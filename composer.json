@@ -1,0 +1,14 @@
+{
+    "name": "slince/config",
+    "description": "Slince config component",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Taosikai",
+            "email": "taosikai@yeah.net"
+        }
+    ],
+    "require": {
+        "php": "~5.4"
+    }
+}
