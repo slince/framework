@@ -9,11 +9,9 @@ use Slince\Config\Exception\ParseException;
 
 class PhpArrayParser extends AbstractParser
 {
-
     /**
-     * 解析所有的条目
-     *
-     * @return array
+     * (non-PHPdoc)
+     * @see \Slince\Config\Parser\AbstractParser::parse()
      */
     function parse()
     {
@@ -23,7 +21,11 @@ class PhpArrayParser extends AbstractParser
         }
         return $data;
     }
-
+    
+    /**
+     * (non-PHPdoc)
+     * @see \Slince\Config\Parser\AbstractParser::dump()
+     */
     function dump($keyMap)
     {}
 }

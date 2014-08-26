@@ -21,8 +21,16 @@ abstract class AbstractParser implements ParserInterface
     {
         $this->_item = $item;
     }
-
+    
+    /**
+     * (non-PHPdoc)
+     * @see \Slince\Config\ParserInterface::parse()
+     */
     abstract function parse();
-
+    
+    /**
+     * (non-PHPdoc)
+     * @see \Slince\Config\ParserInterface::dump()
+     */
     abstract function dump(array $keyMap);
 }

@@ -9,7 +9,11 @@ use Slince\Config\Exception\ParseException;
 
 class IniParser extends AbstractParser
 {
-
+    
+    /**
+     * (non-PHPdoc)
+     * @see \Slince\Config\Parser\AbstractParser::parse()
+     */
     function parse()
     {
         if ($data = parse_ini_file($this->_item, true) === false) {
@@ -19,6 +23,10 @@ class IniParser extends AbstractParser
         }
     }
 
+    /**
+     * (non-PHPdoc)
+     * @see \Slince\Config\Parser\AbstractParser::dump()
+     */
     function dump()
     {}
 }
