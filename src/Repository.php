@@ -9,7 +9,7 @@ class Repository implements \ArrayAccess
 {
 
     /**
-     * 配置的键值对
+     * 配置的值
      *
      * @var array
      */
