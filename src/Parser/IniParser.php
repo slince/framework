@@ -28,5 +28,7 @@ class IniParser extends AbstractParser
      * @see \Slince\Config\Parser\AbstractParser::dump()
      */
     function dump()
-    {}
+    {
+        
+    }
 }
