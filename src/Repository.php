@@ -97,5 +97,55 @@ class Repository implements \ArrayAccess
     {
         return isset($this->_keyMap[$key]);
     }
-    
+
+    /**
+     * 移除已存在的键值
+     * 
+     * @param mixed $key
+     */
+    function remove($key)
+    {
+        unset($this->_keyMap[$key]);
+    }
+
+    /**
+     * 实现接口方法
+     * 
+     * @param mixed $offset            
+     */
+    function offsetGet($offset)
+    {
+        return $this->get($offset);
+    }
+
+    /**
+     * 实现接口方法
+     * 
+     * @param mixed $offset            
+     * @param mixed $value            
+     */
+    function offsetSet($offset, $value)
+    {
+        $this->set($offset, $value);
+    }
+
+    /**
+     * 实现接口方法
+     * 
+     * @param mixed $offset            
+     */
+    function offsetUnset($offset)
+    {
+        $this->remove($offset);
+    }
+
+    /**
+     * 实现接口方法
+     * 
+     * @param mixed $offset            
+     */
+    function offsetExists($offset)
+    {
+        $this->remove($offset);
+    }
 }

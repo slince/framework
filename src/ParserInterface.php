@@ -22,12 +22,8 @@ interface ParserInterface
      * @return boolean
      */
     function dump(array $keyMap);
-
     /**
-     * 给解析器增加一个同类型的项目
-     *
-     * @param mixed $item            
-     * @return void
+     * 获取解析器的唯一标记
      */
-    function addItem($item);
+    function getId();
 }
