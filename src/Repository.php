@@ -23,7 +23,7 @@ class Repository implements \ArrayAccess
     }
 
     /**
-     * 重置当前配置对象，已存在的配置都会被清空
+     * 重置当前配置接口
      *
      * @param ParserInterface $parser            
      * @return void
