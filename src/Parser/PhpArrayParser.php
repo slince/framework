@@ -26,6 +26,6 @@ class PhpArrayParser extends AbstractParser
      * (non-PHPdoc)
      * @see \Slince\Config\Parser\AbstractParser::dump()
      */
-    function dump($keyMap)
+    function dump(array $keyMap)
     {}
 }
