@@ -18,7 +18,7 @@ class Repository implements \ArrayAccess
     function __construct(ParserInterface $parser = null)
     {
         if (! is_null($parser)) {
-            $this->_keyMap = $this->_parser->read();
+            $this->_keyMap = $parser->parse();
         }
     }
 
@@ -30,7 +30,7 @@ class Repository implements \ArrayAccess
      */
     function renew(ParserInterface $parser)
     {
-        $this->_keyMap = $parser->read();
+        $this->_keyMap = $parser->parse();
     }
 
     /**
@@ -41,7 +41,7 @@ class Repository implements \ArrayAccess
      */
     function merge(ParserInterface $parser)
     {
-        $this->_keyMap = array_merge($this->_keyMap, $parser->read());
+        $this->_keyMap = array_merge($this->_keyMap, $parser->parse());
     }
 
     /**

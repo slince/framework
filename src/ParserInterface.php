@@ -22,8 +22,4 @@ interface ParserInterface
      * @return boolean
      */
     function dump(array $keyMap);
-    /**
-     * 获取解析器的唯一标记
-     */
-    function getId();
 }
