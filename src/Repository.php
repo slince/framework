@@ -5,7 +5,7 @@
  */
 namespace Slince\Config;
 
-class Repository implements \ArrayAccess
+class Repository implements \ArrayAccess, \Countable
 {
 
     /**
@@ -147,5 +147,12 @@ class Repository implements \ArrayAccess
     function offsetExists($offset)
     {
         $this->remove($offset);
+    }
+    /**
+     * 实现接口方法
+     */
+    function count()
+    {
+        return count($this->_keyMap);
     }
 }

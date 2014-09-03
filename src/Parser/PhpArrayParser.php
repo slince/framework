@@ -15,7 +15,7 @@ class PhpArrayParser extends AbstractParser
      */
     function parse()
     {
-        $data = include $item;
+        $data = include $this->_item;
         if (! is_array($data)) {
             throw ParseException(sprintf('The file "%s" must return a PHP array', $item));
         }
