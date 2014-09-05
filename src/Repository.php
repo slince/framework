@@ -5,7 +5,7 @@
  */
 namespace Slince\Config;
 
-class Repository implements \ArrayAccess, \Countable
+class Repository implements \ArrayAccess, \Countable, \SeekableIterator 
 {
 
     /**
