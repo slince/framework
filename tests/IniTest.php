@@ -15,20 +15,22 @@ class IniTest extends \PHPUnit_Framework_TestCase
     }
     function testMerge()
     {
-        $this->_fixture->merge(new IniParser(__DIR__ . '/config/config.json'));
+        $this->_fixture->merge(new IniParser(__DIR__ . '/config/config.ini'));
         $this->assertNotEmpty($this->_fixture->toArray());
     }
     
     function testException()
     {
         $this->setExpectedException('Slince\Config\Exception\ParseException');
-        $this->_fixture->merge(new JsonParser(__DIR__ . '/config/config2.json'));
+        $this->_fixture->merge(new IniParser(__DIR__ . '/config/config2.ini'));
     }
-    
+    /**
+     * @expectedException Slince\Config\Exception\ParseException
+     */
     function testDump()
     {
-        $this->_fixture->merge(new JsonParser(__DIR__ . '/config/config.json'));
+        $this->_fixture->merge(new IniParser(__DIR__ . '/config/config.ini'));
         $this->_fixture['key5'] = 'value5';
-        $this->_fixture->dump(new JsonParser(__DIR__ . '/config/config-test.json'));
+        $this->_fixture->dump(new IniParser(__DIR__ . '/config/config-test.ini'));
     }
 }

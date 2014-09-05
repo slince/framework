@@ -16,8 +16,8 @@ class IniParser extends AbstractParser
      */
     function parse()
     {
-        if ($data = parse_ini_file($this->_item, true) === false) {
-            throw ParseException(sprintf('The file "%s" has syntax errors', $item));
+        if (($data = @parse_ini_file($this->_item, true)) === false) {
+            throw new ParseException(sprintf('The file "%s" has syntax errors', $this->_item));
         } else {
             return $data;
         }
@@ -27,7 +27,7 @@ class IniParser extends AbstractParser
      * (non-PHPdoc)
      * @see \Slince\Config\Parser\AbstractParser::dump()
      */
-    function dump()
+    function dump(array $keyMap)
     {
         throw new ParseException('Not supported');
     }
