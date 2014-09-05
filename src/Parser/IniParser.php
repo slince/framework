@@ -29,6 +29,6 @@ class IniParser extends AbstractParser
      */
     function dump()
     {
-        
+        throw new ParseException('Not supported');
     }
 }
