@@ -5,7 +5,7 @@
  */
 namespace Slince\Config;
 
-class Repository implements \ArrayAccess, \Countable, \SeekableIterator 
+class Repository implements \ArrayAccess, \Countable
 {
 
     /**
@@ -23,25 +23,18 @@ class Repository implements \ArrayAccess, \Countable, \SeekableIterator
     }
 
     /**
-     * 重置当前配置接口
+     * 添加新的配置接口或数据
      *
-     * @param ParserInterface $parser            
+     * @param ParserInterface|array $data            
      * @return void
      */
-    function renew(ParserInterface $parser)
+    function merge($data)
     {
-        $this->_keyMap = $parser->parse();
-    }
-
-    /**
-     * 合并新的配置到当前对象
-     *
-     * @param ParserInterface $parser            
-     * @return void
-     */
-    function merge(ParserInterface $parser)
-    {
-        $this->_keyMap = array_merge($this->_keyMap, $parser->parse());
+        if ($data instanceof ParserInterface) {
+            $this->_keyMap = array_merge($this->_keyMap, $data->parse());
+        } else {
+            $this->_keyMap = array_merge($this->_keyMap, $data);
+        }
     }
 
     /**
@@ -100,17 +93,27 @@ class Repository implements \ArrayAccess, \Countable, \SeekableIterator
 
     /**
      * 移除已存在的键值
-     * 
-     * @param mixed $key
+     *
+     * @param mixed $key            
      */
-    function remove($key)
+    function delete($key)
     {
         unset($this->_keyMap[$key]);
     }
 
     /**
+     * 清除所有的数据
+     *
+     * @return void
+     */
+    function clear()
+    {
+        $this->_keyMap = [];
+    }
+
+    /**
      * 实现接口方法
-     * 
+     *
      * @param mixed $offset            
      */
     function offsetGet($offset)
@@ -120,7 +123,7 @@ class Repository implements \ArrayAccess, \Countable, \SeekableIterator
 
     /**
      * 实现接口方法
-     * 
+     *
      * @param mixed $offset            
      * @param mixed $value            
      */
@@ -131,23 +134,24 @@ class Repository implements \ArrayAccess, \Countable, \SeekableIterator
 
     /**
      * 实现接口方法
-     * 
+     *
      * @param mixed $offset            
      */
     function offsetUnset($offset)
     {
-        $this->remove($offset);
+        $this->delete($offset);
     }
 
     /**
      * 实现接口方法
-     * 
+     *
      * @param mixed $offset            
      */
     function offsetExists($offset)
     {
-        $this->remove($offset);
+        return $this->exists($offset);
     }
+
     /**
      * 实现接口方法
      */
