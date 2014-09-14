@@ -38,8 +38,7 @@ class FileHandler extends AbstractHandler
     {
         $file = new File($this->_getPath($key));
         if ($file->isFile()) {
-            $content = $file->getContents();
-            list ($timestamp, $value) = explode("\r\n", $file->getContents());
+            list($timestamp, $value) = explode("\r\n", $file->getContents());
             if (time() > $timestamp) {
                 return $value;
             } else {
