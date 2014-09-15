@@ -5,7 +5,7 @@
  */
 namespace Slince\Cache\Handler;
 
-class MemcacheHandler extends AbstractHandler
+class ApcHandler extends AbstractHandler
 {
 
     /**
