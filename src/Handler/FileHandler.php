@@ -6,6 +6,7 @@
 namespace Slince\Cache\Handler;
 
 use Slince\Filesystem\File;
+use Slince\Filesystem\Directory;
 
 class FileHandler extends AbstractHandler
 {
@@ -19,7 +20,7 @@ class FileHandler extends AbstractHandler
 
     /**
      * (non-PHPdoc)
-     * 
+     *
      * @see \Slince\Cache\HandlerInterface::set()
      */
     function set($key, $value, $duration)
@@ -38,7 +39,7 @@ class FileHandler extends AbstractHandler
     {
         $file = new File($this->_getPath($key));
         if ($file->isFile()) {
-            list($expire, $value) = explode("\r\n", $file->getContents());
+            list ($expire, $value) = explode("\r\n", $file->getContents());
             if (time() > $expire) {
                 return $value;
             } else {
@@ -50,13 +51,12 @@ class FileHandler extends AbstractHandler
 
     /**
      * (non-PHPdoc)
-     * 
+     *
      * @see \Slince\Cache\HandlerInterface::delete()
      */
     function delete($key)
     {
-        $file = new File($this->_getPath($key));
-        return $file->delete();
+        return @unlink($this->_getPath($key));
     }
 
     /**
@@ -68,18 +68,22 @@ class FileHandler extends AbstractHandler
     {
         return file_exists($this->_getPath($key));
     }
+
     /**
      * (non-PHPdoc)
+     * 
      * @see \Slince\Cache\HandlerInterface::flush()
      */
     function flush()
     {
-        
+        $directory = new Directory($this->_path);
+        return $directory->clear();
     }
 
     /**
-     *
-     * @param unknown $key            
+     * 获取缓存文件路径
+     * 
+     * @param string $key            
      * @return string
      */
     private function _getPath($key)
