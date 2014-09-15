@@ -25,7 +25,7 @@ class FileHandler extends AbstractHandler
     function set($key, $value, $duration)
     {
         $file = new File($this->_getPath($key));
-        $str = (time() + $duration) . "\r\n" . json_encode($value);
+        $str = (time() + $duration) . "\r\n" . serialize($value);
         return $file->resave($str);
     }
 
@@ -67,6 +67,14 @@ class FileHandler extends AbstractHandler
     function exists($key)
     {
         return file_exists($this->_getPath($key));
+    }
+    /**
+     * (non-PHPdoc)
+     * @see \Slince\Cache\HandlerInterface::flush()
+     */
+    function flush()
+    {
+        
     }
 
     /**
