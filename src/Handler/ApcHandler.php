@@ -9,25 +9,18 @@ class ApcHandler extends AbstractHandler
 {
 
     /**
-     * memcache实例
-     *
-     * @var \Memcache
-     */
-    private $_memcache;
-
-    function __construct($memcache)
-    {
-        $this->_memcache = $memcache;
-    }
-
-    /**
      * (non-PHPdoc)
      *
      * @see \Slince\Cache\HandlerInterface::set()
      */
     function set($key, $value, $duration)
     {
-        return $this->_memcache->set($key, $value, false, time() + $duration);
+        return apc_store($key, $value, $duration);
+    }
+
+    function add($key, $value, $duration)
+    {
+        return apc_add($key, $value, $duration);
     }
 
     /**
@@ -37,7 +30,7 @@ class ApcHandler extends AbstractHandler
      */
     function get($key)
     {
-        return $this->_memcache->get($key);
+        return apc_fetch($key);
     }
 
     /**
@@ -47,7 +40,7 @@ class ApcHandler extends AbstractHandler
      */
     function delete($key)
     {
-        return $this->_memcache->delete($key);
+        return apc_delete($key);
     }
 
     /**
@@ -57,7 +50,7 @@ class ApcHandler extends AbstractHandler
      */
     function exists($key)
     {
-        return $this->get($key) !== false;
+        return apc_exists($key);
     }
 
     /**
@@ -67,6 +60,6 @@ class ApcHandler extends AbstractHandler
      */
     function flush()
     {
-        return $this->_memcache->flush();
+        apc_clear_cache('user');
     }
 }

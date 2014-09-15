@@ -18,6 +18,15 @@ interface HandlerInterface
     function set($key, $value, $duration);
 
     /**
+     * 添加一个值
+     *
+     * @param string $key            
+     * @param mixed $value            
+     * @param int $duration            
+     */
+    function add($key, $value, $duration);
+
+    /**
      * 获取一个值
      *
      * @param string $key            

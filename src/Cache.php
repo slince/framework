@@ -8,7 +8,18 @@ namespace Slince\Cache;
 class Cache
 {
 
+    /**
+     * 处理句柄
+     * 
+     * @var HandlerInterface
+     */
     protected $_handler;
+    
+    /**
+     * 默认的缓存时间
+     * @var int
+     */
+    protected $_duration = 3600;
 
     function __construct(HandlerInterface $handler)
     {
@@ -34,17 +45,36 @@ class Cache
     {
         return $this->_handler;
     }
+    
+    /**
+     * 设置默认的缓存时间
+     * @param int $duration
+     */
+    function setDuration($duration)
+    {
+        $this->_duration = $duration;
+    }
 
+    /**
+     * 获取默认的缓存时间
+     * 
+     * @return int
+     */
+    function getDuration()
+    {
+        return $this->_duration;
+    }
     /**
      * 设置一个值
      *
      * @param string $key            
      * @param mixed $value            
      * @param int $duration            
+     * @return boolean
      */
-    function set($key, $value, $duration = 3600)
+    function set($key, $value, $duration = null)
     {
-        $this->_handler->set($key, $value, $duration);
+        return $this->_handler->set($key, $value, $duration);
     }
 
     /**
@@ -53,18 +83,18 @@ class Cache
      * @param string $key            
      * @param mixed $value            
      * @param int $duration            
+     * @return boolean
      */
-    function setIfNotExists($key, $value, $duration = 3600)
+    function add($key, $value, $duration = 3600)
     {
-        if (! $this->exists($key)) {
-            $this->set($key, $value, $duration);
-        }
+        return $this->_handler->add($key, $value, $duration);
     }
 
     /**
      * 判断一个值是否存在
      *
      * @param string $key            
+     * @return boolean
      */
     function exists($key)
     {
@@ -73,19 +103,22 @@ class Cache
 
     /**
      * 获取一个值
-     *
-     * @param string $key            
+     * 
+     * @param unknown $key            
+     * @param string $defaultValue            
+     * @return mixed
      */
     function get($key, $defaultValue = null)
     {
         $value = $this->_handler->get($key);
-        return is_null($value) ? $defaultValue : $value;
+        return ($value === false) ? $defaultValue : $value;
     }
 
     /**
      * 删除一个值
      *
      * @param string $key            
+     * @return boolean
      */
     function delete($key)
     {

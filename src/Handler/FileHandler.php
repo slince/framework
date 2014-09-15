@@ -12,7 +12,7 @@ class FileHandler extends AbstractHandler
 {
 
     /**
-     * 缓存文件路径
+     * 缓存位置
      * 
      * @var string
      */
@@ -33,6 +33,17 @@ class FileHandler extends AbstractHandler
         $file = new File($this->_getPath($key));
         $str = (time() + $duration) . "\r\n" . serialize($value);
         return $file->resave($str);
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see \Slince\Cache\HandlerInterface::add()
+     */
+    function add($key, $value, $duration)
+    {
+        if (! $this->exists($key)) {
+            $this->set($key, $value, $duration);
+        }
     }
 
     /**
@@ -82,7 +93,9 @@ class FileHandler extends AbstractHandler
     function flush()
     {
         $directory = new Directory($this->_path);
-        return $directory->clear();
+        foreach ($directory->lists() as $file) {
+            $file->delete();
+        }
     }
 
     /**

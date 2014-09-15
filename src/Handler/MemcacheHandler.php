@@ -15,7 +15,7 @@ class MemcacheHandler extends AbstractHandler
      */
     private $_memcache;
 
-    function __construct($memcache)
+    function __construct(\Memcached $memcache)
     {
         $this->_memcache = $memcache;
     }
@@ -28,6 +28,16 @@ class MemcacheHandler extends AbstractHandler
     function set($key, $value, $duration)
     {
         return $this->_memcache->set($key, $value, false, time() + $duration);
+    }
+
+    /**
+     * (non-PHPdoc)
+     * 
+     * @see \Slince\Cache\HandlerInterface::add()
+     */
+    function add($key, $value, $duration)
+    {
+        return $this->_memcache->add($key, $value, false, time() + $duration);
     }
 
     /**
