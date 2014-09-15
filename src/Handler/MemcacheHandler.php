@@ -8,19 +8,20 @@ namespace Slince\Cache\Handler;
 use Slince\Filesystem\File;
 use Slince\Filesystem\Directory;
 
-class FileHandler extends AbstractHandler
+class MemcacheHandler extends AbstractHandler
 {
 
     /**
-     * 缓存文件路径
+     * memcache实例
      * 
-     * @var string
+     * @var \Memcache
      */
-    private $_path;
+    private $_memcache;
 
-    function __construct($path)
+    function __construct($memcache)
     {
-        $this->_path = $path;
+        
+        $this->_memcache = $memcache;
     }
 
     /**
@@ -30,9 +31,7 @@ class FileHandler extends AbstractHandler
      */
     function set($key, $value, $duration)
     {
-        $file = new File($this->_getPath($key));
-        $str = (time() + $duration) . "\r\n" . serialize($value);
-        return $file->resave($str);
+        return $this->_memcache->set($key, $value, false, time() + $duration);
     }
 
     /**
@@ -42,16 +41,7 @@ class FileHandler extends AbstractHandler
      */
     function get($key)
     {
-        $file = new File($this->_getPath($key));
-        if ($file->isFile()) {
-            list ($expire, $value) = explode("\r\n", $file->getContents());
-            if (time() > $expire) {
-                return $value;
-            } else {
-                $file->delete();
-            }
-        }
-        return false;
+        return $this->_memcache->get($key);
     }
 
     /**
@@ -61,7 +51,7 @@ class FileHandler extends AbstractHandler
      */
     function delete($key)
     {
-        return @unlink($this->_getPath($key));
+        return $this->_memcache->delete($key);
     }
 
     /**
@@ -76,7 +66,7 @@ class FileHandler extends AbstractHandler
 
     /**
      * (non-PHPdoc)
-     *
+     * 
      * @see \Slince\Cache\HandlerInterface::flush()
      */
     function flush()
@@ -87,7 +77,7 @@ class FileHandler extends AbstractHandler
 
     /**
      * 获取缓存文件路径
-     *
+     * 
      * @param string $key            
      * @return string
      */
