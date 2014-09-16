@@ -42,8 +42,9 @@ class FileHandler extends AbstractHandler
     function add($key, $value, $duration)
     {
         if (! $this->exists($key)) {
-            $this->set($key, $value, $duration);
+            return $this->set($key, $value, $duration);
         }
+        return false;
     }
 
     /**
@@ -56,8 +57,8 @@ class FileHandler extends AbstractHandler
         $file = new File($this->_getPath($key));
         if ($file->isFile()) {
             list ($expire, $value) = explode("\r\n", $file->getContents());
-            if (time() > $expire) {
-                return $value;
+            if (time() < $expire) {
+                return @unserialize($value);
             } else {
                 $file->delete();
             }

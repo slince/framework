@@ -5,7 +5,7 @@
  */
 namespace Slince\Cache\Handler;
 
-class MemcacheHandler extends AbstractHandler
+class MemcachedHandler extends AbstractHandler
 {
 
     /**
@@ -13,11 +13,11 @@ class MemcacheHandler extends AbstractHandler
      *
      * @var \Memcache
      */
-    private $_memcache;
+    private $_memcached;
 
-    function __construct(\Memcached $memcache)
+    function __construct(\Memcached $memcached)
     {
-        $this->_memcache = $memcache;
+        $this->_memcached = $memcached;
     }
 
     /**
@@ -27,7 +27,7 @@ class MemcacheHandler extends AbstractHandler
      */
     function set($key, $value, $duration)
     {
-        return $this->_memcache->set($key, $value, false, time() + $duration);
+        return $this->_memcached->set($key, $value, false, time() + $duration);
     }
 
     /**
@@ -37,7 +37,7 @@ class MemcacheHandler extends AbstractHandler
      */
     function add($key, $value, $duration)
     {
-        return $this->_memcache->add($key, $value, false, time() + $duration);
+        return $this->_memcached->add($key, $value, false, time() + $duration);
     }
 
     /**
@@ -47,7 +47,7 @@ class MemcacheHandler extends AbstractHandler
      */
     function get($key)
     {
-        return $this->_memcache->get($key);
+        return $this->_memcached->get($key);
     }
 
     /**
@@ -57,7 +57,7 @@ class MemcacheHandler extends AbstractHandler
      */
     function delete($key)
     {
-        return $this->_memcache->delete($key);
+        return $this->_memcached->delete($key);
     }
 
     /**
@@ -77,6 +77,6 @@ class MemcacheHandler extends AbstractHandler
      */
     function flush()
     {
-        return $this->_memcache->flush();
+        return $this->_memcached->flush();
     }
 }
