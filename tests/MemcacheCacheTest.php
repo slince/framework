@@ -9,9 +9,9 @@ class MemcacheCacheTest extends \PHPUnit_Framework_TestCase
 
     function setUp()
     {
-        $memcached = new \Memcached();
-        $memcached->addServer('127.0.0.1', 11211);
-        $this->_fixture = new Cache(new MemcacheHandler($memcached));
+        $memcache = new \Memcache();
+        $memcache->connect('127.0.0.1', 11211);
+        $this->_fixture = new Cache(new MemcacheHandler($memcache));
     }
 
     function teerDown()
