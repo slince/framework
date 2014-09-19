@@ -5,33 +5,53 @@
  */
 namespace Slince\View;
 
-class Element
+class Element implements ViewInterface
 {
 
-    private $_name;
-
+    /**
+     * 视图位置
+     *
+     * @var string
+     */
     private $_path;
 
-    private $_content;
+    /**
+     * 局部视图归属
+     *
+     * @var View
+     */
+    private $_view;
 
-    function __construct($path)
+    function __construct($path, View $view)
     {
         $this->_path = $path;
+        $this->_view = $view;
     }
 
+    /**
+     * 设置归属视图对象
+     *
+     * @param View $view            
+     */
+    function setView(View $view)
+    {
+        $this->_view = $view;
+    }
+
+    /**
+     * 渲染视图
+     *
+     * @throws Exception\FileNotExistsException
+     * @return string
+     */
     function render()
     {
-        if (empty($this->_content)) {
-            if (! file_exists($this->_path)) {
-                throw new Exception\FileNotExistsException($this->_path);
-            }
-            ob_start();
-            include $this->_path;
-            $this->_content = ob_get_clean();
-        }
-        return $this->_content;
+        return $this->_view->renderFile($this->_path);
     }
 
+    /**
+     * 魔术方法
+     */
     function __toString()
     {
         return $this->render();
