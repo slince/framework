@@ -149,6 +149,7 @@ class View implements ViewInterface
         if (! is_null($this->_layout)) {
             
         }
+        return $this->renderWithoutLayout();
     }
     /**
      * (non-PHPdoc)
@@ -165,7 +166,7 @@ class View implements ViewInterface
      */
     function renderFile($path)
     {
-        if (! file_exists()) {
+        if (! file_exists($path)) {
             throw new Exception\FileNotExistsException($path);
         }
         ob_start();
