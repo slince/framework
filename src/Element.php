@@ -28,6 +28,14 @@ class Element implements ViewInterface
         $this->_view = $view;
     }
 
+    function __call($name, $args)
+    {
+        return call_user_func_array(array(
+            $this->_view,
+            $name
+        ), $args);
+    }
+
     /**
      * 设置归属视图对象
      *

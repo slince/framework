@@ -42,23 +42,23 @@ class View implements ViewInterface
      * @var string
      */
     private $_elementPath;
-    
+
     /**
      * 使用的布局
-     * @var string 
+     * 
+     * @var string
      */
     private $_layout;
 
-    function __construct($path, $layout = '')
+    function __construct($path, $layout = null)
     {
         $this->_path = $path;
         $this->_layout = $layout;
     }
-    
     /**
      * 设置局部视图文件位置
-     * 
-     * @param string $path
+     *
+     * @param string $path            
      */
     function setElementPath($path)
     {
@@ -108,6 +108,16 @@ class View implements ViewInterface
     }
 
     /**
+     * 是否存在某个block
+     * 
+     * @param string $name            
+     */
+    function hasBlock($name)
+    {
+        return isset($this->_blocks[$name]);
+    }
+
+    /**
      * 获取块的内容，块不存在会抛出异常
      *
      * @param string $name            
@@ -137,23 +147,36 @@ class View implements ViewInterface
 
     /**
      * 获取一个局部视图的内容
-     * @param string $name
+     * 
+     * @param string $name            
      */
     function element($name)
     {
+        $this->_elements[] = $name;
         return Factory::createElement($this->_getElementFile($name))->render();
     }
 
-    function render()
-    {
-        if (! is_null($this->_layout)) {
-            
-        }
-        return $this->renderWithoutLayout();
-    }
     /**
      * (non-PHPdoc)
+     * 
      * @see \Slince\View\ViewInterface::render()
+     */
+    function render()
+    {
+        if (! isset($this->_blocks['content'])) {
+            $content = $this->renderWithoutLayout();
+        }
+        if (! is_null($this->_layout)) {
+            if (! file_exists($this->_layout)) {
+                throw new Exception\FileNotExistsException($this->_layout);
+            }
+            return $this->renderFile($this->_layout);
+        }
+        return $content;
+    }
+
+    /**
+     * 不使用模板布局渲染
      */
     function renderWithoutLayout()
     {
@@ -177,8 +200,8 @@ class View implements ViewInterface
 
     /**
      * 获取局部视图位置
-     * 
-     * @param string $name
+     *
+     * @param string $name            
      * @return string
      */
     private function _getElementFile($name)
