@@ -1,5 +1,5 @@
 <?php $this->capture('hello');?>
-world;
+world ！
 <?php $this->end();?>
 hello
 <?php echo $this->fetch('hello'); ?>
