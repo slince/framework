@@ -8,7 +8,7 @@
 
     {
         "require": {
-            "slince/di": "dev-master@dev"
+            "slince/config": "dev-master@dev"
         }
     }
 
@@ -33,5 +33,15 @@
     //client.php
     $repository = new Slince\Config\Repository;
     $repository->merge(new Slince\Config\Parser\PhpArrayParser('config.php'));
-    $repository->merge(new Slince\Config\Parser\PhpArrayParser('config.php'));    
+    $repository->merge(new Slince\Config\Parser\JsonParser('config.json'));
+    $repository->merge(new Slince\Config\Parser\IniParser('config.ini'));
+    
+    //获取参数
+    echo $repository->get('key1');
+    echo $repository['key2'];
+    //设置参数
+    $repository->set('key7', 'val7');
+    $repository['key8'] = 'val8';
+    
+    //将配置写回到config.php中
     
