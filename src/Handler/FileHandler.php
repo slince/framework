@@ -94,9 +94,7 @@ class FileHandler extends AbstractHandler
     function flush()
     {
         $directory = new Directory($this->_path);
-        foreach ($directory->lists() as $file) {
-            $file->delete();
-        }
+        $directory->clear();
     }
 
     /**
