@@ -1,7 +1,7 @@
 <?php
 /**
  * slince cache library
- * @author Taosikai <taosikai@yeah.net>
+ * @author Tao <taosikai@yeah.net>
  */
 namespace Slince\Cache\Handler;
 
