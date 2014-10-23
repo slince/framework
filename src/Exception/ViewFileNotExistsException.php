@@ -1,7 +1,7 @@
 <?php
 /**
  * slince view library
- * @author Taosikai <taosikai@yeah.net>
+ * @author Tao <taosikai@yeah.net>
  */
 namespace Slince\View\Exception;
 
