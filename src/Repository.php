@@ -1,7 +1,7 @@
 <?php
 /**
  * slince config component
- * @author Taosikai <taosikai@yeah.net>
+ * @author Tao <taosikai@yeah.net>
  */
 namespace Slince\Config;
 
