@@ -11,7 +11,6 @@ class FileCacheTest extends \PHPUnit_Framework_TestCase
     {
         $this->_fixture = new Cache(new FileHandler(__DIR__ . '/tmp/'));
     }
-
     function teerDown()
     {
         unset($this->_fixture);
@@ -75,6 +74,15 @@ class FileCacheTest extends \PHPUnit_Framework_TestCase
         $val2 = $this->_fixture->get('key6');
         $this->assertEmpty($val1);
         $this->assertEmpty($val2);
+    }
+    
+    function test0Duration()
+    {
+        $value = $this->_fixture->get('a');
+        if (empty($value)) {
+            $this->_fixture->set('a', 'a', 0);
+            echo 'test';
+        }
     }
 
 }

@@ -31,7 +31,8 @@ class FileHandler extends AbstractHandler
     function set($key, $value, $duration)
     {
         $file = new File($this->_getPath($key));
-        $str = (time() + $duration) . "\r\n" . serialize($value);
+        $expire = ($duration == 0) ? 0 : time() + $duration;
+        $str = $expire . "\r\n" . serialize($value);
         return $file->resave($str);
     }
     
@@ -57,7 +58,7 @@ class FileHandler extends AbstractHandler
         $file = new File($this->_getPath($key));
         if ($file->isFile()) {
             list ($expire, $value) = explode("\r\n", $file->getContents());
-            if (time() < $expire) {
+            if ($expire == 0 || time() < $expire) {
                 return @unserialize($value);
             } else {
                 $file->delete();

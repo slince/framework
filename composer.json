@@ -14,7 +14,7 @@
     "minimum-stability": "dev",
     "require": {
         "php": "~5.4",
-        "slince/filesystem": "1.0.*@dev"
+        "slince/filesystem": "dev-master@dev"
     },
     "autoload": {
         "psr-4": {
