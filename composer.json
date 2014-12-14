@@ -1,0 +1,23 @@
+{
+    "name": "slince/session",
+    "description": "Slince session component",
+    "require-dev": {
+        "phpunit/phpunit": "4.2.*"
+    },
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Tao",
+            "email": "taosikai@sina.cn"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Slince\\Session\\": "src/"
+        }
+    },
+    "minimum-stability": "dev",
+    "require": {
+        "php": "~5.4"
+    }
+}
