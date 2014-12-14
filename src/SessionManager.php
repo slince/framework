@@ -57,6 +57,11 @@ class SessionManager
         $this->_handler = $handler;
     }
     
+    function setGcProbability($probability)
+    {
+        
+    }
+    
     /**
      * 启动或者重用会话
      */
