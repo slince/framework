@@ -2,16 +2,10 @@
 namespace Slince\Session;
 
 use Slince\Session\Exception\SessionException;
+use Slince\Session\BridgeInterface\BridgeInterface;
 
 class SessionManager
 {
-    private $_cookieParams = [
-        'lifetime' => 0,
-        'path' => '',
-        'domain' => '',
-        'secure' => false,
-        'httponly' => false,
-    ];
     
     /**
      * handler
@@ -21,11 +15,11 @@ class SessionManager
     private $_handler;
     
     /**
-     * 是否已经从ini文件上读取过配置
+     * 传递中介
      * 
-     * @var boolean
+     * @var BridgeInterface
      */
-    private $_hasReadFromIniFile = false;
+    private $_bridge;
     
     /**
      * 是否已经启动
@@ -34,27 +28,17 @@ class SessionManager
      */
     private $_hasStarted = false;
     
-    function setCookieParam($name, $param)
-    {
-        if (! $this->_hasReadFromIniFile) {
-            $this->_cookieParams = session_get_cookie_params();
-        }
-        $this->_cookieParams[$name] = $param;
-    }
-    function setCookieParams($params)
-    {
-        if (! $this->_hasReadFromIniFile) {
-            $this->_cookieParams = session_get_cookie_params();
-        }
-        $this->_cookieParams = array_merge($this->_cookieParams, $params);
-    }
-    
     function setHandler(\SessionHandlerInterface $handler)
     {
         if ($this->hasStarted()) {
             $this->destroy();
         }
         $this->_handler = $handler;
+    }
+    
+    function setBridge(BridgeInterface $bridge)
+    {
+        $this->_bridge = $bridge;
     }
     
     function setGcProbability($probability)
@@ -68,9 +52,6 @@ class SessionManager
     function start()
     {
         if (! $this->hasStarted()) {
-            if ($this->_hasReadFromIniFile) {
-                call_user_func_array('session_set_cookie_params', $this->__cookieParams);
-            }
             if (! is_null($this->_handler)) {
                 session_set_save_handler($this->_handler, true);
             }
