@@ -1,4 +1,14 @@
 <?php
+/**
+ * slince session component
+ * 
+ * session组件是对session管理的抽象
+ * 组件所有对session的设置都不会持久化到ini文件中
+ * 同样组件对ini文件的读取是懒惰的；如果客户端没有主动
+ * 修改session运行参数；组件不会主动从ini中读取默认参数
+ * 
+ * @author Taosikai <taosikai@yeah.net>
+ */
 namespace Slince\Session;
 
 use Slince\Session\Exception\SessionException;
@@ -20,6 +30,10 @@ class SessionManager
      * @var BridgeInterface
      */
     private $_bridge;
+    
+    private $_id;
+    
+    private $_name;
     
     /**
      * 是否已经启动
@@ -52,11 +66,31 @@ class SessionManager
     function start()
     {
         if (! $this->hasStarted()) {
-            if (! is_null($this->_handler)) {
-                session_set_save_handler($this->_handler, true);
-            }
+            $this->_init();
             session_start();
             $this->_hasStarted = true;
+        }
+    }
+    
+    /**
+     * 启动前调用
+     */
+    private function _init()
+    {
+        if (! is_null($this->_handler)) {
+            session_set_save_handler($this->_handler, true);
+        }
+        //初始化桥配置
+        if (! is_null($this->_bridge)) {
+            $this->_bridge->init($this);
+        }
+        //设置session id;如果设置了id则不会再生成session文件
+        if (! is_null($this->_id)) {
+            session_id($this->_id);
+        }
+        //自定义session；name
+        if (! is_null($this->_name)) {
+            session_name($this->_name);
         }
     }
     
@@ -100,7 +134,12 @@ class SessionManager
      */
     function destroy()
     {
-        session_destroy();
+        //已经启动才能销毁
+        if ($this->hasStarted()) {
+            session_destroy();
+        }
+        $_SESSION = [];
+        $this->_hasStarted = false;
     }
     
     /**
@@ -110,6 +149,9 @@ class SessionManager
      */
     function regenerateId()
     {
+        if (! $this->hasStarted()) {
+            $this->start();
+        }
         return session_regenerate_id();
     }
     
@@ -118,7 +160,7 @@ class SessionManager
      */
     function getName()
     {
-        return session_name();
+        return is_null($this->_name) ? session_name() : $this->_name;
     }
     
 
@@ -134,7 +176,10 @@ class SessionManager
         if (! preg_match("/[A-z]/", $name)) {
             throw new SessionException('Session name contains at least one letter');
         }
-        return session_name($name);
+        
+        //session已经启动则销毁当前会话
+        $this->destroy();
+        return $this->_name = $name;
     }
     
     /**
@@ -143,7 +188,7 @@ class SessionManager
      */
     function getId()
     {
-        return session_id();
+        return is_null($this->_id) ? session_id() : $this->_id;
     }
     
     /**
@@ -153,11 +198,12 @@ class SessionManager
      */
     function setId($id)
     {
-        return session_id($id);
+        $this->destroy();
+        return $this->_id = $id;
     }
     
     /**
-     * 写入值
+     * 写入值，session结束前调用
      * 
      * @return void
      */

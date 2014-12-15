@@ -3,5 +3,10 @@ namespace Slince\Session\BridgeInterface;
 
 interface BridgeInterface
 {
-    function init();
+    /**
+     * SessionManager初始化工作
+     * 
+     * @param SessionManager $sessionManager
+     */
+    function init(SessionManager $sessionManager);
 }
