@@ -5,7 +5,7 @@
  */
 namespace Slince\View;
 
-class View implements ViewInterface
+class View implements ViewFileInterface
 {
 
     /**
@@ -30,13 +30,6 @@ class View implements ViewInterface
     private $_elements;
 
     /**
-     * 传入到视图的变量
-     *
-     * @var array
-     */
-    private $_vars = [];
-
-    /**
      * 局部视图位置
      *
      * @var string
@@ -49,6 +42,8 @@ class View implements ViewInterface
      * @var string
      */
     private $_layout;
+    
+    private $_ext = 'php';
 
     function __construct($path, $layout = null)
     {
@@ -72,7 +67,7 @@ class View implements ViewInterface
      */
     function setVars($vars)
     {
-        $this->_vars = array_merge($this->_vars, $vars);
+        ViewRender::$vars = array_merge(ViewRender::$vars, $vars);
     }
 
     /**
@@ -83,7 +78,16 @@ class View implements ViewInterface
      */
     function setVar($name, $var)
     {
-        $this->_vars[$name] = $var;
+        ViewRender::$vars[$name] = $var;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see \Slince\View\ViewFileInterface::getViewFile()
+     */
+    function getViewFile()
+    {
+        return $this->_path;
     }
 
     /**
@@ -137,7 +141,7 @@ class View implements ViewInterface
      * @param string $name            
      * @return string|false
      */
-    function fetchWithoutException($name)
+    function fetchOrFail($name)
     {
         if (isset($this->_blocks[$name])) {
             return $this->_blocks[$name]->render();
@@ -158,7 +162,6 @@ class View implements ViewInterface
 
     /**
      * (non-PHPdoc)
-     * 
      * @see \Slince\View\ViewInterface::render()
      */
     function render()
@@ -185,20 +188,6 @@ class View implements ViewInterface
     }
 
     /**
-     * 渲染当前视图
-     */
-    function renderFile($path)
-    {
-        if (! file_exists($path)) {
-            throw new Exception\FileNotExistsException($path);
-        }
-        ob_start();
-        extract($this->_vars);
-        include $path;
-        return ob_get_clean();
-    }
-
-    /**
      * 获取局部视图位置
      *
      * @param string $name            
@@ -206,6 +195,6 @@ class View implements ViewInterface
      */
     private function _getElementFile($name)
     {
-        return $this->_elementPath . $name . '.php';
+        return "{$this->_elementPath}.{$name}.{$this->_ext}";
     }
 }
