@@ -1,4 +1,8 @@
 <?php
+/**
+ * slince session library
+ * @author Tao <taosikai@yeah.net>
+ */
 namespace Slince\Session\Bridge;
 
 use Slince\Session\BridgeInterface;

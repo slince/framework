@@ -19,6 +19,7 @@
     "minimum-stability": "dev",
     "require": {
         "php": "~5.4",
-        "slince/cache": "dev-master@dev"
+        "slince/cache": "dev-master@dev",
+        "slince/filesystem": "dev-master@dev"
     }
 }
