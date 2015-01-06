@@ -2,6 +2,7 @@
 namespace Slince\Session\Bridge;
 
 use Slince\Session\BridgeInterface\BridgeInterface;
+use Slince\Session\SessionManager;
 
 class QueryStringBridge extends VariableSourceBridge
 {
@@ -17,7 +18,7 @@ class QueryStringBridge extends VariableSourceBridge
         $this->set($_GET[$queryVar]);
     }
     
-    function init($sessionManager)
+    function init(SessionManager $sessionManager)
     {
         if (is_null($this->_variable)) {
             $this->setVariable($_GET[$sessionManager->getName()]);

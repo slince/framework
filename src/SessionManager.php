@@ -18,11 +18,11 @@ class SessionManager
 {
     
     /**
-     * handler
+     * storage
      * 
-     * @var \SessionHandlerInterface
+     * @var \StorageInterface
      */
-    private $_handler;
+    private $_storage;
     
     /**
      * 传递中介
@@ -35,6 +35,8 @@ class SessionManager
     
     private $_name;
     
+    private $_gcMaxLifeTime;
+    
     /**
      * 是否已经启动
      * 
@@ -42,22 +44,17 @@ class SessionManager
      */
     private $_hasStarted = false;
     
-    function setHandler(\SessionHandlerInterface $handler)
+    function setStorage(StorageInterface $storage)
     {
         if ($this->hasStarted()) {
             $this->destroy();
         }
-        $this->_handler = $handler;
+        $this->_storage = $storage;
     }
     
     function setBridge(BridgeInterface $bridge)
     {
         $this->_bridge = $bridge;
-    }
-    
-    function setGcProbability($probability)
-    {
-        
     }
     
     /**
@@ -83,6 +80,10 @@ class SessionManager
         //初始化桥配置
         if (! is_null($this->_bridge)) {
             $this->_bridge->init($this);
+        }
+        //初始化存储接口
+        if (! is_null($this->_storage)) {
+            $this->_storage->init($this);
         }
         //设置session id;如果设置了id则不会再生成session文件
         if (! is_null($this->_id)) {
@@ -200,6 +201,19 @@ class SessionManager
     {
         $this->destroy();
         return $this->_id = $id;
+    }
+    
+    /**
+     * 获取gc周期
+     * 
+     * @return int
+     */
+    function getGcMaxlifeTime()
+    {
+        if (is_null($this->_gcMaxLifeTime)) {
+            $this->_gcMaxLifeTime = intval(ini_get('session.gc_maxlifetime'));
+        }
+        return $this->_gcMaxLifeTime;
     }
     
     /**

@@ -2,6 +2,7 @@
 namespace Slince\Session\Bridge;
 
 use Slince\Session\BridgeInterface;
+use Slince\Session\SessionManager;
 
 class CookieBridge implements BridgeInterface
 {
@@ -37,10 +38,10 @@ class CookieBridge implements BridgeInterface
         $this->_cookieParams = array_merge($this->_cookieParams, $params);
     }
 
-    function init()
+    function init(SessionManager $sessionManager)
     {
         if ($this->_hasReadFromIniFile) {
-            call_user_func_array('session_set_cookie_params', $this->__cookieParams);
+            call_user_func_array('session_set_cookie_params', $this->_cookieParams);
         }
         return true;
     }
