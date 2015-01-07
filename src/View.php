@@ -34,15 +34,15 @@ class View extends AbstractViewFile implements ViewInterface
 
     /**
      * 使用的布局
-     * 
+     *
      * @var string
      */
     private $_layout;
-    
+
     private $_ext = 'php';
-    
+
     private $_vars = [];
-    
+
     private $_content;
 
     function __construct($viewFile, $layout = null)
@@ -50,6 +50,7 @@ class View extends AbstractViewFile implements ViewInterface
         $this->_layout = $layout;
         parent::__construct($viewFile);
     }
+
     /**
      * 设置局部视图文件位置
      *
@@ -80,7 +81,7 @@ class View extends AbstractViewFile implements ViewInterface
     {
         $this->_vars[$name] = $var;
     }
-    
+
     /**
      * 捕捉一个视图块
      *
@@ -104,7 +105,7 @@ class View extends AbstractViewFile implements ViewInterface
 
     /**
      * 是否存在某个block
-     * 
+     *
      * @param string $name            
      */
     function hasBlock($name)
@@ -143,7 +144,7 @@ class View extends AbstractViewFile implements ViewInterface
 
     /**
      * 获取一个局部视图的内容
-     * 
+     *
      * @param string $name            
      */
     function element($name)
@@ -155,6 +156,7 @@ class View extends AbstractViewFile implements ViewInterface
 
     /**
      * (non-PHPdoc)
+     *
      * @see \Slince\View\ViewInterface::render()
      */
     function render()
@@ -167,9 +169,10 @@ class View extends AbstractViewFile implements ViewInterface
         }
         return $this->_blocks['content'];
     }
-    
+
     /**
      * 不带布局渲染页面
+     *
      * @return string
      */
     function renderWithoutLayout()
@@ -179,7 +182,7 @@ class View extends AbstractViewFile implements ViewInterface
 
     /**
      * 渲染视图文件
-     * 
+     *
      * @throws Exception\FileNotExistsException
      * @return string
      */
@@ -193,11 +196,11 @@ class View extends AbstractViewFile implements ViewInterface
         include $viewFile;
         return ob_get_clean();
     }
-    
+
     /**
      * 获取局部视图位置
      *
-     * @param string $name
+     * @param string $name            
      * @return string
      */
     private function _getElementFile($name)

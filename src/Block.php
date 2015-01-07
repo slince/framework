@@ -22,7 +22,7 @@ class Block implements ViewInterface
 
     /**
      * 设置内容
-     * 
+     *
      * @param string $content            
      */
     function setContent($content)
@@ -32,7 +32,7 @@ class Block implements ViewInterface
 
     /**
      * (non-PHPdoc)
-     * 
+     *
      * @see ViewInterface::render()
      */
     function render()

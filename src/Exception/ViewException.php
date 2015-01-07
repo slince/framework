@@ -7,5 +7,4 @@ namespace Slince\View\Exception;
 
 class ViewException extends \Exception
 {
-    
 }

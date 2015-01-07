@@ -7,5 +7,9 @@ namespace Slince\View;
 
 interface ViewFileInterface
 {
+
+    /**
+     * 视图文件位置
+     */
     function getViewFile();
 }
