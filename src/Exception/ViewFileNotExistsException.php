@@ -5,7 +5,7 @@
  */
 namespace Slince\View\Exception;
 
-class FileNotExistsException extends ViewException
+class ViewFileNotExistsException extends ViewException
 {
 
     function __construct($viewFile)

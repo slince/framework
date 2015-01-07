@@ -5,7 +5,7 @@
  */
 namespace Slince\View;
 
-interface ViewFileInterface extends ViewInterface
+interface ViewFileInterface
 {
     function getViewFile();
 }

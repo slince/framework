@@ -5,15 +5,11 @@
  */
 namespace Slince\View;
 
-class View implements ViewFileInterface
-{
+use Slince\View\Exception\ViewException;
+use Slince\View\Exception\ViewFileNotExistsException;
 
-    /**
-     * 视图位置
-     *
-     * @var string
-     */
-    private $_path;
+class View extends AbstractViewFile implements ViewInterface
+{
 
     /**
      * 视图块
@@ -44,11 +40,15 @@ class View implements ViewFileInterface
     private $_layout;
     
     private $_ext = 'php';
+    
+    private $_vars = [];
+    
+    private $_content;
 
-    function __construct($path, $layout = null)
+    function __construct($viewFile, $layout = null)
     {
-        $this->_path = $path;
         $this->_layout = $layout;
+        parent::__construct($viewFile);
     }
     /**
      * 设置局部视图文件位置
@@ -67,7 +67,7 @@ class View implements ViewFileInterface
      */
     function setVars($vars)
     {
-        ViewRender::$vars = array_merge(ViewRender::$vars, $vars);
+        $this->_vars = array_merge($this->_vars, $vars);
     }
 
     /**
@@ -78,18 +78,9 @@ class View implements ViewFileInterface
      */
     function setVar($name, $var)
     {
-        ViewRender::$vars[$name] = $var;
+        $this->_vars[$name] = $var;
     }
     
-    /**
-     * (non-PHPdoc)
-     * @see \Slince\View\ViewFileInterface::getViewFile()
-     */
-    function getViewFile()
-    {
-        return $this->_path;
-    }
-
     /**
      * 捕捉一个视图块
      *
@@ -129,8 +120,8 @@ class View implements ViewFileInterface
      */
     function fetch($name)
     {
-        if (! isset($this->_blocks[$name])) {
-            throw new Exception\ViewException(sprintf('Block "%s" does not exists', $name));
+        if (! $this->hasBlock($name)) {
+            throw new ViewException(sprintf('Block "%s" does not exists', $name));
         }
         return $this->_blocks[$name]->render();
     }
@@ -143,10 +134,11 @@ class View implements ViewFileInterface
      */
     function fetchOrFail($name)
     {
-        if (isset($this->_blocks[$name])) {
-            return $this->_blocks[$name]->render();
+        try {
+            return $this->fetch($name);
+        } catch (ViewException $e) {
+            return false;
         }
-        return false;
     }
 
     /**
@@ -157,7 +149,8 @@ class View implements ViewFileInterface
     function element($name)
     {
         $this->_elements[] = $name;
-        return Factory::createElement($this->_getElementFile($name))->render();
+        $element = Factory::createElement($this->_getElementFile($name));
+        return $this->renderViewFile($element->getViewFile());
     }
 
     /**
@@ -167,30 +160,44 @@ class View implements ViewFileInterface
     function render()
     {
         if (! isset($this->_blocks['content'])) {
-            $content = $this->renderWithoutLayout();
+            $this->_blocks['content'] = $this->renderWithoutLayout();
         }
         if (! is_null($this->_layout)) {
-            if (! file_exists($this->_layout)) {
-                throw new Exception\FileNotExistsException($this->_layout);
-            }
-            return $this->renderFile($this->_layout);
+            return $this->renderViewFile($this->_layout);
         }
-        return $content;
+        return $this->_blocks['content'];
     }
-
+    
     /**
-     * 不使用模板布局渲染
+     * 不带布局渲染页面
+     * @return string
      */
     function renderWithoutLayout()
     {
-        $this->_blocks['content'] = Factory::createBlock($this->renderFile($this->_path));
-        return $this->_blocks['content']->render();
+        return $this->renderViewFile($this->getViewFile());
     }
 
     /**
+     * 渲染视图文件
+     * 
+     * @throws Exception\FileNotExistsException
+     * @return string
+     */
+    function renderViewFile($viewFile)
+    {
+        if (! file_exists($viewFile)) {
+            throw new ViewFileNotExistsException($viewFile);
+        }
+        ob_start();
+        extract($this->_vars);
+        include $viewFile;
+        return ob_get_clean();
+    }
+    
+    /**
      * 获取局部视图位置
      *
-     * @param string $name            
+     * @param string $name
      * @return string
      */
     private function _getElementFile($name)

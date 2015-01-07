@@ -7,5 +7,8 @@ namespace Slince\View;
 
 interface ViewInterface
 {
+    /**
+     * 渲染视图
+     */
     function render();
 }

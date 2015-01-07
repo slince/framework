@@ -11,12 +11,12 @@ class AbstractViewFile implements ViewFileInterface
 {
     protected $_viewFile;
     
-    /**
-     * (non-PHPdoc)
-     * @see \Slince\View\ViewInterface::render()
-     */
-    function render()
+    function __construct($viewFile)
     {
-        return ViewRender::render($this);
+        $this->_viewFile = $viewFile;
+    }
+    function getViewFile()
+    {
+        return $this->_viewFile;
     }
 }
