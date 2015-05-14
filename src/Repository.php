@@ -7,7 +7,12 @@ namespace Slince\Config;
 
 class Repository implements \ArrayAccess, \Countable
 {
-
+    /**
+     * 当前实例
+     * 
+     * @var Repository
+     */
+    private $_instance;
     /**
      * 配置的值
      *
@@ -20,6 +25,17 @@ class Repository implements \ArrayAccess, \Countable
         if (! is_null($parser)) {
             $this->_keyMap = $parser->parse();
         }
+    }
+    
+    /**
+     * 单例模式
+     */
+    function newInstance()
+    {
+        if (! $this->_instance instanceof self) {
+            $this->_instance = new self();
+        }
+        return $this->_instance;
     }
 
     /**
