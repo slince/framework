@@ -42,15 +42,18 @@ class Repository implements \ArrayAccess, \Countable
      * 添加新的配置接口或数据
      *
      * @param ParserInterface|array $data            
+     * @param string $key
      * @return void
      */
-    function merge($data)
+    function merge($data, $key = null)
     {
         if ($data instanceof ParserInterface) {
-            $this->_keyMap = array_merge($this->_keyMap, $data->parse());
-        } else {
-            $this->_keyMap = array_merge($this->_keyMap, $data);
+            $data =  $data->parse();
         }
+        if (! is_null($key)) {
+            $data = [$key => $data];
+        }
+        $this->_keyMap = array_merge($this->_keyMap, $data);
     }
 
     /**
