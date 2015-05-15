@@ -16,15 +16,12 @@ class Repository implements \ArrayAccess, \Countable
     /**
      * 配置的值
      *
-     * @var array
+     * @var DataObject
      */
-    private $_keyMap = [];
+    private $_dataObject;
 
-    function __construct(ParserInterface $parser = null)
+    function __construct()
     {
-        if (! is_null($parser)) {
-            $this->_keyMap = $parser->parse();
-        }
     }
     
     /**
@@ -59,123 +56,10 @@ class Repository implements \ArrayAccess, \Countable
     /**
      * 将当前对象中保存的值导出
      *
-     * @param ParserInterface $parser            
+     * @param FileInterface $file
      */
-    function dump(ParserInterface $parser)
+    function dump(FileInterface $file)
     {
         $parser->dump($this->_keyMap);
-    }
-
-    /**
-     * 输出当前对象中保存的配置值
-     *
-     * @return array
-     */
-    function toArray()
-    {
-        return $this->_keyMap;
-    }
-
-    /**
-     * 设置新的配置值，已存在的键值将会被覆盖
-     *
-     * @param int|string $key            
-     * @param mixed $value            
-     * @return void
-     */
-    function set($key, $value)
-    {
-        $this->_keyMap[$key] = $value;
-    }
-
-    /**
-     * 获取某个键值对应的参数
-     *
-     * @param int|string $key            
-     * @param mixed $defaultValue            
-     * @return mixed
-     */
-    function get($key, $defaultValue = null)
-    {
-        return $this->exists($key) ? $this->_keyMap[$key] : $defaultValue;
-    }
-
-    /**
-     * 判断是否存在某个键值
-     *
-     * @param int|string $key            
-     */
-    function exists($key)
-    {
-        return isset($this->_keyMap[$key]);
-    }
-
-    /**
-     * 移除已存在的键值
-     *
-     * @param mixed $key            
-     */
-    function delete($key)
-    {
-        unset($this->_keyMap[$key]);
-    }
-
-    /**
-     * 清除所有的数据
-     *
-     * @return void
-     */
-    function clear()
-    {
-        $this->_keyMap = [];
-    }
-
-    /**
-     * 实现接口方法
-     *
-     * @param mixed $offset            
-     */
-    function offsetGet($offset)
-    {
-        return $this->get($offset);
-    }
-
-    /**
-     * 实现接口方法
-     *
-     * @param mixed $offset            
-     * @param mixed $value            
-     */
-    function offsetSet($offset, $value)
-    {
-        $this->set($offset, $value);
-    }
-
-    /**
-     * 实现接口方法
-     *
-     * @param mixed $offset            
-     */
-    function offsetUnset($offset)
-    {
-        $this->delete($offset);
-    }
-
-    /**
-     * 实现接口方法
-     *
-     * @param mixed $offset            
-     */
-    function offsetExists($offset)
-    {
-        return $this->exists($offset);
-    }
-
-    /**
-     * 实现接口方法
-     */
-    function count()
-    {
-        return count($this->_keyMap);
     }
 }

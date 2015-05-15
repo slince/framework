@@ -13,13 +13,5 @@ interface ParserInterface
      * 
      * @return array
      */
-    function parse();
-
-    /**
-     * 持久化配置数据
-     *
-     * @param array $keyMap            
-     * @return boolean
-     */
-    function dump(array $keyMap);
+    function parse(FileInterface $file);
 }
