@@ -9,16 +9,4 @@ use Slince\Config\ParserInterface;
 
 abstract class AbstractParser implements ParserInterface
 {
-
-    /**
-     * 解析器条目
-     * 
-     * @var mixed
-     */
-    protected $_item;
-
-    function __construct($item)
-    {
-        $this->_item = $item;
-    }
 }

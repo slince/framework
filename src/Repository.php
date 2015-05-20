@@ -5,6 +5,9 @@
  */
 namespace Slince\Config;
 
+use Slince\Config\DataObject;
+use Slince\Config\ParserFactory;
+
 class Repository implements \ArrayAccess, \Countable
 {
     /**
@@ -13,17 +16,27 @@ class Repository implements \ArrayAccess, \Countable
      * @var Repository
      */
     private $_instance;
+    
     /**
      * 配置的值
      *
      * @var DataObject
      */
     private $_dataObject;
-
-    function __construct()
-    {
-    }
     
+    /**
+     * 解析器
+     * @var array
+     */
+    private $_parsers = [];
+
+    function __construct(FileInterface $file = null)
+    {
+        $this->_dataObject = DataObject::create();
+        if (! is_null($file)) {
+            $this->parse($file);
+        }
+    }
     /**
      * 单例模式
      */
@@ -34,7 +47,27 @@ class Repository implements \ArrayAccess, \Countable
         }
         return $this->_instance;
     }
-
+    /**
+     * 获取已知解析器
+     * @param string $name
+     */
+    function getParser($name)
+    {
+        if (! isset($this->_parsers[$name])) {
+            $this->_parsers[$name] = ParserFactory::create($name);
+        }
+        return $this->_parsers[$name];
+    }
+    
+    /**
+     * 解析文件数据
+     * @param FileInterface $file
+     */
+    function parse(FileInterface $file)
+    {
+        $this->_dataObject->merge($this->getParser($file::FILE_TYPE)->parse($file));
+    }
+    
     /**
      * 添加新的配置接口或数据
      *
@@ -45,12 +78,12 @@ class Repository implements \ArrayAccess, \Countable
     function merge($data, $key = null)
     {
         if ($data instanceof ParserInterface) {
-            $data =  $data->parse();
+            $data =  $this->getParser($data::FILE_TYPE)->parse($data);
         }
         if (! is_null($key)) {
             $data = [$key => $data];
         }
-        $this->_keyMap = array_merge($this->_keyMap, $data);
+        $this->_dataObject->merge($data);
     }
 
     /**
@@ -60,6 +93,15 @@ class Repository implements \ArrayAccess, \Countable
      */
     function dump(FileInterface $file)
     {
-        $parser->dump($this->_keyMap);
+        return $this->getParser($file::FILE_TYPE)->dump($file, $this->_dataObject->toArray());
+    }
+    
+    /**
+     * 数据对象
+     * @return DataObject
+     */
+    function getDataObject()
+    {
+        return $this->_dataObject;
     }
 }

@@ -3,7 +3,7 @@
  * slince config library
  * @author Tao <taosikai@yeah.net>
  */
-namespace Slince\Config\Format;
+namespace Slince\Config\File;
 
 class JsonFile extends AbstractFile
 {

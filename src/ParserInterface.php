@@ -14,4 +14,12 @@ interface ParserInterface
      * @return array
      */
     function parse(FileInterface $file);
+    
+    /**
+     * 将数据持久化到配置文件
+     * @param FileInterface $file
+     * @param array $data
+     */
+    function dump(FileInterface $file, array $data);
+    
 }

@@ -18,7 +18,13 @@ class DataObject implements \ArrayAccess, \Countable
     {
         $this->_data = $data;
     }
-    
+    /**
+     * 创建该实例
+     */
+    static function create()
+    {
+        return self();
+    }
     /**
      * 输出当前对象中保存的配置值
      *
@@ -51,6 +57,15 @@ class DataObject implements \ArrayAccess, \Countable
     function get($key, $defaultValue = null)
     {
         return $this->exists($key) ? $this->_data[$key] : $defaultValue;
+    }
+    
+    /**
+     * 批量合并
+     * @param array $data
+     */
+    function merge(array $data)
+    {
+        $this->_data = array_merge($this->_data, $data);
     }
 
     /**

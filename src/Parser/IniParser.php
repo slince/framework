@@ -6,28 +6,27 @@
 namespace Slince\Config\Parser;
 
 use Slince\Config\Exception\ParseException;
+use Slince\Config\FileInterface;
 
 class IniParser extends AbstractParser
 {
-    
     /**
      * (non-PHPdoc)
-     * @see \Slince\Config\Parser\AbstractParser::parse()
+     * @see \Slince\Config\ParserInterface::parse()
      */
-    function parse()
+    function parse(FileInterface $file)
     {
-        if (($data = @parse_ini_file($this->_item, true)) === false) {
-            throw new ParseException(sprintf('The file "%s" has syntax errors', $this->_item));
+        if (($data = @parse_ini_file($file->getPath(), true)) === false) {
+            throw new ParseException(sprintf('The file "%s" has syntax errors', $file->getPath()));
         } else {
             return $data;
         }
     }
-
     /**
      * (non-PHPdoc)
-     * @see \Slince\Config\Parser\AbstractParser::dump()
+     * @see \Slince\Config\ParserInterface::dump()
      */
-    function dump(array $keyMap)
+    function dump(FileInterface $file, array $data)
     {
         throw new ParseException('Not supported');
     }
