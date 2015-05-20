@@ -3,9 +3,9 @@
  * slince cache library
  * @author Tao <taosikai@yeah.net>
  */
-namespace Slince\Cache\Handler;
+namespace Slince\Cache\Storage;
 
-class MemcacheHandler extends AbstractHandler
+class MemcacheStorage extends AbstractStorage
 {
 
     /**
@@ -23,7 +23,7 @@ class MemcacheHandler extends AbstractHandler
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\HandlerInterface::set()
+     * @see \Slince\Cache\StorageInterface::set()
      */
     function set($key, $value, $duration)
     {
@@ -33,7 +33,7 @@ class MemcacheHandler extends AbstractHandler
     /**
      * (non-PHPdoc)
      * 
-     * @see \Slince\Cache\HandlerInterface::add()
+     * @see \Slince\Cache\StorageInterface::add()
      */
     function add($key, $value, $duration)
     {
@@ -43,7 +43,7 @@ class MemcacheHandler extends AbstractHandler
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\HandlerInterface::get()
+     * @see \Slince\Cache\StorageInterface::get()
      */
     function get($key)
     {
@@ -53,7 +53,7 @@ class MemcacheHandler extends AbstractHandler
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\HandlerInterface::delete()
+     * @see \Slince\Cache\StorageInterface::delete()
      */
     function delete($key)
     {
@@ -63,7 +63,7 @@ class MemcacheHandler extends AbstractHandler
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\HandlerInterface::exists()
+     * @see \Slince\Cache\StorageInterface::exists()
      */
     function exists($key)
     {
@@ -73,7 +73,7 @@ class MemcacheHandler extends AbstractHandler
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\HandlerInterface::flush()
+     * @see \Slince\Cache\StorageInterface::flush()
      */
     function flush()
     {

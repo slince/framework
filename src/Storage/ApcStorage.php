@@ -3,15 +3,15 @@
  * slince cache library
  * @author Tao <taosikai@yeah.net>
  */
-namespace Slince\Cache\Handler;
+namespace Slince\Cache\Storage;
 
-class ApcHandler extends AbstractHandler
+class ApcStorage extends AbstractStorage
 {
 
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\HandlerInterface::set()
+     * @see \Slince\Cache\StorageInterface::set()
      */
     function set($key, $value, $duration)
     {
@@ -26,7 +26,7 @@ class ApcHandler extends AbstractHandler
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\HandlerInterface::get()
+     * @see \Slince\Cache\StorageInterface::get()
      */
     function get($key)
     {
@@ -36,7 +36,7 @@ class ApcHandler extends AbstractHandler
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\HandlerInterface::delete()
+     * @see \Slince\Cache\StorageInterface::delete()
      */
     function delete($key)
     {
@@ -46,7 +46,7 @@ class ApcHandler extends AbstractHandler
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\HandlerInterface::exists()
+     * @see \Slince\Cache\StorageInterface::exists()
      */
     function exists($key)
     {
@@ -56,7 +56,7 @@ class ApcHandler extends AbstractHandler
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\HandlerInterface::flush()
+     * @see \Slince\Cache\StorageInterface::flush()
      */
     function flush()
     {

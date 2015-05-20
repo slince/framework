@@ -5,7 +5,7 @@
  */
 namespace Slince\Cache;
 
-interface HandlerInterface
+interface StorageInterface
 {
 
     /**

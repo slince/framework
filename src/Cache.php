@@ -9,11 +9,11 @@ class Cache
 {
 
     /**
-     * 处理句柄
+     * 存储接口
      *
-     * @var HandlerInterface
+     * @var StorageInterface
      */
-    protected $_handler;
+    protected $_storage;
 
     /**
      * 默认的缓存时间
@@ -22,29 +22,29 @@ class Cache
      */
     protected $_duration = 3600;
 
-    function __construct(HandlerInterface $handler)
+    function __construct(StorageInterface $storage)
     {
-        $this->setHandler($handler);
+        $this->setStorage($storage);
     }
 
     /**
      * 设置处理器
      *
-     * @param HandlerInterface $handler            
+     * @param StorageInterface $storage            
      */
-    function setHandler(HandlerInterface $handler)
+    function setStorage(StorageInterface $storage)
     {
-        $this->_handler = $handler;
+        $this->_storage = $storage;
     }
 
     /**
      * 获取处理器
      *
-     * @return HandlerInterface
+     * @return StorageInterface
      */
-    function getHandler()
+    function getStorage()
     {
-        return $this->_handler;
+        return $this->_storage;
     }
 
     /**
@@ -80,7 +80,7 @@ class Cache
         if (is_null($duration)) {
             $duration = $this->_duration;
         }
-        return $this->_handler->set($key, $value, $duration);
+        return $this->_storage->set($key, $value, $duration);
     }
 
     /**
@@ -96,7 +96,7 @@ class Cache
         if (is_null($duration)) {
             $duration = $this->_duration;
         }
-        return $this->_handler->add($key, $value, $duration);
+        return $this->_storage->add($key, $value, $duration);
     }
 
     /**
@@ -107,7 +107,7 @@ class Cache
      */
     function exists($key)
     {
-        return $this->_handler->exists($key);
+        return $this->_storage->exists($key);
     }
 
     /**
@@ -119,7 +119,7 @@ class Cache
      */
     function get($key, $defaultValue = null)
     {
-        $value = $this->_handler->get($key);
+        $value = $this->_storage->get($key);
         return ($value === false) ? $defaultValue : $value;
     }
 
@@ -131,7 +131,7 @@ class Cache
      */
     function delete($key)
     {
-        return $this->_handler->delete($key);
+        return $this->_storage->delete($key);
     }
 
     /**
@@ -139,6 +139,6 @@ class Cache
      */
     function flush()
     {
-        $this->_handler->flush();
+        $this->_storage->flush();
     }
 }
