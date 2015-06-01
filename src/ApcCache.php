@@ -18,6 +18,11 @@ class ApcCache extends AbstractCache
         return apc_store($key, $value, $duration);
     }
 
+    /**
+     * (non-PHPdoc)
+     * 
+     * @see \Slince\Cache\AbstractCache::_doAdd()
+     */
     protected function _doAdd($key, $value, $duration)
     {
         return apc_add($key, $value, $duration);

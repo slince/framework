@@ -5,7 +5,7 @@
  */
 namespace Slince\Cache;
 
-class MemcachedCache extends AbstractStorage
+class MemcachedCache extends AbstractCache
 {
 
     /**
@@ -22,10 +22,10 @@ class MemcachedCache extends AbstractStorage
 
     /**
      * (non-PHPdoc)
-     *
-     * @see \Slince\Cache\StorageInterface::set()
+     * 
+     * @see \Slince\Cache\StorageInterface::_doSet()
      */
-    function set($key, $value, $duration)
+    protected function _doSet($key, $value, $duration)
     {
         return $this->_memcached->set($key, $value, false, time() + $duration);
     }
