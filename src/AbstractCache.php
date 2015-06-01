@@ -1,19 +1,12 @@
 <?php
 /**
- * slince cache component
+ * slince cache library
  * @author Tao <taosikai@yeah.net>
  */
 namespace Slince\Cache;
 
-class Cache
+abstract class AbstractCache implements StorageInterface
 {
-
-    /**
-     * 存储接口
-     *
-     * @var StorageInterface
-     */
-    protected $_storage;
 
     /**
      * 默认的缓存时间
@@ -22,35 +15,10 @@ class Cache
      */
     protected $_duration = 3600;
 
-    function __construct(StorageInterface $storage)
-    {
-        $this->setStorage($storage);
-    }
-
-    /**
-     * 设置处理器
-     *
-     * @param StorageInterface $storage            
-     */
-    function setStorage(StorageInterface $storage)
-    {
-        $this->_storage = $storage;
-    }
-
-    /**
-     * 获取处理器
-     *
-     * @return StorageInterface
-     */
-    function getStorage()
-    {
-        return $this->_storage;
-    }
-
     /**
      * 设置默认的缓存时间
      *
-     * @param int $duration            
+     * @param int $duration
      */
     function setDuration($duration)
     {
@@ -80,7 +48,7 @@ class Cache
         if (is_null($duration)) {
             $duration = $this->_duration;
         }
-        return $this->_storage->set($key, $value, $duration);
+        return $this->_doSet($key, $value, $duration);
     }
 
     /**
@@ -96,7 +64,7 @@ class Cache
         if (is_null($duration)) {
             $duration = $this->_duration;
         }
-        return $this->_storage->add($key, $value, $duration);
+        return $this->_doAdd($key, $value, $duration);
     }
 
     /**
@@ -107,7 +75,7 @@ class Cache
      */
     function exists($key)
     {
-        return $this->_storage->exists($key);
+        return $this->_doExists($key);
     }
 
     /**
@@ -119,7 +87,7 @@ class Cache
      */
     function get($key, $defaultValue = null)
     {
-        $value = $this->_storage->get($key);
+        $value = $this->_doGet($key);
         return ($value === false) ? $defaultValue : $value;
     }
 
@@ -131,7 +99,7 @@ class Cache
      */
     function delete($key)
     {
-        return $this->_storage->delete($key);
+        return $this->_doDelete($key);
     }
 
     /**
@@ -139,6 +107,14 @@ class Cache
      */
     function flush()
     {
-        $this->_storage->flush();
+        $this->_doFlush();
+    }
+    
+    protected function _doAdd($key, $value, $duration)
+    {
+        if (! $this->_doExists($key)) {
+            return $this->_doSet($key, $value, $duration);
+        }
+        return false;
     }
 }
