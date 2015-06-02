@@ -11,7 +11,7 @@ abstract class AbstractFile implements FileInterface
 {
 
     /**
-     * 解析器条目
+     * 文件地址
      *
      * @var string
      */
