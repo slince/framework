@@ -3,9 +3,9 @@
  * slince cache library
  * @author Tao <taosikai@yeah.net>
  */
-namespace Slince\Cache\Storage;
+namespace Slince\Cache;
 
-class MemcacheStorage extends AbstractStorage
+class memcacheCache extends AbstractCache
 {
 
     /**
@@ -23,19 +23,19 @@ class MemcacheStorage extends AbstractStorage
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\StorageInterface::set()
+     * @see \Slince\Cache\StorageInterface::_doSet()
      */
-    function set($key, $value, $duration)
+    protected function _doSet($key, $value, $duration)
     {
         return $this->_memcache->set($key, $value, false, time() + $duration);
     }
 
     /**
      * (non-PHPdoc)
-     * 
-     * @see \Slince\Cache\StorageInterface::add()
+     *
+     * @see \Slince\Cache\StorageInterface::_doAdd()
      */
-    function add($key, $value, $duration)
+    protected function _doAdd($key, $value, $duration)
     {
         return $this->_memcache->add($key, $value, false, time() + $duration);
     }
@@ -43,9 +43,9 @@ class MemcacheStorage extends AbstractStorage
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\StorageInterface::get()
+     * @see \Slince\Cache\StorageInterface::_doGet()
      */
-    function get($key)
+    protected function _doGet($key)
     {
         return $this->_memcache->get($key);
     }
@@ -53,19 +53,9 @@ class MemcacheStorage extends AbstractStorage
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\StorageInterface::delete()
+     * @see \Slince\Cache\StorageInterface::_doExists()
      */
-    function delete($key)
-    {
-        return $this->_memcache->delete($key);
-    }
-
-    /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Cache\StorageInterface::exists()
-     */
-    function exists($key)
+    protected function _doExists($key)
     {
         return $this->get($key) !== false;
     }
@@ -73,9 +63,19 @@ class MemcacheStorage extends AbstractStorage
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\StorageInterface::flush()
+     * @see \Slince\Cache\StorageInterface::_doDelete()
      */
-    function flush()
+    protected function _doDelete($key)
+    {
+        return $this->_memcache->delete($key);
+    }
+
+    /**
+     * (non-PHPdoc)
+     *
+     * @see \Slince\Cache\StorageInterface::_doFlush()
+     */
+    protected function _doFlush()
     {
         return $this->_memcache->flush();
     }

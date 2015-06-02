@@ -12,7 +12,7 @@ class ArrayCache extends AbstractCache
 
     /**
      * (non-PHPdoc)
-     * 
+     *
      * @see \Slince\Cache\StorageInterface::_doSet()
      */
     protected function _doSet($key, $value, $duration)
@@ -23,7 +23,7 @@ class ArrayCache extends AbstractCache
 
     /**
      * (non-PHPdoc)
-     * 
+     *
      * @see \Slince\Cache\StorageInterface::_doGet()
      */
     protected function _doGet($key)
@@ -33,7 +33,7 @@ class ArrayCache extends AbstractCache
 
     /**
      * (non-PHPdoc)
-     * 
+     *
      * @see \Slince\Cache\StorageInterface::_doGet()
      */
     protected function _doExists($key)
@@ -43,7 +43,7 @@ class ArrayCache extends AbstractCache
 
     /**
      * (non-PHPdoc)
-     * 
+     *
      * @see \Slince\Cache\StorageInterface::_doDelete()
      */
     protected function _doDelete($key)
@@ -54,7 +54,7 @@ class ArrayCache extends AbstractCache
 
     /**
      * (non-PHPdoc)
-     * 
+     *
      * @see \Slince\Cache\StorageInterface::_doFlush()
      */
     protected function _doFlush()
