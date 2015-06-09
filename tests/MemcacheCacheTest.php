@@ -1,80 +1,79 @@
 <?php
-use Slince\Cache\Cache;
-use Slince\Cache\Handler\MemcacheHandler;
+use Slince\Cache\MemcacheCache;
 
-class MemcacheCacheTest extends \PHPUnit_Framework_TestCase
+class _memcacheCacheTest extends \PHPUnit_Framework_TestCase
 {
 
-    private $_fixture;
+    private $_memcacheCache;
 
     function setUp()
     {
         $memcache = new \Memcache();
         $memcache->connect('127.0.0.1', 11211);
-        $this->_fixture = new Cache(new MemcacheHandler($memcache));
+        $this->_memcacheCache = new MemcacheCache($memcache);
     }
 
     function teerDown()
     {
-        unset($this->_fixture);
+        unset($this->_memcacheCache);
     }
 
     function testSet()
     {
-        $res = $this->_fixture->set('key1', 'value1');
+        $res = $this->_memcacheCache->set('key1', 'value1');
         $this->assertTrue($res);
     }
 
     function testAdd()
     {
-        $res = $this->_fixture->add('key2', 'value2');
+        $res = $this->_memcacheCache->add('key2', 'value2');
         $this->assertTrue($res);
-        $res = $this->_fixture->add('key2', 'value2');
+        $res = $this->_memcacheCache->add('key2', 'value2');
         $this->assertFalse($res);
     }
 
     function testGet()
     {
         $value = 'value3';
-        $this->_fixture->set('key3', $value);
-        $var = $this->_fixture->get('key3');
+        $this->_memcacheCache->set('key3', $value);
+        $var = $this->_memcacheCache->get('key3');
         $this->assertEquals($value, $var);
     }
 
     function testDelete()
     {
         $value = 'value4';
-        $this->_fixture->set('key4', $value);
-        $val = $this->_fixture->get('key4');
+        $this->_memcacheCache->set('key4', $value);
+        $val = $this->_memcacheCache->get('key4');
         $this->assertEquals($value, $val);
-        $this->_fixture->delete('key4');
-        $val = $this->_fixture->get('key4');
+        $this->_memcacheCache->delete('key4');
+        $val = $this->_memcacheCache->get('key4');
         $this->assertEmpty($val);
     }
 
     function testExists()
     {
         $value = 'value7';
-        $this->_fixture->set('key7', $value);
-        $res = $this->_fixture->exists('key7');
+        $this->_memcacheCache->set('key7', $value);
+        $res = $this->_memcacheCache->exists('key7');
         $this->assertTrue($res);
-        $this->_fixture->delete('key7');
-        $res = $this->_fixture->exists('key7');
+        $this->_memcacheCache->delete('key7');
+        $res = $this->_memcacheCache->exists('key7');
         $this->assertFalse($res);
     }
     
     function testFlush()
     {
         $value = 'value5';
-        $this->_fixture->set('key5', $value);
-        $this->_fixture->set('key6', $value);
-        $val1 = $this->_fixture->get('key5');
-        $val2 = $this->_fixture->get('key6');
+        $this->_memcacheCache->set('key5', $value);
+        $this->_memcacheCache->set('key6', $value);
+        $val1 = $this->_memcacheCache->get('key5');
+        $val2 = $this->_memcacheCache->get('key6');
         $this->assertEquals($value, $val1);
         $this->assertEquals($value, $val2);
-        $this->_fixture->flush();
-        $val1 = $this->_fixture->get('key5');
-        $val2 = $this->_fixture->get('key6');
+        $this->_memcacheCache->flush();
+        $val1 = $this->_memcacheCache->get('key5');
+        $val2 = $this->_memcacheCache->get('key6');
         $this->assertEmpty($val1);
         $this->assertEmpty($val2);
     }

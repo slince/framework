@@ -5,7 +5,7 @@
  */
 namespace Slince\Cache;
 
-abstract class AbstractCache implements StorageInterface
+abstract class AbstractCache extends AbstractStorage implements CacheInterface
 {
 
     /**
@@ -18,7 +18,7 @@ abstract class AbstractCache implements StorageInterface
     /**
      * 设置默认的缓存时间
      *
-     * @param int $duration
+     * @param int $duration            
      */
     function setDuration($duration)
     {
@@ -109,7 +109,7 @@ abstract class AbstractCache implements StorageInterface
     {
         $this->_doFlush();
     }
-    
+
     protected function _doAdd($key, $value, $duration)
     {
         if (! $this->_doExists($key)) {

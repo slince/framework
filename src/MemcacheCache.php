@@ -77,6 +77,8 @@ class memcacheCache extends AbstractCache
      */
     protected function _doExists($key)
     {
+        $this->_memcache->delete($key);
+        var_dump($this->get($key));exit;
         return $this->get($key) !== false;
     }
 

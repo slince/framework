@@ -35,7 +35,7 @@ class FileCache extends AbstractCache
      */
     function setPath($path)
     {
-        $path = rtrim($path, '\\/') . '';
+        $path = rtrim($path, '\\/') . '/';
         $this->_path = str_replace('\\', '/', $path);
     }
 
@@ -72,10 +72,10 @@ class FileCache extends AbstractCache
      */
     protected function _doSet($key, $value, $duration)
     {
-        $filePath = $this->_getPath($key);
+        $filePath = $this->_getFilePath($key);
         $expire = ($duration == 0) ? 0 : time() + $duration;
         $data = $expire . "\r\n" . serialize($value);
-        return file_put_contents($filePath, $data);
+        return @file_put_contents($filePath, $data) !== false;
     }
 
     /**
@@ -85,7 +85,7 @@ class FileCache extends AbstractCache
      */
     protected function _doGet($key)
     {
-        $filePath = $this->_getPath($key);
+        $filePath = $this->_getFilePath($key);
         if (is_file($filePath)) {
             list ($expire, $value) = explode("\r\n", @file_get_contents($filePath));
             if ($expire == 0 || time() < $expire) {
@@ -104,7 +104,7 @@ class FileCache extends AbstractCache
      */
     protected function _doExists($key)
     {
-        return file_exists($this->_getPath($key));
+        return file_exists($this->_getFilePath($key));
     }
 
     /**
@@ -114,7 +114,7 @@ class FileCache extends AbstractCache
      */
     protected function _doDelete($key)
     {
-        return @unlink($this->_getPath($key));
+        return @unlink($this->_getFilePath($key));
     }
 
     /**
@@ -135,8 +135,8 @@ class FileCache extends AbstractCache
      * @param string $key            
      * @return string
      */
-    private function _getPath($key)
+    private function _getFilePath($key)
     {
-        return $this->_path . md5($key);
+        return $this->_path . md5($key) . $this->_ext;
     }
 }
