@@ -1,6 +1,5 @@
 <?php
-use Slince\Cache\Cache;
-use Slince\Cache\Handler\FileHandler;
+use Slince\Cache\FileCache;
 
 class FileCacheTest extends \PHPUnit_Framework_TestCase
 {
@@ -9,14 +8,14 @@ class FileCacheTest extends \PHPUnit_Framework_TestCase
 
     function setUp()
     {
-        $this->_fixture = new Cache(new FileHandler(__DIR__ . '/tmp/'));
+        $this->_fixture = new FileCache(__DIR__ . '/tmp/');
     }
     function teerDown()
     {
         unset($this->_fixture);
     }
 
-    function testSet()
+    function testSet() 
     {
         $res = $this->_fixture->set('key1', 'value1');
         $this->assertTrue($res);

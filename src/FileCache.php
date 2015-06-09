@@ -5,9 +5,6 @@
  */
 namespace Slince\Cache;
 
-use Slince\Filesystem\File;
-use Slince\Filesystem\Directory;
-
 class FileCache extends AbstractCache
 {
 
@@ -18,9 +15,16 @@ class FileCache extends AbstractCache
      */
     private $_path;
 
-    function __construct($path)
+    /**
+     * 缓存文件扩展名
+     * @var string
+     */
+    private $_ext;
+
+    function __construct($path, $ext = '')
     {
         $this->_path = $path;
+        $this->_ext = $ext;
     }
 
     /**
@@ -30,10 +34,10 @@ class FileCache extends AbstractCache
      */
     protected function _doSet($key, $value, $duration)
     {
-        $file = new File($this->_getPath($key));
+        $filePath = $this->_getPath($key);
         $expire = ($duration == 0) ? 0 : time() + $duration;
-        $str = $expire . "\r\n" . serialize($value);
-        return $file->resave($str);
+        $data = $expire . "\r\n" . serialize($value);
+        return file_put_contents($filePath, $data);
     }
 
     /**
@@ -43,13 +47,13 @@ class FileCache extends AbstractCache
      */
     protected function _doGet($key)
     {
-        $file = new File($this->_getPath($key));
-        if ($file->isFile()) {
-            list ($expire, $value) = explode("\r\n", $file->getContents());
+        $filePath = $this->_getPath($key);
+        if (is_file($filePath)) {
+            list ($expire, $value) = explode("\r\n", file_get_contents($filePath));
             if ($expire == 0 || time() < $expire) {
                 return @unserialize($value);
             } else {
-                $file->delete();
+                @unlink($filePath);
             }
         }
         return false;
@@ -82,8 +86,9 @@ class FileCache extends AbstractCache
      */
     protected function _doFlush()
     {
-        $directory = new Directory($this->_path);
-        $directory->clear();
+        foreach (glob("{$this->_path}*{$this->_ext}") as $filename) {
+            @unlink($filename);
+        }
     }
 
     /**
