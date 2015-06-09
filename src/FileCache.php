@@ -17,14 +17,52 @@ class FileCache extends AbstractCache
 
     /**
      * 缓存文件扩展名
+     *
      * @var string
      */
     private $_ext;
 
     function __construct($path, $ext = '')
     {
-        $this->_path = $path;
+        $this->setPath($path);
         $this->_ext = $ext;
+    }
+
+    /**
+     * 设置缓存目录
+     *
+     * @param string $path            
+     */
+    function setPath($path)
+    {
+        $path = rtrim($path, '\\/') . '';
+        $this->_path = str_replace('\\', '/', $path);
+    }
+
+    /**
+     * 获取缓存目录
+     */
+    function getPath()
+    {
+        return $this->_path;
+    }
+
+    /**
+     * 设置缓存文件扩展名
+     *
+     * @param string $ext            
+     */
+    function setExt($ext)
+    {
+        $this->_ext = $ext;
+    }
+
+    /**
+     * 获取缓存文件扩展名
+     */
+    function getExt()
+    {
+        return $this->_ext;
     }
 
     /**
@@ -49,7 +87,7 @@ class FileCache extends AbstractCache
     {
         $filePath = $this->_getPath($key);
         if (is_file($filePath)) {
-            list ($expire, $value) = explode("\r\n", file_get_contents($filePath));
+            list ($expire, $value) = explode("\r\n", @file_get_contents($filePath));
             if ($expire == 0 || time() < $expire) {
                 return @unserialize($value);
             } else {

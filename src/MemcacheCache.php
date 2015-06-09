@@ -21,6 +21,26 @@ class memcacheCache extends AbstractCache
     }
 
     /**
+     * 设置memcache
+     *
+     * @param \Memcache $memcache            
+     */
+    function setMemcache(\Memcache $memcache)
+    {
+        $this->_memcache = $memcache;
+    }
+
+    /**
+     * 获取memcache
+     *
+     * @return Memcache
+     */
+    function getMemcache()
+    {
+        return $this->_memcache;
+    }
+
+    /**
      * (non-PHPdoc)
      *
      * @see \Slince\Cache\StorageInterface::_doSet()
