@@ -5,7 +5,7 @@
  */
 namespace Slince\Config\File;
 
-class PhpArrayFile extends AbstractFile
+class IniFile extends AbstractFile
 {
-    const FILE_TYPE = 'php';
+    const FILE_TYPE = 'ini';
 }

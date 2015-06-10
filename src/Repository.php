@@ -7,8 +7,9 @@ namespace Slince\Config;
 
 use Slince\Config\DataObject;
 use Slince\Config\ParserFactory;
+use Slince\Config\File\FileInterface;
 
-class Repository implements \ArrayAccess, \Countable
+class Repository
 {
     /**
      * 当前实例
@@ -77,7 +78,7 @@ class Repository implements \ArrayAccess, \Countable
      */
     function merge($data, $key = null)
     {
-        if ($data instanceof ParserInterface) {
+        if ($data instanceof FileInterface) {
             $data =  $this->getParser($data::FILE_TYPE)->parse($data);
         }
         if (! is_null($key)) {

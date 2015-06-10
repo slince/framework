@@ -6,14 +6,14 @@
 namespace Slince\Config\Parser;
 
 use Slince\Config\Exception\ParseException;
-use Slince\Config\FileInterface;
-
+use Slince\Config\File\FileInterface;
 
 class JsonParser extends AbstractParser
 {
-    
+
     /**
      * (non-PHPdoc)
+     * 
      * @see \Slince\Config\ParserInterface::parse()
      */
     function parse(FileInterface $file)
@@ -27,11 +27,12 @@ class JsonParser extends AbstractParser
 
     /**
      * (non-PHPdoc)
+     * 
      * @see \Slince\Config\ParserInterface::dump()
      */
     function dump(FileInterface $file, array $data)
     {
-       $string = json_encode($data);
-       return @file_put_contents($file->getPath(), $string); 
+        $string = json_encode($data);
+        return @file_put_contents($file->getPathWithoutException(), $string);
     }
 }

@@ -5,23 +5,21 @@
  */
 namespace Slince\Config;
 
-use Slince\Config\File;
-use Slince\Config\Parser;
-
 class ParserFactory
 {
+
     static function create($type)
     {
         $class = '';
         switch ($type) {
-            case File\IniFile::FILE_TYPE:
-                $class = 'Parser\\IniParser';
+            case \Slince\Config\File\IniFile::FILE_TYPE:
+                $class = '\\Slince\Config\Parser\\IniParser';
                 break;
-            case File\JsonFile::FILE_TYPE:
-                $class = 'Parser\\JsonParser';
+            case \Slince\Config\File\JsonFile::FILE_TYPE:
+                $class = '\\Slince\Config\Parser\\JsonParser';
                 break;
-            case File\PhpFile::FILE_TYPE:
-                $class = 'Parser\\PhpParser';
+            case \Slince\Config\File\PhpFile::FILE_TYPE:
+                $class = '\\Slince\Config\Parser\\PhpParser';
                 break;
             default:
                 throw new \Exception('Unsupported File Type');

@@ -14,7 +14,7 @@ class DataObject implements \ArrayAccess, \Countable
      */
     private $_data = [];
 
-    function __construct($data)
+    function __construct($data = [])
     {
         $this->_data = $data;
     }
@@ -23,7 +23,7 @@ class DataObject implements \ArrayAccess, \Countable
      */
     static function create()
     {
-        return self();
+        return new self();
     }
     /**
      * 输出当前对象中保存的配置值

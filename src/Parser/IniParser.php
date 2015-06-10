@@ -6,12 +6,14 @@
 namespace Slince\Config\Parser;
 
 use Slince\Config\Exception\ParseException;
-use Slince\Config\FileInterface;
+use Slince\Config\File\FileInterface;
 
 class IniParser extends AbstractParser
 {
+
     /**
      * (non-PHPdoc)
+     * 
      * @see \Slince\Config\ParserInterface::parse()
      */
     function parse(FileInterface $file)
@@ -22,8 +24,10 @@ class IniParser extends AbstractParser
             return $data;
         }
     }
+
     /**
      * (non-PHPdoc)
+     * 
      * @see \Slince\Config\ParserInterface::dump()
      */
     function dump(FileInterface $file, array $data)

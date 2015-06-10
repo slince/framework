@@ -48,4 +48,13 @@ abstract class AbstractFile implements FileInterface
         }
         return $this->_path;
     }
+
+    /**
+     * (non-PHPdoc)
+     * @see \Slince\Config\File\FileInterface::getPathWithoutException()
+     */
+    function getPathWithoutException()
+    {
+        return $this->_path;
+    }
 }
