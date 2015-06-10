@@ -68,7 +68,7 @@ class FileCache extends AbstractCache
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\StorageInterface::_doSet()
+     * @see \Slince\Cache\AbstractStorage::_doSet()
      */
     protected function _doSet($key, $value, $duration)
     {
@@ -81,7 +81,7 @@ class FileCache extends AbstractCache
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\StorageInterface::_doGet()
+     * @see \Slince\Cache\AbstractStorage::_doGet()
      */
     protected function _doGet($key)
     {
@@ -100,7 +100,7 @@ class FileCache extends AbstractCache
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\StorageInterface::_doExists()
+     * @see \Slince\Cache\AbstractStorage::_doExists()
      */
     protected function _doExists($key)
     {
@@ -110,7 +110,7 @@ class FileCache extends AbstractCache
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\StorageInterface::_doDelete()
+     * @see \Slince\Cache\AbstractStorage::_doDelete()
      */
     protected function _doDelete($key)
     {
@@ -120,7 +120,7 @@ class FileCache extends AbstractCache
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\StorageInterface::_doFlush()
+     * @see \Slince\Cache\AbstractStorage::_doFlush()
      */
     protected function _doFlush()
     {

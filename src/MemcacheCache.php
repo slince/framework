@@ -43,7 +43,7 @@ class memcacheCache extends AbstractCache
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\StorageInterface::_doSet()
+     * @see \Slince\Cache\AbstractStorage::_doSet()
      */
     protected function _doSet($key, $value, $duration)
     {
@@ -53,7 +53,7 @@ class memcacheCache extends AbstractCache
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\StorageInterface::_doAdd()
+     * @see \Slince\Cache\AbstractStorage::_doAdd()
      */
     protected function _doAdd($key, $value, $duration)
     {
@@ -63,29 +63,31 @@ class memcacheCache extends AbstractCache
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\StorageInterface::_doGet()
+     * @see \Slince\Cache\AbstractStorage::_doGet()
      */
     protected function _doGet($key)
     {
-        return $this->_memcache->get($key);
+        $val = $this->_memcache->get($key);
+        if (is_null($val)) {
+            $val = false;
+        }
+        return $val;
     }
 
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\StorageInterface::_doExists()
+     * @see \Slince\Cache\AbstractStorage::_doExists()
      */
     protected function _doExists($key)
     {
-        $this->_memcache->delete($key);
-        var_dump($this->get($key));exit;
-        return $this->get($key) !== false;
+        return $this->_doGet($key) !== false;
     }
 
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\StorageInterface::_doDelete()
+     * @see \Slince\Cache\AbstractStorage::_doDelete()
      */
     protected function _doDelete($key)
     {
@@ -95,7 +97,7 @@ class memcacheCache extends AbstractCache
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\StorageInterface::_doFlush()
+     * @see \Slince\Cache\AbstractStorage::_doFlush()
      */
     protected function _doFlush()
     {

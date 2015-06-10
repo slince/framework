@@ -26,6 +26,7 @@ class _memcacheCacheTest extends \PHPUnit_Framework_TestCase
 
     function testAdd()
     {
+        $this->_memcacheCache->delete('key2');
         $res = $this->_memcacheCache->add('key2', 'value2');
         $this->assertTrue($res);
         $res = $this->_memcacheCache->add('key2', 'value2');
@@ -36,8 +37,8 @@ class _memcacheCacheTest extends \PHPUnit_Framework_TestCase
     {
         $value = 'value3';
         $this->_memcacheCache->set('key3', $value);
-        $var = $this->_memcacheCache->get('key3');
-        $this->assertEquals($value, $var);
+        $val = $this->_memcacheCache->get('key3');
+        $this->assertEquals($value, $val);
     }
 
     function testDelete()
@@ -59,6 +60,7 @@ class _memcacheCacheTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($res);
         $this->_memcacheCache->delete('key7');
         $res = $this->_memcacheCache->exists('key7');
+        $val = $this->_memcacheCache->get('key7');
         $this->assertFalse($res);
     }
     
