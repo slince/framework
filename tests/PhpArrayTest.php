@@ -1,37 +1,39 @@
 <?php
 
 use Slince\Config\Repository;
-use Slince\Config\Parser\PhpArrayParser;
+use Slince\Config\File\PhpFile;
 
 class PhpArrayTest extends \PHPUnit_Framework_TestCase
 {
-    private $_fixture;
+    private $_config;
+    
     function setUp()
     {
-        $this->_fixture = new Repository();
+        $this->_config = Repository::newInstance();
     }
     function tearDown()
     {
-        unset($this->_fixture);
+        unset($this->_config);
     }
     function testMerge()
     {
-        $this->_fixture->merge(new PhpArrayParser(__DIR__ . '/config/config.php'));
-        $this->assertCount(4, $this->_fixture);
-        $this->_fixture->merge(new PhpArrayParser(__DIR__ . '/config/config2.php'));
-        $this->assertCount(6, $this->_fixture);
+        $this->_config->merge(new PhpFile(__DIR__ . '/config/config.php'));
+        $this->assertCount(4, $this->_config->getDataObject());
+        $this->_config->merge(new PhpFile(__DIR__ . '/config/config2.php'));
+        $this->assertCount(6, $this->_config->getDataObject());
     }
     
     function testException()
     {
         $this->setExpectedException('Slince\Config\Exception\ParseException');
-        $this->_fixture->merge(new PhpArrayParser(__DIR__ . '/config/config3.php'));
+        $this->_config->merge(new PhpFile(__DIR__ . '/config/config3.php'));
     }
     
     function testDump()
     {
-        $this->_fixture->merge(new PhpArrayParser(__DIR__ . '/config/config.php'));
-        $this->_fixture['key5'] = 'value5';
-        $this->_fixture->dump(new PhpArrayParser(__DIR__ . '/config/config-test.php'));
+        $this->_config->getDataObject()->flush();
+        $this->_config->merge(new PhpFile(__DIR__ . '/config/config.php'));
+        $this->_config->getDataObject()->set('key5', 'value5');
+        $this->_config->dump(new PhpFile(__DIR__ . '/config/config-dump.php'));
     }
 }

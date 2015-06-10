@@ -15,7 +15,7 @@ class Repository implements \ArrayAccess, \Countable
      * 
      * @var Repository
      */
-    private $_instance;
+    static private $_instance;
     
     /**
      * 配置的值
@@ -40,12 +40,12 @@ class Repository implements \ArrayAccess, \Countable
     /**
      * 单例模式
      */
-    function newInstance()
+    static function newInstance()
     {
-        if (! $this->_instance instanceof self) {
-            $this->_instance = new self();
+        if (! self::$_instance instanceof self) {
+            self::$_instance = new self();
         }
-        return $this->_instance;
+        return self::$_instance;
     }
     /**
      * 获取已知解析器

@@ -5,10 +5,14 @@
  */
 namespace Slince\Config\File;
 
-use Slince\Config\FileInterface;
-
 abstract class AbstractFile implements FileInterface
 {
+
+    /**
+     * 文件类型
+     * @var string
+     */
+    const FILE_TYPE = '';
 
     /**
      * 文件地址
@@ -22,11 +26,21 @@ abstract class AbstractFile implements FileInterface
         $this->_path = $path;
     }
 
+    /**
+     * (non-PHPdoc)
+     * 
+     * @see \Slince\Config\FileInterface::setPath()
+     */
     function setPath($path)
     {
         $this->_path = $path;
     }
 
+    /**
+     * (non-PHPdoc)
+     * 
+     * @see \Slince\Config\FileInterface::getPath()
+     */
     function getPath()
     {
         if (! is_file($this->_path)) {

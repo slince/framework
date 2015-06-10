@@ -93,7 +93,7 @@ class DataObject implements \ArrayAccess, \Countable
      *
      * @return void
      */
-    function clear()
+    function flush()
     {
         $this->_data = [];
     }

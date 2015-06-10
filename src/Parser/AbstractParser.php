@@ -5,8 +5,6 @@
  */
 namespace Slince\Config\Parser;
 
-use Slince\Config\ParserInterface;
-
 abstract class AbstractParser implements ParserInterface
 {
 }
