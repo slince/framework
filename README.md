@@ -32,34 +32,34 @@
 
     //client.php
     $repository = new Slince\Config\Repository;
-    $phpParser = new Slince\Config\Parser\PhpArrayParser('config.php');
-    $repository->merge($phpParser);
-    $repository->merge(new Slince\Config\Parser\JsonParser('config.json'));
-    $repository->merge(new Slince\Config\Parser\IniParser('config.ini'));
+    $repository->merge(new PhpFile(__DIR__ . '/config/config.php'));
+    $repository->merge(new JsonFile('config.json'));
+    $repository->merge(new IniFile('config.ini'));
     
     //获取参数,键值不存在时会得到默认值，null；get方法支持自定义默认值
-    echo $repository->get('key1');
-    echo $repository['key2'];
+    $data = $repository->getDataObject();
+    echo $data->get('key1');
+    echo $data['key2'];
     
     //设置参数
-    $repository->set('key7', 'val7');
-    $repository['key8'] = 'val8';
+    $data->set('key7', 'val7');
+    $data['key8'] = 'val8';
     
     //判断键值是否存在
-    if ($repository->exists('key9')) {
+    if ($data->exists('key9')) {
         //***
     }
-    if (isset($repository['key9'])) {
+    if (isset($data['key9'])) {
         //***
     }
     
     //删除键值
-    $repository->delete('key8');
-    unset($repository['key8']);
+    $data->delete('key8');
+    unset($data['key8']);
     
     //将配置写回到config.php中
-    $repository->dump($phpParser);
+    $repository->dump(new PhpFile(__DIR__ . '/config/config-dump.php'));
 
     //清空配置
-    $repository->clear();
+    $data->flush();
     
