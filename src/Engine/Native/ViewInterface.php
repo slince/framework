@@ -1,6 +1,6 @@
 <?php
 /**
- * slince view component
+ * slince view library
  * @author Tao <taosikai@yeah.net>
  */
 namespace Slince\View;
@@ -8,7 +8,8 @@ namespace Slince\View;
 interface ViewInterface
 {
 
-    function setViewPath($path);
-
-    function getViewPath();
+    /**
+     * 渲染视图
+     */
+    function render();
 }
