@@ -7,6 +7,7 @@ namespace Slince\View;
 
 class View implements ViewInterface
 {
+
     protected $_viewPath;
     
     function setViewPath($path)
