@@ -1,9 +1,9 @@
 <?php
 /**
- * slince view component
+ * slince view library
  * @author Tao <taosikai@yeah.net>
  */
-namespace Slince\View;
+namespace Slince\View\Engine\Native;
 
 use Slince\View\Exception\ViewException;
 use Slince\View\Exception\ViewFileNotExistsException;

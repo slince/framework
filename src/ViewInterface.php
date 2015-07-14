@@ -5,7 +5,7 @@
  */
 namespace Slince\View;
 
-interface ViewInterface
+interface ViewManagerInterface
 {
 
     function setViewPath($path);

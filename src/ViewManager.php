@@ -5,7 +5,7 @@
  */
 namespace Slince\View;
 
-class View implements ViewInterface
+class ViewManager implements ViewManagerInterface
 {
 
     protected $_viewPath;
