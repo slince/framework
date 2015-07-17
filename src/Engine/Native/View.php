@@ -26,13 +26,6 @@ class View extends AbstractView
     private $_elements;
 
     /**
-     * 局部视图位置
-     *
-     * @var string
-     */
-    private $_elementPath;
-
-    /**
      * 使用的布局
      *
      * @var string
@@ -55,16 +48,6 @@ class View extends AbstractView
         $this->_viewRender = $viewRender;
     }
 
-    /**
-     * 设置局部视图文件位置
-     *
-     * @param string $path            
-     */
-    function setElementPath($path)
-    {
-        $this->_elementPath = $path;
-    }
-    
     function setViewRender(ViewRenderInterface $viewRender)
     {
         $this->_viewRender = $viewRender;
@@ -173,5 +156,16 @@ class View extends AbstractView
     private function _getElementFile($name)
     {
         return "{$this->_elementPath}.{$name}.{$this->_ext}";
+    }
+    
+    /**
+     * 获取布局文件位置
+     *
+     * @param string $name            
+     * @return string
+     */
+    private function _getLayoutFile($name)
+    {
+        return "{$this->_layoutPath}.{$name}.{$this->_ext}";
     }
 }
