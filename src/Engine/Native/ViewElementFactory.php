@@ -5,7 +5,7 @@
  */
 namespace Slince\View;
 
-class Factory
+class ViewElementFactory
 {
 
     /**

@@ -5,11 +5,7 @@
  */
 namespace Slince\View\Engine\Native;
 
-interface ViewFileInterface
+interface BlockInterface
 {
-
-    /**
-     * 视图文件位置
-     */
-    function getViewFile();
+    function getContent();
 }

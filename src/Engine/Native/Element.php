@@ -5,6 +5,6 @@
  */
 namespace Slince\View\Engine\Native;
 
-class Element extends AbstractViewFile
+class Element extends AbstractView
 {
 }

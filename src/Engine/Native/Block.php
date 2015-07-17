@@ -30,12 +30,7 @@ class Block implements ViewInterface
         $this->_content = $content;
     }
 
-    /**
-     * (non-PHPdoc)
-     *
-     * @see ViewInterface::render()
-     */
-    function render()
+    function getContent()
     {
         return $this->_content;
     }

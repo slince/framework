@@ -8,7 +8,7 @@ namespace Slince\View\Engine\Native;
 use Slince\View\Exception\ViewException;
 use Slince\View\Exception\ViewFileNotExistsException;
 
-class View extends AbstractViewFile implements ViewInterface
+class View extends AbstractView
 {
 
     /**
@@ -41,14 +41,18 @@ class View extends AbstractViewFile implements ViewInterface
 
     private $_ext = 'php';
 
-    private $_vars = [];
-
     private $_content;
+    
+    /**
+     * @var ViewRenderInterface
+     */
+    protected $_viewRender;
 
-    function __construct($viewFile, $layout = null)
+    function __construct(ViewRenderInterface $viewRender, $viewFile, $layout = null)
     {
-        $this->_layout = $layout;
         parent::__construct($viewFile);
+        $this->_layout = $layout;
+        $this->_viewRender = $viewRender;
     }
 
     /**
@@ -60,43 +64,37 @@ class View extends AbstractViewFile implements ViewInterface
     {
         $this->_elementPath = $path;
     }
-
-    /**
-     * 批量设置变量
-     *
-     * @param array $vars            
-     */
-    function setVars($vars)
+    
+    function setViewRender(ViewRenderInterface $viewRender)
     {
-        $this->_vars = array_merge($this->_vars, $vars);
+        $this->_viewRender = $viewRender;
     }
-
-    /**
-     * 设置变量
-     *
-     * @param string $name            
-     * @param mixed $var            
-     */
-    function setVar($name, $var)
+    
+    function getViewRender()
     {
-        $this->_vars[$name] = $var;
+        return $this->_viewRender;
+    }
+    
+    function set($name, $value = null)
+    {
+        $this->_viewRender->set($name, $value);
     }
 
     /**
      * 捕捉一个视图块
      *
-     * @param string $name            
+     * @param string $name 
      */
-    function capture($name)
+    function start($name)
     {
-        $this->_block[$name] = Factory::createBlock();
+        $this->_block[$name] = ViewElementFactory::createBlock();
         ob_start();
     }
 
     /**
      * 结束上一个视图块的捕捉
      */
-    function end()
+    function stop()
     {
         if (($block = end($this->_blocks)) !== false) {
             $block->setContent(ob_get_clean());
@@ -124,21 +122,21 @@ class View extends AbstractViewFile implements ViewInterface
         if (! $this->hasBlock($name)) {
             throw new ViewException(sprintf('Block "%s" does not exists', $name));
         }
-        return $this->_blocks[$name]->render();
+        return $this->_blocks[$name]->getContent();
     }
 
     /**
      * 获取块的内容
      *
      * @param string $name            
-     * @return string|false
+     * @return string|null
      */
     function fetchOrFail($name)
     {
         try {
             return $this->fetch($name);
         } catch (ViewException $e) {
-            return false;
+            return null;
         }
     }
 
@@ -150,52 +148,21 @@ class View extends AbstractViewFile implements ViewInterface
     function element($name)
     {
         $this->_elements[] = $name;
-        $element = Factory::createElement($this->_getElementFile($name));
-        return $this->renderViewFile($element->getViewFile());
+        $element = ViewElementFactory::createElement($this->_getElementFile($name));
+        return $this->_viewRender->render($element);
     }
-
-    /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\View\ViewInterface::render()
-     */
-    function render()
+    
+    function render($useLayout = true)
     {
         if (! isset($this->_blocks['content'])) {
-            $this->_blocks['content'] = $this->renderWithoutLayout();
+            $this->_blocks['content'] = $this->_viewRender->render($this);
         }
-        if (! is_null($this->_layout)) {
-            return $this->renderViewFile($this->_layout);
+        if ($useLayout && ! is_null($this->_layout)) {
+            return $this->_viewRender->render($this->_layout);
         }
         return $this->_blocks['content'];
     }
 
-    /**
-     * 不带布局渲染页面
-     *
-     * @return string
-     */
-    function renderWithoutLayout()
-    {
-        return $this->renderViewFile($this->getViewFile());
-    }
-
-    /**
-     * 渲染视图文件
-     *
-     * @throws Exception\FileNotExistsException
-     * @return string
-     */
-    function renderViewFile($viewFile)
-    {
-        if (! file_exists($viewFile)) {
-            throw new ViewFileNotExistsException($viewFile);
-        }
-        ob_start();
-        extract($this->_vars);
-        include $viewFile;
-        return ob_get_clean();
-    }
 
     /**
      * 获取局部视图位置

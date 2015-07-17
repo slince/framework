@@ -5,13 +5,9 @@
  */
 namespace Slince\View\Engine\Native;
 
-interface ViewInterface
+interface ViewRenderInterface
 {
-
-    /**
-     * 渲染视图
-     */
-    function render();
+    function set($name, $value = null);
     
-    function getViewFile();
+    function render(ViewInterface $viewFile);
 }

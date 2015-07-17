@@ -5,9 +5,8 @@
  */
 namespace Slince\View\Engine\Native;
 
-use Slince\View\ViewFileInterface;
 
-class AbstractViewFile implements ViewFileInterface
+class AbstractView implements ViewInterface
 {
 
     /**
@@ -22,11 +21,6 @@ class AbstractViewFile implements ViewFileInterface
         $this->_viewFile = $viewFile;
     }
 
-    /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\View\ViewFileInterface::getViewFile()
-     */
     function getViewFile()
     {
         return $this->_viewFile;
