@@ -5,16 +5,41 @@
  */
 namespace Slince\View\Engine\Native;
 
-use Slince\View\ViewManager;
+use Slince\View\AbstractViewManager;
 
-class ViewManager extends ViewManager
+class ViewManager extends AbstractViewManager
 {
 
     protected $_ext = 'php';
 
+    /**
+     * 局部视图位置
+     *
+     * @var string
+     */
+    protected $_elementPath;
+
     function getViewRender()
     {
         return ViewRender::newInstance();
+    }
+
+    /**
+     * 设置局部视图位置
+     *
+     * @param string $path            
+     */
+    function setElementPath($path)
+    {
+        $this->_elementPath = $path;
+    }
+
+    /**
+     * 获取局部视图位置
+     */
+    function getElementPath()
+    {
+        $this->_elementPath;
     }
 
     /**
@@ -37,5 +62,17 @@ class ViewManager extends ViewManager
     function getLayoutFile($name)
     {
         return "{$this->_layoutPath}.{$name}.{$this->_ext}";
+    }
+
+    /**
+     * 加载一个模板
+     *
+     * @param string $name            
+     * @return \Slince\View\View
+     */
+    function load($name)
+    {
+        $viewFilePath = "{$this->_viewPath}{$name}.{$this->_ext}";
+        return ViewFactory::createView($this, $viewFilePath);
     }
 }

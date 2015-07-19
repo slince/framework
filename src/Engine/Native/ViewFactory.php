@@ -3,9 +3,9 @@
  * slince view library
  * @author Tao <taosikai@yeah.net>
  */
-namespace Slince\View;
+namespace Slince\View\Engine\Native;
 
-class ViewElementFactory
+class ViewFactory
 {
 
     /**
@@ -25,13 +25,18 @@ class ViewElementFactory
      * @param string $path            
      * @return Element
      */
-    static function createElement($path)
+    static function createElement($elementFile)
     {
-        return new Element($path);
+        return new Element($elementFile);
     }
     
-    static function createLayout($path)
+    static function createLayout($layoutFile)
     {
-        return new Layout($path);
+        return new Layout($layoutFile);
+    }
+    
+    static function createView(ViewManager $viewManager, $viewFile, $layoutFile = null)
+    {
+        return new View($viewManager, $viewFile, $layoutFile);
     }
 }

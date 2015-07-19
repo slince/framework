@@ -9,8 +9,9 @@ use Slince\View\Exception\ViewFileNotExistsException;
 
 class ViewRender implements ViewRenderInterface
 {
+
     protected static $_instance;
-    
+
     static function newInstance()
     {
         if (! self::$_instance instanceof self) {
@@ -18,16 +19,18 @@ class ViewRender implements ViewRenderInterface
         }
         return self::$_instance;
     }
+
     protected $_vars = [];
-    
+
     function set($name, $value = null)
     {
         if (is_array($name)) {
             $this->_vars = $name;
+        } else {
+            $this->_vars[$name] = $value;
         }
-        $this->_vars[$name] = $value;
     }
-    
+
     function render(ViewInterface $viewFile)
     {
         if (! is_file($viewFile->getViewFile())) {

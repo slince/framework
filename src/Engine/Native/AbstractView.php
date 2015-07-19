@@ -6,7 +6,7 @@
 namespace Slince\View\Engine\Native;
 
 
-class AbstractView implements ViewInterface
+abstract class AbstractView implements ViewInterface
 {
 
     /**

@@ -7,7 +7,7 @@ namespace Slince\View\Engine\Native;
 
 use Slince\View\Exception\ViewException;
 use Slince\View\Exception\ViewFileNotExistsException;
-use Slince\View\ViewElementFactory;
+use Slince\View\Engine\Native\ViewFactory;
 
 class View extends AbstractView
 {
@@ -48,7 +48,7 @@ class View extends AbstractView
         $this->_viewRender = $viewManager->getViewRender();
         $this->_viewManager = $viewManager;
         if (! is_null($layoutFile)) {
-            $this->_layout = ViewElementFactory::createLayout(
+            $this->_layout = ViewFactory::createLayout(
                 $viewManager->getLayoutFile($layoutFile)
             );
         }
@@ -76,7 +76,7 @@ class View extends AbstractView
      */
     function start($name)
     {
-        $this->_block[$name] = ViewElementFactory::createBlock();
+        $this->_block[$name] = ViewFactory::createBlock();
         ob_start();
     }
 
@@ -137,12 +137,17 @@ class View extends AbstractView
     function element($name)
     {
         $this->_elements[] = $name;
-        $element = ViewElementFactory::createElement($this->_viewManager->getElementFile($name));
+        $element = ViewFactory::createElement($this->_viewManager->getElementFile($name));
         return $this->_viewRender->render($element);
     }
     
-    function render($useLayout = true)
+    /**
+     * (non-PHPdoc)
+     * @see \Slince\View\Engine\Native\ViewInterface::render()
+     */
+    function render($vars = [], $useLayout = true)
     {
+        $this->set($vars);
         if (! isset($this->_blocks['content'])) {
             $this->_blocks['content'] = $this->_viewRender->render($this);
         }

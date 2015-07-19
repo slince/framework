@@ -6,23 +6,17 @@ class ViewTest extends PHPUnit_Framework_TestCase
 
     function _getService()
     {
-        return ServiceFactory::get('native ');
+        return ServiceFactory::get('native', [
+            'viewPath' => __DIR__ . '/views/'
+        ]);
     }
     
     function testView()
     {
-        $view = new View(__DIR__ . '/views/view1.php');
+        $service = $this->_getService();
+        $view = $service->load('view1');
         $content = $view->render();
         $this->assertNotEmpty($content);
-        $this->assertEquals($content, 'hello');
     }
 
-    function testVars()
-    {
-        $view = new View(__DIR__ . '/views/view2.php');
-        $view->setVar('hello', 'hello');
-        $content = $view->render();
-        ;
-        $this->assertEquals($content, 'helloworld;');
-    }
 }
