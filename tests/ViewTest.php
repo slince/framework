@@ -1,9 +1,14 @@
 <?php
-use Slince\View\View;
+use Slince\View\ServiceFactory;
 
 class ViewTest extends PHPUnit_Framework_TestCase
 {
 
+    function _getService()
+    {
+        return ServiceFactory::get('native ');
+    }
+    
     function testView()
     {
         $view = new View(__DIR__ . '/views/view1.php');

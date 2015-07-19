@@ -7,6 +7,7 @@ namespace Slince\View\Engine\Native;
 
 use Slince\View\Exception\ViewException;
 use Slince\View\Exception\ViewFileNotExistsException;
+use Slince\View\ViewElementFactory;
 
 class View extends AbstractView
 {
@@ -32,20 +33,25 @@ class View extends AbstractView
      */
     private $_layout;
 
-    private $_ext = 'php';
-
     private $_content;
     
     /**
      * @var ViewRenderInterface
      */
     protected $_viewRender;
+    
+    protected $_viewManager;
 
-    function __construct(ViewRenderInterface $viewRender, $viewFile, $layout = null)
+    function __construct(ViewManager $viewManager, $viewFile, $layoutFile = null)
     {
         parent::__construct($viewFile);
-        $this->_layout = $layout;
-        $this->_viewRender = $viewRender;
+        $this->_viewRender = $viewManager->getViewRender();
+        $this->_viewManager = $viewManager;
+        if (! is_null($layoutFile)) {
+            $this->_layout = ViewElementFactory::createLayout(
+                $viewManager->getLayoutFile($layoutFile)
+            );
+        }
     }
 
     function setViewRender(ViewRenderInterface $viewRender)
@@ -131,7 +137,7 @@ class View extends AbstractView
     function element($name)
     {
         $this->_elements[] = $name;
-        $element = ViewElementFactory::createElement($this->_getElementFile($name));
+        $element = ViewElementFactory::createElement($this->_viewManager->getElementFile($name));
         return $this->_viewRender->render($element);
     }
     
@@ -146,26 +152,4 @@ class View extends AbstractView
         return $this->_blocks['content'];
     }
 
-
-    /**
-     * 获取局部视图位置
-     *
-     * @param string $name            
-     * @return string
-     */
-    private function _getElementFile($name)
-    {
-        return "{$this->_elementPath}.{$name}.{$this->_ext}";
-    }
-    
-    /**
-     * 获取布局文件位置
-     *
-     * @param string $name            
-     * @return string
-     */
-    private function _getLayoutFile($name)
-    {
-        return "{$this->_layoutPath}.{$name}.{$this->_ext}";
-    }
 }

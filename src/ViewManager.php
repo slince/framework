@@ -17,14 +17,14 @@ class ViewManager implements ViewManagerInterface
      *
      * @var string
      */
-    private $_elementPath;
+    protected $_elementPath;
 
     /**
      * 布局文件位置
      *
      * @var string
      */
-    private $_layoutPath;
+    protected $_layoutPath;
 
     function setViewPath($path)
     {
@@ -37,10 +37,14 @@ class ViewManager implements ViewManagerInterface
     }
 
     function getLayoutPath()
-    {}
+    {
+        return $this->_layoutPath;
+    }
 
     function getElementPath()
-    {}
+    {
+        $this->_elementPath;
+    }
 
     /**
      * 设置局部视图文件位置

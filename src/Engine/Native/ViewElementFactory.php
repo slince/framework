@@ -29,4 +29,9 @@ class ViewElementFactory
     {
         return new Element($path);
     }
+    
+    static function createLayout($path)
+    {
+        return new Layout($path);
+    }
 }
