@@ -5,7 +5,7 @@
  */
 namespace Slince\View\Engine\Native;
 
-class Block implements ViewInterface
+class Block implements BlockInterface
 {
 
     /**

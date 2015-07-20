@@ -8,10 +8,7 @@ namespace Slince\View\Engine\Native;
 interface ViewInterface
 {
 
-    /**
-     * 渲染视图
-     */
-    function render();
-    
     function getViewFile();
+    
+    function setViewFile($viewFile);
 }

@@ -12,6 +12,8 @@ class ViewManager extends AbstractViewManager
 
     protected $_ext = 'php';
 
+    protected $_layout = '';
+
     /**
      * 局部视图位置
      *
@@ -73,6 +75,11 @@ class ViewManager extends AbstractViewManager
     function load($name)
     {
         $viewFilePath = "{$this->_viewPath}{$name}.{$this->_ext}";
-        return ViewFactory::createView($this, $viewFilePath);
+        if (! is_null($this->_layout)) {
+            $layout = ViewFactory::createLayout($this->getLayoutFile($this->_layout));
+        } else {
+            $layout = null;
+        }
+        return ViewFactory::createView($viewFilePath, $this->getViewRender(), $layout);
     }
 }

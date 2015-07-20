@@ -17,6 +17,19 @@ class ViewTest extends PHPUnit_Framework_TestCase
         $view = $service->load('view1');
         $content = $view->render();
         $this->assertNotEmpty($content);
+        $view = $service->load('view2');
+        $content = $view->render([
+            'hello' => 'hello'
+        ]);
+        $this->assertEquals('hello', $content);
+    }
+    
+    function testElement()
+    {
+        $service = $this->_getService();
+        $view = $service->load('view3');
+        $content = $view->render();
+        var_dump($content);
     }
 
 }

@@ -35,8 +35,8 @@ class ViewFactory
         return new Layout($layoutFile);
     }
     
-    static function createView(ViewManager $viewManager, $viewFile, $layoutFile = null)
+    static function createView($viewFile, ViewRender $viewRender, Layout $layout = null)
     {
-        return new View($viewManager, $viewFile, $layoutFile);
+        return new View($viewFile, $viewRender, $layout);
     }
 }

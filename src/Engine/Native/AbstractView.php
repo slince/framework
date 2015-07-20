@@ -5,7 +5,6 @@
  */
 namespace Slince\View\Engine\Native;
 
-
 abstract class AbstractView implements ViewInterface
 {
 
@@ -24,5 +23,10 @@ abstract class AbstractView implements ViewInterface
     function getViewFile()
     {
         return $this->_viewFile;
+    }
+
+    function setViewFile($viewFile)
+    {
+        $this->_viewFile = $viewFile;
     }
 }
