@@ -7,7 +7,8 @@ class ViewTest extends PHPUnit_Framework_TestCase
     function _getService()
     {
         return ServiceFactory::get('native', [
-            'viewPath' => __DIR__ . '/views/'
+            'viewPath' => __DIR__ . '/views/',
+            'elementPath' => __DIR__ . '/elements/',
         ]);
     }
     

@@ -110,9 +110,10 @@ class ViewRender implements ViewRenderInterface
      *
      * @param string $name            
      */
-    function element($name)
+    function read($name)
     {
         $this->_elements[] = $name;
+        echo $this->_viewManager->getElementFile($name);exit;
         $element = ViewFactory::createElement($this->_viewManager->getElementFile($name));
         return $this->render($element);
     }

@@ -1,1 +1,1 @@
-<?php echo $this->element('element1');?>
+<?php echo $this->read('element1');?>
