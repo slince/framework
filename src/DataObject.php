@@ -5,7 +5,7 @@
  */
 namespace Slince\Config;
 
-class DataObject implements \ArrayAccess, \Countable
+class DataObject implements \ArrayAccess, \Countable, \IteratorAggregate
 {
     /**
      * 配置的值
@@ -35,6 +35,14 @@ class DataObject implements \ArrayAccess, \Countable
         return $this->_data;
     }
 
+    /**
+     * 替换当前数据
+     * @param array $data
+     */
+    function replace(array $data)
+    {
+        $this->_data = $data;
+    }
     /**
      * 设置新的配置值，已存在的键值将会被覆盖
      *
@@ -98,52 +106,62 @@ class DataObject implements \ArrayAccess, \Countable
         $this->_data = [];
     }
 
+
     /**
-     * 实现接口方法
-     *
-     * @param mixed $offset            
+     * (non-PHPdoc)
+     * @see ArrayAccess::offsetGet()
      */
     function offsetGet($offset)
     {
         return $this->get($offset);
     }
 
+
     /**
-     * 实现接口方法
-     *
-     * @param mixed $offset            
-     * @param mixed $value            
+     * (non-PHPdoc)
+     * @see ArrayAccess::offsetSet()
      */
     function offsetSet($offset, $value)
     {
         $this->set($offset, $value);
     }
 
+
     /**
-     * 实现接口方法
-     *
-     * @param mixed $offset            
+     * (non-PHPdoc)
+     * @see ArrayAccess::offsetUnset()
      */
     function offsetUnset($offset)
     {
         $this->delete($offset);
     }
 
+
     /**
-     * 实现接口方法
-     *
-     * @param mixed $offset            
+     * (non-PHPdoc)
+     * @see ArrayAccess::offsetExists()
      */
     function offsetExists($offset)
     {
         return $this->exists($offset);
     }
 
+
     /**
-     * 实现接口方法
+     * (non-PHPdoc)
+     * @see Countable::count()
      */
     function count()
     {
         return count($this->_data);
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see IteratorAggregate::getIterator()
+     */
+    function getIterator()
+    {
+        return new \ArrayIterator($this->_data);
     }
 }
