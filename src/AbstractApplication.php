@@ -9,12 +9,26 @@ abstract class AbstractApplication implements ApplicationInterface
 {
 
     /**
+     * app根文件位置
+     * 
+     * @var string
+     */
+    protected $_root;
+    
+    /**
      * 项目主要部分文件所在位置
      * 
      * @var string
      */
     protected $_src;
 
+    /**
+     * Container instance
+     *
+     * @var ServiceTranslator
+     */
+    protected $_serviceTranslator;
+    
     /**
      * Container instance
      *
@@ -30,16 +44,19 @@ abstract class AbstractApplication implements ApplicationInterface
     protected $_dispatcher;
 
     /**
-     * config instance
+     * Config repository instance
      *
      * @var Repository
      */
     protected $_config;
+    
+    protected $_parameters;
 
     function __construct(Repository $config)
     {
         $this->_config = $config;
-        $this->_kernelInit();
+        $this->_initializeKernel();
+        $this->_initalizeApplication();
     }
 
     /**
@@ -63,13 +80,49 @@ abstract class AbstractApplication implements ApplicationInterface
         return $this->_config;
     }
 
+    function setParameter($name, $parameter)
+    {
+        $this->_parameters[$name] = $parameter;
+        return $this;
+    }
+
+    function getParameter($name, $default = null)
+    {
+        return isset($this->_parameters[$name]) ? $this->_parameters[$name] : $default;
+    }
+
+    function hasParameter($name)
+    {
+        return isset($this->_parameters[$name]);
+    }
+
+    function setParameters(array $parameters)
+    {
+        $this->_parameters = $parameters;
+        return $this;
+    }
+
+    function getParameters()
+    {
+        return $this->_parameters;
+    }
     /**
      * 核心服务实例化
      */
-    protected function _kernelInit()
+    protected function _initializeKernel()
     {
         $this->_container = KernelServiceFactory::createContainer();
+        $this->_serviceTranslator = KernelServiceFactory::createServiceTranslator($this->_container);
         $this->_dispatcher = KernelServiceFactory::createDispatcher();
         $this->_dispatcher->dispatch(EventStore::KERNEL_INITED);
+    }
+    
+    protected function _initalizeApplication()
+    {
+        $configs = $this->_config->getDataObject();
+        //初始化app配置
+        $this->_root = $configs['app']['root'];
+        //初始化服务配置文件
+        $this->_serviceTranslator->initializeFromConfigArray($configs->get('service'));
     }
 }

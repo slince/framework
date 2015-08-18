@@ -4,10 +4,11 @@ namespace Slince\Applicaion;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Controller;
+use Slince\Router\Router;
+use Slince\Router\Route;
 
 class WebApplication extends AbstractApplication
 {
-
 
     /**
      * 
@@ -25,7 +26,7 @@ class WebApplication extends AbstractApplication
     /**
      * 路由解析实例
      *
-     * @var 
+     * @var Router
      */
     protected $_router;
     
@@ -53,17 +54,27 @@ class WebApplication extends AbstractApplication
     }
     
     /**
+     * 获取request
+     * 
+     * @return Request
+     */
+    function getRequest()
+    {
+        return $this->_request;
+    }
+    /**
      * 路由调度
      */
     function _dispatchRoute()
     {
-        $route = $this->_di->get('router')->match($this->_request->getPathinfo());
+        $this->_route = $this->_di->get('router')->match($this->_request->getPathinfo());
         $action = $route->getParameter('action');
         list($controllerName, $actionName) = explode('@', $action);
         //存储路由信息
-        $this->_request->setParameter('controller', $controllerName);
-        $this->_request->setParameter('action', $actionName);
-        $this->_request->setParameter('prefix', $route->getPrefix());
+        $this->setParameter('controller', $controllerName);
+        $this->setParameter('action', $actionName);
+        $this->setParameter('prefix', $route->getPrefix());
+        $this->setParameter('routeParameters', $route->getRouteParameters());
         $response = $this->_invokeController($controllerName, $actionName);
     }
     
@@ -88,7 +99,7 @@ class WebApplication extends AbstractApplication
         if (! method_exists($controller, $actionName)) {
             throw new MissActionException($controller, $actionName);
         }
-        $response = $controller->invokeAction($actionName);
+        $response = $controller->invokeAction($this);
         return $response;
     }
 }
