@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Controller;
 use Slince\Router\Router;
 use Slince\Router\Route;
+use Slince\Event\Event;
 
 class WebApplication extends AbstractApplication
 {
@@ -75,7 +76,13 @@ class WebApplication extends AbstractApplication
         $this->setParameter('action', $actionName);
         $this->setParameter('prefix', $route->getPrefix());
         $this->setParameter('routeParameters', $route->getRouteParameters());
-        $response = $this->_invokeController($controllerName, $actionName);
+        $this->_dispatcher->bind(EventStore::APP_DISPATCH_ROUTE, array(
+            $this,
+            '_invokeController'
+        ));
+        $this->_dispatcher->dispatch(EventStore::APP_DISPATCH_ROUTE, new Event(
+            EventStore::APP_DISPATCH_ROUTE, $this, $this->_dispatcher
+        ));
     }
     
     /**
