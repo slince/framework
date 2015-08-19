@@ -1,6 +1,12 @@
 <?php
 return [
-    'cache' => [
-        'class' => 'Slince\Cache\ArrayCache',
+    'db' => [
+        'class' => 'Cake\Database',
     ],
+    'cache' => [
+        'class' => 'Slince\Cache\Cache',
+        'arguments' => [
+            'path' => CACHE
+        ]
+    ]
 ];
