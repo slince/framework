@@ -35,7 +35,7 @@ class WebApplication extends AbstractApplication
      * (non-PHPdoc)
      * @see \Slince\Applicaion\ApplicationInterface::run()
      */
-    function run($request)
+    function run(Request $request)
     {
         $response = $this->process($request);
         $response->send();
