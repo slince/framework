@@ -3,7 +3,7 @@
  * slince application library
  * @author Tao <taosikai@yeah.net>
  */
-namespace Slince\Applicaion;
+namespace Slince\Application;
 
 class EventStore
 {

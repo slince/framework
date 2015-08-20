@@ -1,5 +1,5 @@
 <?php
-namespace Slince\Applicaion;
+namespace Slince\Application;
 
 use Slince\Config\Repository;
 use Slince\Di\Container;

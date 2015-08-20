@@ -1,5 +1,5 @@
 <?php
-namespace Slince\Applicaion;
+namespace Slince\Application;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

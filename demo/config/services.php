@@ -6,7 +6,6 @@ return [
     'cache' => [
         'class' => 'Slince\Cache\Cache',
         'arguments' => [
-            'path' => CACHE
         ]
     ]
 ];

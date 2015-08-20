@@ -1,5 +1,5 @@
 <?php
-namespace Slince\Applicaion;
+namespace Slince\Application;
 
 use Slince\Di\Container;
 use Slince\Di\Definition;

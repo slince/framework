@@ -1,5 +1,5 @@
 <?php
-namespace Slince\Applicaion;
+namespace Slince\Application;
 
 class LogicException extends \Exception
 {
