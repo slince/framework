@@ -1,15 +1,14 @@
 <?php
 use Slince\Di\Container;
 use Slince\Router\RequestContext;
-use Slince\Applicaion\WebApplication;
 use Slince\Router\RouterFactory;
 
 return [
     'db' => [
         'class' => 'Cake\Database',
     ],
-    'router' => function(Container $container, WebApplication $app) {
-         $context = RequestContext::create()->fromRequest($app->getRequest());
+    'router' => function(Container $container) {
+         $context = RequestContext::create()->fromRequest($container->get('app')->getRequest());
          return RouterFactory::create($context);
     },
     'cache' => [
