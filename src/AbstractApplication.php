@@ -1,9 +1,15 @@
 <?php
+/**
+ * slince application library
+ * @author Tao <taosikai@yeah.net>
+ */
 namespace Slince\Application;
 
 use Slince\Config\Repository;
 use Slince\Di\Container;
 use Slince\Event\Dispatcher;
+use Slince\Event\Event;
+use Slince\Application\Exception\LogicException;
 
 abstract class AbstractApplication implements ApplicationInterface
 {
@@ -114,7 +120,7 @@ abstract class AbstractApplication implements ApplicationInterface
         $this->_container = KernelServiceFactory::createContainer();
         $this->_serviceTranslator = KernelServiceFactory::createServiceTranslator($this->_container);
         $this->_dispatcher = KernelServiceFactory::createDispatcher();
-        $this->_dispatcher->dispatch(EventStore::KERNEL_INITED);
+        $this->_dispatchEvent(EventStore::KERNEL_INITED);
     }
     
     protected function _initalizeApplication()
@@ -122,7 +128,16 @@ abstract class AbstractApplication implements ApplicationInterface
         $configs = $this->_config->getDataObject();
         //初始化app配置
         $this->_root = $configs['app']['root'];
+        if (empty($this->_root)) {
+            throw new LogicException("Application root path is unknow!");
+        }
         //初始化服务配置文件
-        $this->_serviceTranslator->initializeFromConfigArray($configs->get('service'));
+        $this->_serviceTranslator->initializeFromArray($configs->get('service', []));
+    }
+    
+    protected function _dispatchEvent($eventName, $arguments = [])
+    {
+        $event = new Event($eventName, $this, $this->_dispatcher, $arguments);
+        $this->_dispatcher->dispatch($eventName, $event);
     }
 }

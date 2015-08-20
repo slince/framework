@@ -1,12 +1,16 @@
 <?php
+/**
+ * slince application library
+ * @author Tao <taosikai@yeah.net>
+ */
 namespace Slince\Application;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Controller;
 use Slince\Router\Router;
-use Slince\Router\Route;
 use Slince\Event\Event;
+use Slince\Config\Repository;
 
 class WebApplication extends AbstractApplication
 {
@@ -31,14 +35,19 @@ class WebApplication extends AbstractApplication
      */
     protected $_router;
     
+    function __construct(Repository $config, Request $request)
+    {
+        $this->_request = $request;
+        parent::__construct($config);
+    }
     /**
      * (non-PHPdoc)
      * @see \Slince\Applicaion\ApplicationInterface::run()
      */
-    function run(Request $request)
+    function run()
     {
-        $response = $this->process($request);
-        $response->send();
+        $response = $this->process();
+        return $response;
     }
 
     /**
@@ -47,10 +56,9 @@ class WebApplication extends AbstractApplication
      * @param Request $request
      * @return Response
      */
-    function process($request)
+    function process()
     {
-        $this->_request = $request;
-        $this->_dispatcher->dispatch(EventStore::PROCESS_REQUEST);
+        $this->_dispatchEvent(EventStore::PROCESS_REQUEST);
         return $this->_dispatchRoute();
     }
     
@@ -68,7 +76,7 @@ class WebApplication extends AbstractApplication
      */
     function _dispatchRoute()
     {
-        $this->_route = $this->_di->get('router')->match($this->_request->getPathinfo());
+        $this->_route = $this->_container->get('router')->match($this->_request->getPathinfo());
         $action = $route->getParameter('action');
         list($controllerName, $actionName) = explode('@', $action);
         //存储路由信息
@@ -80,9 +88,7 @@ class WebApplication extends AbstractApplication
             $this,
             '_invokeController'
         ));
-        $this->_dispatcher->dispatch(EventStore::APP_DISPATCH_ROUTE, new Event(
-            EventStore::APP_DISPATCH_ROUTE, $this, $this->_dispatcher
-        ));
+        $this->_dispatchEvent(EventStore::APP_DISPATCH_ROUTE);
     }
     
     /**

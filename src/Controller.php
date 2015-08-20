@@ -1,4 +1,8 @@
 <?php
+/**
+ * slince application library
+ * @author Tao <taosikai@yeah.net>
+ */
 namespace Slince\Application;
 
 use Symfony\Component\HttpFoundation\Request;

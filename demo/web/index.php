@@ -5,6 +5,6 @@ use Symfony\Component\HttpFoundation\Request;
 $config = include __DIR__ . '/../config/bootstrap.php';
 
 $request = Request::createFromGlobals();
-$web = new WebApplication($config);
-$response = $web->runWith($request);
+$webApp = new WebApplication($config, $request);
+$response = $webApp->run();
 $response->send();

@@ -1,5 +1,9 @@
 <?php
-namespace Slince\Application;
+/**
+ * slince application library
+ * @author Tao <taosikai@yeah.net>
+ */
+namespace Slince\Application\Exception;
 
 class MissActionException extends \Exception
 {
