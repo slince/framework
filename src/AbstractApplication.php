@@ -120,6 +120,7 @@ abstract class AbstractApplication implements ApplicationInterface
         $this->_container = KernelServiceFactory::createContainer();
         $this->_serviceTranslator = KernelServiceFactory::createServiceTranslator($this->_container);
         $this->_dispatcher = KernelServiceFactory::createDispatcher();
+        $this->_container->share('app', $this);
         $this->_dispatchEvent(EventStore::KERNEL_INITED);
     }
     
@@ -131,6 +132,8 @@ abstract class AbstractApplication implements ApplicationInterface
         if (empty($this->_root)) {
             throw new LogicException("Application root path is unknow!");
         }
+        $router = call_user_func($configs['service']['router'], $this->_container);
+        print_r($configs->get('service'));exit;
         //初始化服务配置文件
         $this->_serviceTranslator->initializeFromArray($configs->get('service', []));
     }
