@@ -12,5 +12,6 @@ class PagesController extends Controller
     function show()
     {
         echo 'hi show';
+        trigger_error(E_USER_ERROR);
     }
 }

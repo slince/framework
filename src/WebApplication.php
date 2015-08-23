@@ -96,6 +96,7 @@ class WebApplication extends AbstractApplication
         $this->setParameter('action', $actionName);
         $this->setParameter('prefix', $route->getPrefix());
         $this->setParameter('routeParameters', $route->getRouteParameters());
+        //绑定controller调用
         $this->_dispatcher->bind(EventStore::DISPATCH_ROUTE, array(
             $this,
             '_invokeController'
