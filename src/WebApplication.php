@@ -7,11 +7,11 @@ namespace Slince\Application;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Controller;
 use Slince\Router\Router;
 use Slince\Event\Event;
 use Slince\Config\Repository;
 use Cake\Utility\Inflector;
+use Slince\Application\Exception;
 
 class WebApplication extends AbstractApplication
 {
@@ -28,7 +28,7 @@ class WebApplication extends AbstractApplication
      * @var Request
      */
     protected $_request;
-
+    
     /**
      * 路由解析实例
      *
@@ -51,6 +51,7 @@ class WebApplication extends AbstractApplication
     {
         return $this->_request;
     }
+    
     /**
      * 获取router
      * 
@@ -99,7 +100,12 @@ class WebApplication extends AbstractApplication
             $this,
             '_invokeController'
         ));
-        $this->_dispatchEvent(EventStore::DISPATCH_ROUTE);
+        //接下来是response传递的事件调度过程
+        $response = new Response();
+        $this->_dispatchEvent(EventStore::DISPATCH_ROUTE, [
+            'response' => $response
+        ]);
+        return $response;
     }
     
     /**
@@ -111,7 +117,7 @@ class WebApplication extends AbstractApplication
      * @throws MissActionException
      * @return Response
      */
-    function _invokeController()
+    function _invokeController(Event $event)
     {
         $controllerClass = $this->_getControllerClass();
         $controller = $this->_container->get($controllerClass);
@@ -121,13 +127,18 @@ class WebApplication extends AbstractApplication
         if(! $controller instanceof Controller) {
             throw new LogicException('Controller action can only return an instance of Response');
         }
+        $actionName = $this->getParameter('action');
         if (! method_exists($controller, $actionName)) {
             throw new MissActionException($controller, $actionName);
         }
-        $response = $controller->invokeAction($this);
-        return $response;
+        $controller->invokeAction($event);
     }
     
+    /**
+     * 获取Controller的完整 class name
+     * 
+     * @return string
+     */
     function _getControllerClass()
     {
         $controllerName = $this->getParameter('controller') . 'Controller';

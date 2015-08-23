@@ -6,6 +6,9 @@
 namespace Slince\Application;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Slince\Application\Exception\LogicException;
+use Slince\Event\Event;
 
 class Controller
 {
@@ -27,15 +30,28 @@ class Controller
     
     function render()
     {
-        
+        return $this->response;
     }
     
-    function invokeAction(WebApplication $app)
+    /**
+     * 与application交互的接口，返回response
+     * 
+     * @param WebApplication $app
+     * @throws LogicException
+     * @return A\Symfony\Component\HttpFoundation\Response
+     */
+    function invokeAction(Event $event)
     {
+        $app = $event->getSubject();
         $this->app = $app;
         $this->request = $app->getRequest();
+        $this->response = $event->getArgument('response');
         $action = $app->getParameter('action');
-        $this->response = call_user_func([$this, $action], $app->getParameter('routeParameters', []));
-        return $this->response;
+        $response = call_user_func([$this, $action], $app->getParameter('routeParameters', []));
+        if (is_null($response)) {
+            $this->render();
+        } elseif(! $response instanceof Response) {
+            throw new LogicException('Controller action can only return an instance of Response');
+        }
     }
 }
