@@ -125,6 +125,8 @@ abstract class AbstractApplication implements ApplicationInterface
         $this->_bindListeners($configs['app']['listeners']);
         //初始化服务配置文件
         $this->_serviceTranslator->initializeFromArray($configs->get('service', []));
+        //error相关处理
+        $this->_handleError();
     }
     
     protected function _dispatchEvent($eventName, $arguments = [])
@@ -138,5 +140,12 @@ abstract class AbstractApplication implements ApplicationInterface
         foreach ($listeners as $eventName => $listener) {
             $this->_dispatcher->bind($eventName, $listener);
         }
+    }
+    
+    protected function _handleError()
+    {
+        $whoops = new \Whoops\Run;
+        $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
+        $whoops->register();
     }
 }
