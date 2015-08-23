@@ -25,7 +25,10 @@ class Controller
         $this->response;
     }
     
-    function render();
+    function render()
+    {
+        
+    }
     
     function invokeAction(WebApplication $app)
     {

@@ -65,17 +65,6 @@ abstract class AbstractApplication implements ApplicationInterface
         $this->_initalizeApplication();
     }
 
-    /**
-     * 获取组件
-     * 
-     * @param unknown $name            
-     * @return Ambigous <object, multitype:, mixed>
-     */
-    function get($name)
-    {
-        return $this->_container->get($key);
-    }
-
     function getContainer()
     {
         return $this->_container;
@@ -132,8 +121,8 @@ abstract class AbstractApplication implements ApplicationInterface
         if (empty($this->_root)) {
             throw new LogicException("Application root path is unknow!");
         }
-        $router = call_user_func($configs['service']['router'], $this->_container);
-        print_r($configs->get('service'));exit;
+        //初始化事件监听器
+        $this->_bindListeners($configs['app']['listeners']);
         //初始化服务配置文件
         $this->_serviceTranslator->initializeFromArray($configs->get('service', []));
     }
@@ -142,5 +131,12 @@ abstract class AbstractApplication implements ApplicationInterface
     {
         $event = new Event($eventName, $this, $this->_dispatcher, $arguments);
         $this->_dispatcher->dispatch($eventName, $event);
+    }
+    
+    function _bindListeners($listeners)
+    {
+        foreach ($listeners as $eventName => $listener) {
+            $this->_dispatcher->bind($eventName, $listener);
+        }
     }
 }

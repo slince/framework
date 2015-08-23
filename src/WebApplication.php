@@ -11,6 +11,7 @@ use App\Controller;
 use Slince\Router\Router;
 use Slince\Event\Event;
 use Slince\Config\Repository;
+use Cake\Utility\Inflector;
 
 class WebApplication extends AbstractApplication
 {
@@ -40,6 +41,25 @@ class WebApplication extends AbstractApplication
         $this->_request = $request;
         parent::__construct($config);
     }
+
+    /**
+     * 获取request
+     *
+     * @return Request
+     */
+    function getRequest()
+    {
+        return $this->_request;
+    }
+    /**
+     * 获取router
+     * 
+     * @return Router
+     */
+    function getRouter()
+    {
+        return $this->_container->get('router');
+    }
     /**
      * (non-PHPdoc)
      * @see \Slince\Applicaion\ApplicationInterface::run()
@@ -61,22 +81,13 @@ class WebApplication extends AbstractApplication
         $this->_dispatchEvent(EventStore::PROCESS_REQUEST);
         return $this->_dispatchRoute();
     }
-    
-    /**
-     * 获取request
-     * 
-     * @return Request
-     */
-    function getRequest()
-    {
-        return $this->_request;
-    }
     /**
      * 路由调度
      */
     function _dispatchRoute()
     {
-        $this->_route = $this->_container->get('router')->match($this->_request->getPathinfo());
+        
+        $route = $this->getRouter()->match($this->_request->getPathinfo());
         $action = $route->getParameter('action');
         list($controllerName, $actionName) = explode('@', $action);
         //存储路由信息
@@ -84,11 +95,11 @@ class WebApplication extends AbstractApplication
         $this->setParameter('action', $actionName);
         $this->setParameter('prefix', $route->getPrefix());
         $this->setParameter('routeParameters', $route->getRouteParameters());
-        $this->_dispatcher->bind(EventStore::APP_DISPATCH_ROUTE, array(
+        $this->_dispatcher->bind(EventStore::DISPATCH_ROUTE, array(
             $this,
             '_invokeController'
         ));
-        $this->_dispatchEvent(EventStore::APP_DISPATCH_ROUTE);
+        $this->_dispatchEvent(EventStore::DISPATCH_ROUTE);
     }
     
     /**
@@ -100,9 +111,10 @@ class WebApplication extends AbstractApplication
      * @throws MissActionException
      * @return Response
      */
-    function _invokeController($controllerName, $actionName)
+    function _invokeController()
     {
-        $controller = $this->get($controllerName);
+        $controllerClass = $this->_getControllerClass();
+        $controller = $this->_container->get($controllerClass);
         if (empty($controller)) {
             throw new MissControllerException($controllerName);
         } 
@@ -114,5 +126,16 @@ class WebApplication extends AbstractApplication
         }
         $response = $controller->invokeAction($this);
         return $response;
+    }
+    
+    function _getControllerClass()
+    {
+        $controllerName = $this->getParameter('controller') . 'Controller';
+        $namespace = '\\App\\Controller\\';
+        $prefix = $this->getParameter('prefix');
+        if (! empty($prefix)) {
+            $namespace .= Inflector::classify(ltrim($prefix, '/')) . '\\';
+        }
+        return $namespace . $controllerName;
     }
 }
