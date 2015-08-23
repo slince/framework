@@ -9,4 +9,8 @@ class PagesController extends Controller
     {
         echo 'hello';
     }
+    function show()
+    {
+        echo 'hi show';
+    }
 }
