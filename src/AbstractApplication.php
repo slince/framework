@@ -101,6 +101,11 @@ abstract class AbstractApplication implements ApplicationInterface
     {
         return $this->_parameters;
     }
+    
+    function getRoot()
+    {
+        return $this->_root;
+    }
     /**
      * 核心服务实例化
      */
@@ -135,7 +140,7 @@ abstract class AbstractApplication implements ApplicationInterface
         $this->_dispatcher->dispatch($eventName, $event);
     }
     
-    function _bindListeners($listeners)
+    protected function _bindListeners($listeners)
     {
         foreach ($listeners as $eventName => $listener) {
             $this->_dispatcher->bind($eventName, $listener);
