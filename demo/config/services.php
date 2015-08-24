@@ -16,9 +16,9 @@ return [
     'view' => function(Container $container) {
         $root = $container->get('app')->getRoot();
         return ServiceFactory::get('native', [
-            'viewPath' => $root . '/Resource/views',
-            'layoutPath' => $root . '/Resource/layouts',
-            'elementPath' => $root . '/Resource/elements',
+            'viewPath' => $root . '/src/Resource/views',
+            'layoutPath' => $root . '/src/Resource/layouts',
+            'elementPath' => $root . '/src/Resource/elements',
         ]);
     }
 ];

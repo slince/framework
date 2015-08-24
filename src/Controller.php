@@ -41,6 +41,8 @@ class Controller
      */
     protected $viewManager;
     
+    protected $rendered = false;
+    
     /**
      * 获取request
      * 
@@ -74,6 +76,7 @@ class Controller
         }
         $content = $this->getViewManager()->load($templateName, $layout)->render();
         $this->response->setContent($content);
+        $this->rendered = true;
         return $this->response;
     }
     
@@ -105,10 +108,17 @@ class Controller
         $this->response = $event->getArgument('response');
         $action = $app->getParameter('action');
         $response = call_user_func([$this, $action], $app->getParameter('routeParameters', []));
+        //如果没有返回response并且没有渲染过视图则渲染视图
         if (is_null($response)) {
-            $this->render();
-        } elseif(! $response instanceof Response) {
-            throw new LogicException('Controller action can only return an instance of Response');
+            if (! $this->rendered) {
+                $this->render();
+            }
+        } else {
+            if(! $response instanceof Response) {
+                throw new LogicException('Controller action can only return an instance of Response');
+            } else {
+                $this->response = $response;
+            }
         }
     }
 }

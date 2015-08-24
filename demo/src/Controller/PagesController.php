@@ -7,7 +7,8 @@ class PagesController extends Controller
 {
     function index()
     {
-        echo 'hello';
+        //echo 'hello';
+        $this->render();
     }
     function show()
     {
