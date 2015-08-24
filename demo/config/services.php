@@ -20,5 +20,5 @@ return [
             'layoutPath' => $root . '/src/Resource/layouts',
             'elementPath' => $root . '/src/Resource/elements',
         ]);
-    }
+    },
 ];

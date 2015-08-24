@@ -8,7 +8,8 @@ class PagesController extends Controller
     function index()
     {
         //echo 'hello';
-        $this->render();
+        //$this->render();
+        $this->loadModel('Articles');
     }
     function show()
     {

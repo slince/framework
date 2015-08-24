@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Slince\Application\Exception\LogicException;
 use Slince\Event\Event;
 use Cake\Utility\Inflector;
+use Cake\ORM\TableRegistry;
 
 class Controller
 {
@@ -43,6 +44,11 @@ class Controller
     
     protected $rendered = false;
     
+    function __get($name)
+    {
+        return $this->loadModel($name);
+    }
+    
     /**
      * 获取request
      * 
@@ -59,6 +65,12 @@ class Controller
     function getResponse()
     {
         $this->response;
+    }
+    
+    function loadModel($modelClass)
+    {
+        $this->$modelClass = TableRegistry::get($modelClass);
+        return $this->$modelClass;
     }
     
     /**
