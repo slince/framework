@@ -87,10 +87,13 @@ class Controller
      */
     function getViewManager()
     {
-        $controllerDir = $this->app->getParameter('controller');
-        $viewManager = $this->app->getContainer()->get('view');
-        $viewManager->setViewPath($viewManager->getViewPath() . '/' . $controllerDir);
-        return $viewManager;
+        if (is_null($this->viewManager)) {
+            $controllerDir = $this->app->getParameter('controller');
+            $viewManager = $this->app->getContainer()->get('view');
+            $viewManager->setViewPath($viewManager->getViewPath() . '/' . $controllerDir);
+            $this->viewManager = $viewManager;
+        }
+        return $this->viewManager;
     }
     
     /**
