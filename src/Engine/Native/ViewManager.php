@@ -18,13 +18,6 @@ class ViewManager extends AbstractViewManager
     protected $_ext = 'php';
 
     /**
-     * layout
-     *
-     * @var string
-     */
-    protected $_layout;
-
-    /**
      * 局部视图位置
      *
      * @var string
@@ -87,11 +80,11 @@ class ViewManager extends AbstractViewManager
      * @param string $name            
      * @return \Slince\View\View
      */
-    function load($name)
+    function load($name, $layout = null)
     {
         $viewFilePath = "{$this->_viewPath}{$name}.{$this->_ext}";
-        if (! is_null($this->_layout)) {
-            $layout = ViewFactory::createLayout($this->getLayoutFile($this->_layout));
+        if (! is_null($layout)) {
+            $layout = ViewFactory::createLayout($this->getLayoutFile($layout));
         } else {
             $layout = null;
         }
