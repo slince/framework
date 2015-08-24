@@ -34,11 +34,22 @@ class Controller
     }
     
     /**
+     * 获取ViewManager
+     * 
+     * @\Slince\View\Engine\Native\ViewManager
+     */
+    function getView()
+    {
+        
+        return $this->app->getContainer()->get('view');
+    }
+    
+    /**
      * 与application交互的接口，返回response
      * 
      * @param WebApplication $app
      * @throws LogicException
-     * @return A\Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     function invokeAction(Event $event)
     {

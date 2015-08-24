@@ -2,6 +2,7 @@
 use Slince\Di\Container;
 use Slince\Router\RequestContext;
 use Slince\Router\RouterFactory;
+use Slince\View\ServiceFactory;
 
 return [
     'router' => function(Container $container) {
@@ -12,8 +13,7 @@ return [
          call_user_func($routeCreateCallback, $routes);
          return $router;
     },
-    'view' => [
-        'class' => 'Slince\\Router\\ServiceFactory',
-        'arguments'
-    ]
+    'view' => function() {
+        return ServiceFactory::get('native');
+    }
 ];
