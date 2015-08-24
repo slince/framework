@@ -10,11 +10,8 @@ class ServiceFactory
 
     const SERVICE_NATIVE = 'native';
 
-    const SERVICE_TWIG = 'twig';
-
     static $serviceMap = [
-        self::SERVICE_NATIVE => 'Native',
-        self::SERVICE_TWIG => 'Twig'
+        self::SERVICE_NATIVE => 'Native'
     ];
 
     /**

@@ -8,6 +8,11 @@ namespace Slince\View;
 abstract class AbstractViewManager implements ViewManagerInterface
 {
 
+    /**
+     * 视图文件位置
+     * 
+     * @var string
+     */
     protected $_viewPath;
 
     /**
