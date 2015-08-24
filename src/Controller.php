@@ -9,39 +9,85 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Slince\Application\Exception\LogicException;
 use Slince\Event\Event;
+use Cake\Utility\Inflector;
 
 class Controller
 {
+    /**
+     * app
+     * 
+     * @var WebApplication
+     */
     protected $app;
     
+    /**
+     * request
+     * 
+     * @var Request
+     */
     protected $request;
     
+    /**
+     * response
+     * 
+     * @var Response
+     */
     protected $response;
     
+    /**
+     * view manager
+     * 
+     * @var \Slince\View\Engine\Native\ViewManager
+     */
+    protected $viewManager;
+    
+    /**
+     * 获取request
+     * 
+     * @return \Symfony\Component\HttpFoundation\Request
+     */
     function getRequest()
     {
         return $this->request;
     }
     
+    /**
+     * 获取response
+     */
     function getResponse()
     {
         $this->response;
     }
     
-    function render()
+    /**
+     * 渲染模板
+     * 
+     * @param string $templateName
+     * @param string $layout
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    function render($templateName = null, $layout = true)
     {
+        //如果没有选择render，则取当前action
+        if (is_null($templateName)) {
+            $templateName = $this->app->getParameter('action');
+        }
+        $content = $this->getViewManager()->load($templateName, $layout)->render();
+        $this->response->setContent($content);
         return $this->response;
     }
     
     /**
      * 获取ViewManager
      * 
-     * @\Slince\View\Engine\Native\ViewManager
+     * @return \Slince\View\Engine\Native\ViewManager
      */
-    function getView()
+    function getViewManager()
     {
-        
-        return $this->app->getContainer()->get('view');
+        $controllerDir = $this->app->getParameter('controller');
+        $viewManager = $this->app->getContainer()->get('view');
+        $viewManager->setViewPath($viewManager->getViewPath() . '/' . $controllerDir);
+        return $viewManager;
     }
     
     /**

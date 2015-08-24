@@ -13,7 +13,12 @@ return [
          call_user_func($routeCreateCallback, $routes);
          return $router;
     },
-    'view' => function() {
-        return ServiceFactory::get('native');
+    'view' => function(Container $container) {
+        $root = $container->get('app')->getRoot();
+        return ServiceFactory::get('native', [
+            'viewPath' => $root . '/Resource/views',
+            'layoutPath' => $root . '/Resource/layouts',
+            'elementPath' => $root . '/Resource/elements',
+        ]);
     }
 ];
