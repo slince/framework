@@ -16,16 +16,21 @@ class View extends AbstractView
      *
      * @var string
      */
-    private $_layout;
+    protected $_layout;
 
-    private $_content;
 
     /**
-     *
+     * 视图渲染器
+     * 
      * @var ViewRenderInterface
      */
     protected $_viewRender;
 
+    /**
+     * 视图管理者
+     * 
+     * @var ViewManager
+     */
     protected $_viewManager;
 
     function __construct($viewFile, ViewRenderInterface $viewRender, Layout $layout = null)
@@ -34,19 +39,49 @@ class View extends AbstractView
         $this->_viewRender = $viewRender;
     }
 
+    /**
+     * 设置视图渲染器
+     * 
+     * @param ViewRenderInterface $viewRender
+     */
     function setViewRender(ViewRenderInterface $viewRender)
     {
         $this->_viewRender = $viewRender;
     }
 
+    /**
+     * 获取视图渲染器
+     * 
+     * @return \Slince\View\Engine\Native\ViewRenderInterface
+     */
     function getViewRender()
     {
         return $this->_viewRender;
     }
 
+    /**
+     * 设置一个变量或者一组变量
+     * 
+     * @param string|array $name
+     * @param string $value
+     */
     function set($name, $value = null)
     {
-        $this->_viewRender->set($name, $value);
+        if (is_array($name)) {
+            $this->_viewRender->setVariables($name);
+        } else {
+            $this->_viewRender->setVariable($name, $value);
+        }
+    }
+    
+    /**
+     * 添加一组变量
+     * 
+     * @param array $variables
+     */
+    function add(array $variables)
+    {
+        $this->_viewRender->addVariables($variables);
     }
 
     /**

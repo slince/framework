@@ -30,11 +30,25 @@ class ViewFactory
         return new Element($elementFile);
     }
     
+    /**
+     * 创建layout
+     * 
+     * @param string $layoutFile
+     * @return \Slince\View\Engine\Native\Layout
+     */
     static function createLayout($layoutFile)
     {
         return new Layout($layoutFile);
     }
     
+    /**
+     * 创建视图对象
+     * 
+     * @param string $viewFile
+     * @param ViewRender $viewRender
+     * @param Layout $layout
+     * @return \Slince\View\Engine\Native\View
+     */
     static function createView($viewFile, ViewRender $viewRender, Layout $layout = null)
     {
         return new View($viewFile, $viewRender, $layout);

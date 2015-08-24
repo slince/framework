@@ -17,6 +17,11 @@ abstract class AbstractViewManager implements ViewManagerInterface
      */
     protected $_layoutPath;
 
+    /**
+     * configs
+     * 
+     * @param array $configs
+     */
     function __construct($configs = [])
     {
         foreach ($configs as $key => $config) {

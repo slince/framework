@@ -20,11 +20,19 @@ abstract class AbstractView implements ViewInterface
         $this->_viewFile = $viewFile;
     }
 
+    /**
+     * (non-PHPdoc)
+     * @see \Slince\View\Engine\Native\ViewInterface::getViewFile()
+     */
     function getViewFile()
     {
         return $this->_viewFile;
     }
 
+    /**
+     * (non-PHPdoc)
+     * @see \Slince\View\Engine\Native\ViewInterface::setViewFile()
+     */
     function setViewFile($viewFile)
     {
         $this->_viewFile = $viewFile;

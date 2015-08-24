@@ -10,9 +10,19 @@ use Slince\View\AbstractViewManager;
 class ViewManager extends AbstractViewManager
 {
 
+    /**
+     * 扩展名
+     *
+     * @var string
+     */
     protected $_ext = 'php';
 
-    protected $_layout = '';
+    /**
+     * layout
+     *
+     * @var string
+     */
+    protected $_layout;
 
     /**
      * 局部视图位置
@@ -21,6 +31,11 @@ class ViewManager extends AbstractViewManager
      */
     protected $_elementPath;
 
+    /**
+     * 视图渲染器
+     *
+     * @return ViewRender
+     */
     function getViewRender()
     {
         return ViewRender::newInstance();

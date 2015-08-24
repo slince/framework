@@ -13,7 +13,7 @@ class Block implements BlockInterface
      *
      * @var string
      */
-    private $_content;
+    protected $_content;
 
     function __construct($content = '')
     {

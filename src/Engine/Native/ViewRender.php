@@ -10,6 +10,11 @@ use Slince\View\Exception\ViewFileNotExistsException;
 class ViewRender implements ViewRenderInterface
 {
 
+    /**
+     * 当前视图渲染器实例
+     * 
+     * @var ViewRender
+     */
     protected static $_instance;
 
     /**
@@ -26,8 +31,17 @@ class ViewRender implements ViewRenderInterface
      */
     protected $_elements;
 
-    protected $_vars = [];
+    /**
+     * 设置的变量
+     * @var array
+     */
+    protected $_variables = [];
 
+    /**
+     * 实例化当前对象，单例
+     * 
+     * @return \Slince\View\Engine\Native\ViewRender
+     */
     static function newInstance()
     {
         if (! self::$_instance instanceof self) {
@@ -36,13 +50,31 @@ class ViewRender implements ViewRenderInterface
         return self::$_instance;
     }
 
-    function set($name, $value = null)
+    /**
+     * (non-PHPdoc)
+     * @see \Slince\View\Engine\Native\ViewRenderInterface::setVariable()
+     */
+    function setVariable($name, $value = null)
     {
-        if (is_array($name)) {
-            $this->_vars = $name;
-        } else {
-            $this->_vars[$name] = $value;
-        }
+        $this->_variables[$name] = $value;
+    }
+
+    /**
+     * (non-PHPdoc)
+     * @see \Slince\View\Engine\Native\ViewRenderInterface::setVariables()
+     */
+    function setVariables(array $variables)
+    {
+        $this->_variables = $variables;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see \Slince\View\Engine\Native\ViewRenderInterface::addVariables()
+     */
+    function addVariables(array $variables)
+    {
+        $this->_variables = array_merge($this->_variables, $variables);
     }
 
     /**
@@ -118,14 +150,18 @@ class ViewRender implements ViewRenderInterface
         return $this->render($element);
     }
 
-    function render(ViewInterface $viewFile)
+    /**
+     * (non-PHPdoc)
+     * @see \Slince\View\Engine\Native\ViewRenderInterface::render()
+     */
+    function render(ViewInterface $view)
     {
-        if (! is_file($viewFile->getViewFile())) {
-            throw new ViewFileNotExistsException($viewFile->getViewFile());
+        if (! is_file($view->getViewFile())) {
+            throw new ViewFileNotExistsException($view->getViewFile());
         }
-        extract($this->_vars);
+        extract($this->_variables);
         ob_start();
-        include $viewFile->getViewFile();
+        include $view->getViewFile();
         $content = ob_get_clean();
         return $content;
     }
