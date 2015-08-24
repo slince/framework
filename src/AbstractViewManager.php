@@ -44,7 +44,7 @@ abstract class AbstractViewManager implements ViewManagerInterface
      */
     function setViewPath($path)
     {
-        $this->_viewPath = $path;
+        $this->_viewPath = rtrim($path, '/') . DIRECTORY_SEPARATOR;
     }
 
     /**
@@ -64,7 +64,7 @@ abstract class AbstractViewManager implements ViewManagerInterface
      */
     function setLayoutPath($path)
     {
-        $this->_layoutPath = $path;
+        $this->_layoutPath = rtrim($path, '/') . DIRECTORY_SEPARATOR;
     }
 
     /**
