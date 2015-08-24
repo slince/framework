@@ -83,7 +83,7 @@ class ViewManager extends AbstractViewManager
     function load($name, $layout = null)
     {
         $viewFilePath = "{$this->_viewPath}{$name}.{$this->_ext}";
-        if (! is_null($layout)) {
+        if (! empty($layout)) {
             $layout = ViewFactory::createLayout($this->getLayoutFile($layout));
         } else {
             $layout = null;
