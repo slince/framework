@@ -41,7 +41,17 @@ class WebApplication extends AbstractApplication
         $this->_request = $request;
         parent::__construct($config);
     }
-
+    
+    /**
+     * (non-PHPdoc)
+     * @see \Slince\Applicaion\ApplicationInterface::run()
+     */
+    function run()
+    {
+        parent::run();
+        $response = $this->_process();
+        return $response;
+    }
     /**
      * 获取request
      *
@@ -61,15 +71,6 @@ class WebApplication extends AbstractApplication
     {
         return $this->_container->get('router');
     }
-    /**
-     * (non-PHPdoc)
-     * @see \Slince\Applicaion\ApplicationInterface::run()
-     */
-    function run()
-    {
-        $response = $this->process();
-        return $response;
-    }
 
     /**
      * 处理request
@@ -77,7 +78,7 @@ class WebApplication extends AbstractApplication
      * @param Request $request
      * @return Response
      */
-    function process()
+    protected function _process()
     {
         $this->_dispatchEvent(EventStore::PROCESS_REQUEST);
         return $this->_dispatchRoute();
@@ -85,7 +86,7 @@ class WebApplication extends AbstractApplication
     /**
      * 路由调度
      */
-    function _dispatchRoute()
+    protected function _dispatchRoute()
     {
         
         $route = $this->getRouter()->match($this->_request->getPathinfo());
@@ -118,9 +119,10 @@ class WebApplication extends AbstractApplication
      * @throws MissActionException
      * @return Response
      */
-    function _invokeController(Event $event)
+    protected function _invokeController(Event $event)
     {
-        $controllerClass = $this->_getControllerClass();
+        $controllerClass = $this->_getControllerNamedClass();
+        var_dump($controllerClass);
         $controller = $this->_container->get($controllerClass);
         if (empty($controller)) {
             throw new MissControllerException($controllerName);
@@ -140,7 +142,7 @@ class WebApplication extends AbstractApplication
      * 
      * @return string
      */
-    function _getControllerClass()
+    protected function _getControllerNamedClass()
     {
         $controllerName = $this->getParameter('controller') . 'Controller';
         $namespace = '\\App\\Controller\\';

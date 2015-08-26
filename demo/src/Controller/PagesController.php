@@ -9,7 +9,8 @@ class PagesController extends Controller
     {
         //echo 'hello';
         //$this->render();
-        $this->loadModel('Articles');
+//         $this->loadModel('Articles');
+echo 123;
     }
     function show()
     {

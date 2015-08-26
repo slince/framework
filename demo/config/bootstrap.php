@@ -8,17 +8,20 @@ use Slince\Application\WebApplication;
 use Symfony\Component\HttpFoundation\Request;
 
 include __DIR__ . '/../../vendor/autoload.php';
+include __DIR__ . '/paths.php';
+
 $config = Repository::newInstance();
 $config->merge(new PhpFile(__DIR__ . '/app.php'));
 $config->merge(new PhpFile(__DIR__ . '/services.php'), 'service');
 
 $request = Request::createFromGlobals();
 $webApp = new WebApplication($config, $request);
-$webApp->getDispatcher()->bind(EventStore::APP_INIT, function (Event $event)
+//app初始化完成之后，初始化配置
+$webApp->getDispatcher()->bind(EventStore::APP_INITED, function (Event $event)
 {
     $app = $event->getSubject();
-    $config = $app->getConfig();
-    foreach ($config['db'] as $name => $config) {
-        ConnectionManager::config($name, $config['default']);
+    $configs = $app->getConfig()->getDataObject();
+    foreach ($configs['datasources'] as $name => $config) {
+        ConnectionManager::config($name, $config);
     }
 });

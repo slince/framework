@@ -19,7 +19,7 @@ abstract class AbstractApplication implements ApplicationInterface
      * 
      * @var string
      */
-    protected $_root;
+    protected $_rootPath;
     
     /**
      * 项目主要部分文件所在位置
@@ -56,15 +56,21 @@ abstract class AbstractApplication implements ApplicationInterface
      */
     protected $_config;
     
+    protected $_listeners = [];
+    
     protected $_parameters;
 
     function __construct(Repository $config)
     {
         $this->_config = $config;
         $this->_initializeKernel();
-        $this->_initalizeApplication();
     }
 
+    function run()
+    {
+        $this->_initalizeApplication();
+    }
+    
     function getContainer()
     {
         return $this->_container;
@@ -73,6 +79,11 @@ abstract class AbstractApplication implements ApplicationInterface
     function getConfig()
     {
         return $this->_config;
+    }
+    
+    function getDispatcher()
+    {
+        return $this->_dispatcher;
     }
 
     function setParameter($name, $parameter)
@@ -102,9 +113,9 @@ abstract class AbstractApplication implements ApplicationInterface
         return $this->_parameters;
     }
     
-    function getRoot()
+    function getRootPath()
     {
-        return $this->_root;
+        return $this->_rootPath;
     }
     /**
      * 核心服务实例化
@@ -122,16 +133,17 @@ abstract class AbstractApplication implements ApplicationInterface
     {
         $configs = $this->_config->getDataObject();
         //初始化app配置
-        $this->_root = $configs['app']['root'];
-        if (empty($this->_root)) {
+        $this->_rootPath = $configs->get('rootPath');
+        if (empty($this->_rootPath)) {
             throw new LogicException("Application root path is unknow!");
         }
         //初始化事件监听器
-        $this->_bindListeners($configs['app']['listeners']);
+        $this->_bindListeners($configs->get('listeners', []));
         //初始化服务配置文件
         $this->_serviceTranslator->initializeFromArray($configs->get('service', []));
         //error相关处理
         $this->_handleError();
+        $this->_dispatchEvent(EventStore::APP_INITED);
     }
     
     protected function _dispatchEvent($eventName, $arguments = [])
@@ -140,7 +152,7 @@ abstract class AbstractApplication implements ApplicationInterface
         $this->_dispatcher->dispatch($eventName, $event);
     }
     
-    protected function _bindListeners($listeners)
+    protected function _bindListeners(array $listeners)
     {
         foreach ($listeners as $eventName => $listener) {
             $this->_dispatcher->bind($eventName, $listener);

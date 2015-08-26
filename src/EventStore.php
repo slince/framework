@@ -8,13 +8,13 @@ namespace Slince\Application;
 class EventStore
 {
 
-    const KERNEL_INITED = 'kernel.inited';
+    const KERNEL_INITED = 'Kernel.inited';
 
-    const APP_INIT = 'app.init';
+    const APP_INITED = 'App.inited';
 
-    const PROCESS_REQUEST = 'process_request';
+    const PROCESS_REQUEST = 'processRequest';
     
-    const DISPATCH_ROUTE = 'dispatch_route';
+    const DISPATCH_ROUTE = 'dispatchRoute';
 
-    const APP_RUN = 'app.run';
+    const APP_RUN = 'App.run';
 }
