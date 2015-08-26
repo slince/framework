@@ -23,12 +23,5 @@ return [
                 'quoteIdentifiers' => false,
             ]
         ],
-        'listeners' => [
-            EventStore::PROCESS_REQUEST => function(Event $event) {
-                $routes = $event->getSubject()->getRouter()->getRoutes();
-                $routeCreateCallback = include __DIR__ . '/routes.php';
-                call_user_func($routeCreateCallback, $routes);
-            }
-        ]
     ]
 ];
