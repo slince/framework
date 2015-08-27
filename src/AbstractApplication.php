@@ -126,7 +126,6 @@ abstract class AbstractApplication implements ApplicationInterface
         $this->_serviceTranslator = KernelServiceFactory::createServiceTranslator($this->_container);
         $this->_dispatcher = KernelServiceFactory::createDispatcher();
         $this->_container->share('app', $this);
-        $this->_dispatchEvent(EventStore::KERNEL_INITED);
     }
     
     protected function _initalizeApplication()

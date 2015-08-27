@@ -100,7 +100,7 @@ class WebApplication extends AbstractApplication
         //绑定controller调用
         $this->_dispatcher->bind(EventStore::DISPATCH_ROUTE, array(
             $this,
-            '_invokeController'
+            'invokeController'
         ));
         //接下来是response传递的事件调度过程
         $response = new Response();
@@ -119,10 +119,9 @@ class WebApplication extends AbstractApplication
      * @throws MissActionException
      * @return Response
      */
-    protected function _invokeController(Event $event)
+    function invokeController(Event $event)
     {
         $controllerClass = $this->_getControllerNamedClass();
-        var_dump($controllerClass);
         $controller = $this->_container->get($controllerClass);
         if (empty($controller)) {
             throw new MissControllerException($controllerName);

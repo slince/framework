@@ -14,11 +14,11 @@ return [
          return $router;
     },
     'view' => function(Container $container) {
-        $root = $container->get('app')->getRoot();
+        $rootPath = $container->get('app')->getRootPath();
         return ServiceFactory::get('native', [
-            'viewPath' => $root . '/src/Resource/views',
-            'layoutPath' => $root . '/src/Resource/layouts',
-            'elementPath' => $root . '/src/Resource/elements',
+            'viewPath' => $rootPath . '/src/Resource/views',
+            'layoutPath' => $rootPath . '/src/Resource/layouts',
+            'elementPath' => $rootPath . '/src/Resource/elements',
         ]);
     },
 ];
