@@ -19,7 +19,23 @@ return [
             'encoding' => 'utf8',
             'timezone' => '+8:00',
             'cacheMetadata' => true,
-            'quoteIdentifiers' => false,
+            'quoteIdentifiers' => false
         ]
+    ],
+    'cache' => [
+        '_cake_core_' => [
+            'className' => 'File',
+            'prefix' => 'myapp_cake_core_',
+            'path' => CACHE_PATH . '/',
+            'serialize' => true,
+            'duration' => '+2 minutes'
+        ],
+        '_cake_model_' => [
+            'className' => 'File',
+            'prefix' => 'myapp_cake_model_',
+            'path' => CACHE_PATH . 'models/',
+            'serialize' => true,
+            'duration' => '+2 minutes',
+        ],
     ],
 ];

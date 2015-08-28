@@ -6,6 +6,7 @@ use Slince\Event\Event;
 use Cake\Datasource\ConnectionManager;
 use Slince\Application\WebApplication;
 use Symfony\Component\HttpFoundation\Request;
+use Cake\Cache\Cache;
 
 include __DIR__ . '/../../vendor/autoload.php';
 include __DIR__ . '/paths.php';
@@ -21,7 +22,12 @@ $webApp->getDispatcher()->bind(EventStore::APP_INITED, function (Event $event)
 {
     $app = $event->getSubject();
     $configs = $app->getConfig()->getDataObject();
+    //设置数据库
     foreach ($configs['datasources'] as $name => $config) {
         ConnectionManager::config($name, $config);
+    }
+    //设置缓存
+    foreach ($configs['cache'] as $name => $config) {
+        Cache::config($name, $config);
     }
 });
