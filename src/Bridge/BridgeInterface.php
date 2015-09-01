@@ -1,7 +1,7 @@
 <?php
 namespace Slince\Application\Bridge;
 
-class Bridge
+interface BridgeInterface
 {
-    
+    function 
 }
