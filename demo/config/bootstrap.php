@@ -5,7 +5,6 @@ use Slince\Application\EventStore;
 use Slince\Event\Event;
 use Cake\Datasource\ConnectionManager;
 use Slince\Application\WebApplication;
-use Symfony\Component\HttpFoundation\Request;
 use Cake\Cache\Cache;
 
 include __DIR__ . '/../../vendor/autoload.php';
@@ -15,8 +14,7 @@ $config = Repository::newInstance();
 $config->merge(new PhpFile(__DIR__ . '/app.php'));
 $config->merge(new PhpFile(__DIR__ . '/services.php'), 'service');
 
-$request = Request::createFromGlobals();
-$webApp = new WebApplication($config, $request);
+$webApp = new WebApplication($config);
 //app初始化完成之后，初始化配置
 $webApp->getDispatcher()->bind(EventStore::APP_INITED, function (Event $event)
 {

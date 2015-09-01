@@ -36,12 +36,19 @@ class WebApplication extends AbstractApplication
      */
     protected $_router;
     
-    function __construct(Repository $config, Request $request)
+    function __construct(Repository $config, Request $request = null)
     {
-        $this->_request = $request;
+        if (! is_null($request)) {
+            $this->handle($request);
+        }
         parent::__construct($config);
     }
     
+    function handle(Request $request)
+    {
+        $this->_request = $request;
+        return $this;
+    }
     /**
      * (non-PHPdoc)
      * @see \Slince\Applicaion\ApplicationInterface::run()

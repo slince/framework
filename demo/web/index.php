@@ -1,4 +1,8 @@
 <?php
+use Symfony\Component\HttpFoundation\Request;
+
 include __DIR__ . '/../config/bootstrap.php';
-$response = $webApp->run();
+
+$request = Request::createFromGlobals();
+$response = $webApp->handle($request)->run();
 $response->send();
