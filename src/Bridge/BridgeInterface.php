@@ -1,7 +1,9 @@
 <?php
 namespace Slince\Application\Bridge;
 
+use Slince\Event\Event;
+
 interface BridgeInterface
 {
-    function 
+    function init(Event $event);
 }

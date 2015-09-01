@@ -142,6 +142,8 @@ abstract class AbstractApplication implements ApplicationInterface
         $this->_serviceTranslator->initializeFromArray($configs->get('service', []));
         //error相关处理
         $this->_handleError();
+        //bridge
+        $this->_handleBridge();
         $this->_dispatchEvent(EventStore::APP_INITED);
     }
     
@@ -163,5 +165,13 @@ abstract class AbstractApplication implements ApplicationInterface
         $whoops = new \Whoops\Run;
         $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
         $whoops->register();
+    }
+    
+    protected function _handleBridge()
+    {
+        $bridges = BridgeFactory::createAllBridges();
+        foreach ($bridges as $bridge) {
+            $this->_dispatcher->addSubscriber($bridge);
+        }
     }
 }
