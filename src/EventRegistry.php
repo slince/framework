@@ -6,33 +6,40 @@
 namespace Slince\Application;
 
 use Slince\Event\Event;
+use Slince\Event\ListenerInterface;
+
 class EventRegistry
 {
+
     /**
-     * 
+     *
      * Application
-     * 
+     *
      * @var AbstractApplication
      */
     protected $_application;
-    
+
     protected $_loaded = [];
-    
+
     function __construct(ApplicationInterface $application)
     {
         $this->_application = $application;
-        $this->_application->getDispatcher()->bind(
-            EventStore::KERNEL_INITED, [$this, 'handle']
-        );
+        $this->_application->getDispatcher()->bind(EventStore::KERNEL_INITED, [
+            $this,
+            'handle'
+        ]);
     }
-    
+
     function register($objectName)
     {
-        $this->_application->getDispatcher()
-            ->addSubscriber($this->load($objectName));
+        $listener = $this->load($objectName);
+        if ($listener instanceof ListenerInterface) {
+            $this->_application->getDispatcher()->addListener($eventName, $listener);
+        }
+        $this->_application->getDispatcher()->addSubscriber();
         return $this;
     }
-    
+
     function load($objectName)
     {
         if (isset($this->_loaded[$objectName])) {
@@ -43,14 +50,12 @@ class EventRegistry
         $this->_loaded[$objectName] = $instance;
         return $instance;
     }
-    
+
     function _resolveClassName($objectName)
     {
         return '';
     }
-    
+
     function handle(Event $event)
-    {
-        
-    }
+    {}
 }
