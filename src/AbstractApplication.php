@@ -29,25 +29,31 @@ abstract class AbstractApplication implements ApplicationInterface
     protected $_src;
 
     /**
-     * Container instance
+     * Container Instance
      *
      * @var ServiceTranslator
      */
     protected $_serviceTranslator;
     
     /**
-     * Container instance
+     * Container Instance
      *
      * @var Container
      */
     protected $_container;
 
     /**
-     * dispatcher instance
+     * Dispatcher Instance
      *
      * @var Dispatcher
      */
     protected $_dispatcher;
+    
+    /**
+     * Event Registry
+     * @var EventRegistry
+     */
+    protected $_eventRegistry;
 
     /**
      * Config repository instance
@@ -124,6 +130,7 @@ abstract class AbstractApplication implements ApplicationInterface
         $this->_serviceTranslator = KernelServiceFactory::createServiceTranslator($this->_container);
         $this->_dispatcher = KernelServiceFactory::createDispatcher();
         $this->_container->share('app', $this);
+        $this->_eventRegistry = KernelServiceFactory::createEventRegistry($this);
         $this->_dispatchEvent(EventStore::KERNEL_INITED);
     }
     

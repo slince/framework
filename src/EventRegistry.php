@@ -5,7 +5,8 @@
  */
 namespace Slince\Application;
 
-class ListenerRegistry
+use Slince\Event\Event;
+class EventRegistry
 {
     /**
      * 
@@ -20,6 +21,9 @@ class ListenerRegistry
     function __construct(ApplicationInterface $application)
     {
         $this->_application = $application;
+        $this->_application->getDispatcher()->bind(
+            EventStore::KERNEL_INITED, [$this, 'handle']
+        );
     }
     
     function register($objectName)
@@ -41,6 +45,11 @@ class ListenerRegistry
     }
     
     function _resolveClassName($objectName)
+    {
+        return '';
+    }
+    
+    function handle(Event $event)
     {
         
     }

@@ -35,4 +35,9 @@ class KernelServiceFactory
     {
         return new ServiceTranslator($container);
     }
+    
+    static function createEventRegistry(ApplicationInterface $application)
+    {
+        return new EventRegistry($application);
+    }
 }
