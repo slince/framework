@@ -24,10 +24,11 @@ class EventRegistry
     function __construct(ApplicationInterface $application)
     {
         $this->_application = $application;
-        $this->_application->getDispatcher()->bind(EventStore::KERNEL_INITED, [
-            $this,
-            'handle'
-        ]);
+    }
+    
+    function _bindSystemListeners()
+    {
+        
     }
 
     function register($objectName)
@@ -55,7 +56,4 @@ class EventRegistry
     {
         return '';
     }
-
-    function handle(Event $event)
-    {}
 }
