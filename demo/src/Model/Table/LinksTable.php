@@ -67,7 +67,12 @@ class LinksTable extends Table
              ])
             ->requirePresence('status')
             ->notEmpty('status', '状态不得为空');
-		return $validator;
-	}
+        return $validator;
+    }
+    
+    function getName($id)
+    {
+        return $this->findById($id)->select(['name'])->first()->toArray();
+    }
 
 }

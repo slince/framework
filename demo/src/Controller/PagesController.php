@@ -9,7 +9,7 @@ class PagesController extends Controller
     {
 //         echo 'hello';
         $this->render();
-        $articles = $this->loadModel('Articles')->find('all')->first()->toArray();
+        $articles = $this->loadModel('Links')->getName(1);
         print_r($articles);
     }
     function show()

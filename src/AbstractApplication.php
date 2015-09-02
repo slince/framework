@@ -56,8 +56,6 @@ abstract class AbstractApplication implements ApplicationInterface
      */
     protected $_config;
     
-    protected $_listeners = [];
-    
     protected $_parameters;
 
     function __construct(Repository $config)
@@ -126,6 +124,7 @@ abstract class AbstractApplication implements ApplicationInterface
         $this->_serviceTranslator = KernelServiceFactory::createServiceTranslator($this->_container);
         $this->_dispatcher = KernelServiceFactory::createDispatcher();
         $this->_container->share('app', $this);
+        $this->_dispatchEvent(EventStore::KERNEL_INITED);
     }
     
     protected function _initalizeApplication()
