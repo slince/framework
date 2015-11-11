@@ -16,11 +16,11 @@ class PhpParser extends AbstractParser
      * 
      * @see \Slince\Config\ParserInterface::parse()
      */
-    function parse(FileInterface $file)
+    function parse($filePath)
     {
-        $data = include $file->getPath();
+        $data = include $filePath;
         if (! is_array($data)) {
-            throw new ParseException(sprintf('The file "%s" must return a PHP array', $file->getPath()));
+            throw new ParseException(sprintf('The file "%s" must return a PHP array', $filePath));
         }
         return $data;
     }
@@ -30,10 +30,10 @@ class PhpParser extends AbstractParser
      * 
      * @see \Slince\Config\ParserInterface::dump()
      */
-    function dump(FileInterface $file, array $data)
+    function dump($filePath, array $data)
     {
         $string = "<?php\r\nreturn " . var_export($data, true) . ";\r\n";
-        return @file_put_contents($file->getPathWithoutException(), $string) !== false;
+        return @file_put_contents($filePath, $string) !== false;
     }
     /**
      * (non-PHPdoc)

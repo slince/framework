@@ -16,10 +16,10 @@ class IniParser extends AbstractParser
      * 
      * @see \Slince\Config\ParserInterface::parse()
      */
-    function parse(FileInterface $file)
+    function parse($filePath)
     {
-        if (($data = @parse_ini_file($file->getPath(), true)) === false) {
-            throw new ParseException(sprintf('The file "%s" has syntax errors', $file->getPath()));
+        if (($data = @parse_ini_file($filePath, true)) === false) {
+            throw new ParseException(sprintf('The file "%s" has syntax errors', $filePath));
         } else {
             return $data;
         }
@@ -30,7 +30,7 @@ class IniParser extends AbstractParser
      * 
      * @see \Slince\Config\ParserInterface::dump()
      */
-    function dump(FileInterface $file, array $data)
+    function dump($filePath, array $data)
     {
         throw new ParseException('Not supported');
     }

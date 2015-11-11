@@ -5,9 +5,9 @@
  */
 namespace Slince\Config;
 
-trait DataObjectTrait implements \ArrayAccess, \Countable, \IteratorAggregate
+class DataObject implements \ArrayAccess, \Countable, \IteratorAggregate
 {
-    
+
     /**
      * 配置的值
      *
@@ -27,12 +27,14 @@ trait DataObjectTrait implements \ArrayAccess, \Countable, \IteratorAggregate
 
     /**
      * 替换当前数据
-     * @param array $data
+     * 
+     * @param array $data            
      */
     function replace(array $data)
     {
         $this->_data = $data;
     }
+
     /**
      * 设置新的配置值，已存在的键值将会被覆盖
      *
@@ -56,10 +58,11 @@ trait DataObjectTrait implements \ArrayAccess, \Countable, \IteratorAggregate
     {
         return $this->exists($key) ? $this->_data[$key] : $defaultValue;
     }
-    
+
     /**
      * 批量合并
-     * @param array $data
+     * 
+     * @param array $data            
      */
     function merge(array $data)
     {
@@ -96,9 +99,9 @@ trait DataObjectTrait implements \ArrayAccess, \Countable, \IteratorAggregate
         $this->_data = [];
     }
 
-
     /**
      * (non-PHPdoc)
+     * 
      * @see ArrayAccess::offsetGet()
      */
     function offsetGet($offset)
@@ -106,9 +109,9 @@ trait DataObjectTrait implements \ArrayAccess, \Countable, \IteratorAggregate
         return $this->get($offset);
     }
 
-
     /**
      * (non-PHPdoc)
+     * 
      * @see ArrayAccess::offsetSet()
      */
     function offsetSet($offset, $value)
@@ -116,9 +119,9 @@ trait DataObjectTrait implements \ArrayAccess, \Countable, \IteratorAggregate
         $this->set($offset, $value);
     }
 
-
     /**
      * (non-PHPdoc)
+     * 
      * @see ArrayAccess::offsetUnset()
      */
     function offsetUnset($offset)
@@ -126,9 +129,9 @@ trait DataObjectTrait implements \ArrayAccess, \Countable, \IteratorAggregate
         $this->delete($offset);
     }
 
-
     /**
      * (non-PHPdoc)
+     * 
      * @see ArrayAccess::offsetExists()
      */
     function offsetExists($offset)
@@ -136,18 +139,19 @@ trait DataObjectTrait implements \ArrayAccess, \Countable, \IteratorAggregate
         return $this->exists($offset);
     }
 
-
     /**
      * (non-PHPdoc)
+     * 
      * @see Countable::count()
      */
     function count()
     {
         return count($this->_data);
     }
-    
+
     /**
      * (non-PHPdoc)
+     * 
      * @see IteratorAggregate::getIterator()
      */
     function getIterator()

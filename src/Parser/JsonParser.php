@@ -6,7 +6,6 @@
 namespace Slince\Config\Parser;
 
 use Slince\Config\Exception\ParseException;
-use Slince\Config\File\FileInterface;
 
 class JsonParser extends AbstractParser
 {
@@ -16,9 +15,9 @@ class JsonParser extends AbstractParser
      * 
      * @see \Slince\Config\ParserInterface::parse()
      */
-    function parse(FileInterface $file)
+    function parse($filePath)
     {
-        $data = json_decode(file_get_contents($file->getPath()), true);
+        $data = json_decode(file_get_contents($filePath), true);
         if (json_last_error() != JSON_ERROR_NONE) {
             throw new ParseException('The file (%s)  need to contain a valid json string');
         }
@@ -30,10 +29,10 @@ class JsonParser extends AbstractParser
      * 
      * @see \Slince\Config\ParserInterface::dump()
      */
-    function dump(FileInterface $file, array $data)
+    function dump($filePath, array $data)
     {
         $string = json_encode($data);
-        return @file_put_contents($file->getPathWithoutException(), $string);
+        return @file_put_contents($filePath, $string);
     }
 
     /**

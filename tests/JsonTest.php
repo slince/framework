@@ -1,6 +1,5 @@
 <?php
-use Slince\Config\Repository;
-use Slince\Config\File\JsonFile;
+use Slince\Config\Config;
 
 class JsonTest extends \PHPUnit_Framework_TestCase
 {
@@ -9,7 +8,7 @@ class JsonTest extends \PHPUnit_Framework_TestCase
 
     function setUp()
     {
-        $this->_config = Repository::newInstance();
+        $this->_config = new Config();
     }
 
     function tearDown()
@@ -19,21 +18,21 @@ class JsonTest extends \PHPUnit_Framework_TestCase
 
     function testMerge()
     {
-        $this->_config->merge(new JsonFile(__DIR__ . '/config/config.json'));
-        $this->assertNotEmpty($this->_config->getDataObject()->toArray());
+        $this->_config->load(__DIR__ . '/config/config.json');
+        $this->assertNotEmpty($this->_config->toArray());
     }
 
     function testException()
     {
         $this->setExpectedException('Slince\Config\Exception\ParseException');
-        $this->_config->merge(new JsonFile(__DIR__ . '/config/config2.json'));
+        $this->_config->load(__DIR__ . '/config/config2.json');
     }
 
-    function testDump()
-    {
-        $this->_config->merge(new JsonFile(__DIR__ . '/config/config.json'));
-        $this->_config->getDataObject()->set('key5', 'value5');
-        $this->_config->getDataObject()->set('key6', 'value6');
-        $this->_config->dump(new JsonFile(__DIR__ . '/config/config-dump.json'));
-    }
+//     function testDump()
+//     {
+//         $this->_config->merge(new JsonFile(__DIR__ . '/config/config.json'));
+//         $this->_config->getDataObject()->set('key5', 'value5');
+//         $this->_config->getDataObject()->set('key6', 'value6');
+//         $this->_config->dump(new JsonFile(__DIR__ . '/config/config-dump.json'));
+//     }
 }

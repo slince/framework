@@ -31,35 +31,34 @@
     key6 = val6
 
     //client.php
-    $repository = new Slince\Config\Repository;
-    $repository->merge(new PhpFile(__DIR__ . '/config/config.php'));
-    $repository->merge(new JsonFile('config.json'));
-    $repository->merge(new IniFile('config.ini'));
+    $config = new Slince\Config\Config;
+    $config->load(__DIR__ . '/config/config.php');
+    $config->load('config.json');
+    $config->load('config.ini');
     
     //获取参数,键值不存在时会得到默认值，null；get方法支持自定义默认值
-    $data = $repository->getDataObject();
-    echo $data->get('key1');
-    echo $data['key2'];
+    echo $config->get('key1');
+    echo $config['key2'];
     
     //设置参数
-    $data->set('key7', 'val7');
-    $data['key8'] = 'val8';
+    $config->set('key7', 'val7');
+    $config['key8'] = 'val8';
     
     //判断键值是否存在
-    if ($data->exists('key9')) {
+    if ($config->exists('key9')) {
         //***
     }
-    if (isset($data['key9'])) {
+    if (config($data['key9'])) {
         //***
     }
     
     //删除键值
-    $data->delete('key8');
-    unset($data['key8']);
+    $config->delete('key8');
+    unset($config['key8']);
     
     //将配置写回到config.php中
-    $repository->dump(new PhpFile(__DIR__ . '/config/config-dump.php'));
+    $config->dump(__DIR__ . '/config/config-dump.php');
 
     //清空配置
-    $data->flush();
+    $config->flush();
     

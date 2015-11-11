@@ -1,6 +1,5 @@
 <?php
-use Slince\Config\Repository;
-use Slince\Config\File\IniFile;
+use Slince\Config\Config;
 
 class IniTest extends \PHPUnit_Framework_TestCase
 {
@@ -9,7 +8,7 @@ class IniTest extends \PHPUnit_Framework_TestCase
 
     function setUp()
     {
-        $this->_config = new Repository();
+        $this->_config = new Config();
     }
 
     function tearDown()
@@ -19,14 +18,14 @@ class IniTest extends \PHPUnit_Framework_TestCase
 
     function testMerge()
     {
-        $this->_config->merge(new IniFile(__DIR__ . '/config/config.ini'));
-        $this->assertNotEmpty($this->_config->getDataObject()->toArray());
+        $this->_config->load(__DIR__ . '/config/config.ini');
+        $this->assertNotEmpty($this->_config->toArray());
     }
 
     function testException()
     {
         $this->setExpectedException('Slince\Config\Exception\ParseException');
-        $this->_config->merge(new IniFile(__DIR__ . '/config/config2.ini'));
+        $this->_config->load(__DIR__ . '/config/config2.ini');
     }
 
     /**
@@ -34,10 +33,10 @@ class IniTest extends \PHPUnit_Framework_TestCase
      */
     function testDump()
     {
-        $this->_config->merge(new IniFile(__DIR__ . '/config/config.ini'));
-        $this->_config->getDataObject()->set('key5', 'value5');
-        $this->_config->getDataObject()->set('key6', 'value6');
+        $this->_config->load(__DIR__ . '/config/config.ini');
+        $this->_config->set('key5', 'value5');
+        $this->_config->set('key6', 'value6');
         $this->setExpectedException('Slince\Config\Exception\ParseException');
-        $this->_config->dump(new IniFile(__DIR__ . '/config/config-dump.ini'));
+        $this->_config->dump(__DIR__ . '/config/config-dump.ini');
     }
 }
