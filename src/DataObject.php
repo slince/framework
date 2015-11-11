@@ -5,26 +5,16 @@
  */
 namespace Slince\Config;
 
-class DataObject implements \ArrayAccess, \Countable, \IteratorAggregate
+trait DataObjectTrait implements \ArrayAccess, \Countable, \IteratorAggregate
 {
+    
     /**
      * 配置的值
      *
      * @var array
      */
-    private $_data = [];
+    protected $_data = [];
 
-    function __construct($data = [])
-    {
-        $this->_data = $data;
-    }
-    /**
-     * 创建该实例
-     */
-    static function create()
-    {
-        return new self();
-    }
     /**
      * 输出当前对象中保存的配置值
      *

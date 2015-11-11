@@ -24,4 +24,9 @@ interface ParserInterface
      * @param array $data            
      */
     function dump(FileInterface $file, array $data);
+    
+    /**
+     * 获取解析器支持的文件扩展名
+     */
+    static function getSupportedExtensions();
 }

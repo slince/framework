@@ -12,4 +12,6 @@ interface ConfigInterface
     function set($key, $value);
     
     function delete($key);
+    
+    function load($path);
 }

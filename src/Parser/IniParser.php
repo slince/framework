@@ -34,4 +34,13 @@ class IniParser extends AbstractParser
     {
         throw new ParseException('Not supported');
     }
+
+    /**
+     * (non-PHPdoc)
+     * @see \Slince\Config\Parser\ParserInterface::getSupportedExtensions()
+     */
+    static function getSupportedExtensions()
+    {
+        return ['ini'];
+    }
 }

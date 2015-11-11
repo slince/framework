@@ -35,4 +35,12 @@ class PhpParser extends AbstractParser
         $string = "<?php\r\nreturn " . var_export($data, true) . ";\r\n";
         return @file_put_contents($file->getPathWithoutException(), $string) !== false;
     }
+    /**
+     * (non-PHPdoc)
+     * @see \Slince\Config\Parser\ParserInterface::getSupportedExtensions()
+     */
+    static function getSupportedExtensions()
+    {
+        return ['php'];
+    }
 }

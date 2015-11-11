@@ -35,4 +35,13 @@ class JsonParser extends AbstractParser
         $string = json_encode($data);
         return @file_put_contents($file->getPathWithoutException(), $string);
     }
+
+    /**
+     * (non-PHPdoc)
+     * @see \Slince\Config\Parser\ParserInterface::getSupportedExtensions()
+     */
+    static function getSupportedExtensions()
+    {
+        return ['json'];
+    }
 }
