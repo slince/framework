@@ -54,27 +54,13 @@ class ViewRender implements ViewRenderInterface
      * (non-PHPdoc)
      * @see \Slince\View\Engine\Native\ViewRenderInterface::setVariable()
      */
-    function setVariable($name, $value = null)
+    function set($name, $value = null)
     {
-        $this->_variables[$name] = $value;
-    }
-
-    /**
-     * (non-PHPdoc)
-     * @see \Slince\View\Engine\Native\ViewRenderInterface::setVariables()
-     */
-    function setVariables(array $variables)
-    {
-        $this->_variables = $variables;
-    }
-    
-    /**
-     * (non-PHPdoc)
-     * @see \Slince\View\Engine\Native\ViewRenderInterface::addVariables()
-     */
-    function addVariables(array $variables)
-    {
-        $this->_variables = array_merge($this->_variables, $variables);
+        if (is_array($name)) {
+            $this->_variables = array_merge($this->_variables, $name);
+        } else {
+            $this->_variables[$name] = $value;
+        }
     }
 
     /**

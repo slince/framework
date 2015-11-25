@@ -14,21 +14,7 @@ interface ViewRenderInterface
      * @param string $name            
      * @param string $value            
      */
-    function setVariable($name, $value = null);
-
-    /**
-     * 批量设置对象
-     * 
-     * @param array $variables            
-     */
-    function setVariables(array $variables);
-
-    /**
-     * 批量添加一组变量
-     * 
-     * @param array $variables            
-     */
-    function addVariables(array $variables);
+    function set($name, $value = null);
 
     /**
      * 渲染一个视图对象
