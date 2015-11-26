@@ -63,7 +63,7 @@ class View extends AbstractView
             return $block->getContent();
         }
         if ($useLayout && ! is_null($this->_layout)) {
-            return $viewRender->renderFile($this->_layout);
+            return $viewRender->renderFile($this->_viewManager->getLayoutFile($this->_layout));
         }
     }
 }
