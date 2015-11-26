@@ -1,7 +1,7 @@
 <?php
 /**
  * slince view library
- * 
+ *
  * @author Tao <taosikai@yeah.net>
  */
 namespace Slince\View\Engine\Native;
@@ -34,27 +34,39 @@ class ViewRender implements ViewRenderInterface
 
     /**
      * 设置的变量
-     * 
+     *
      * @var array
      */
     protected $_variables = [];
+
+    /**
+     * View manager
+     *
+     * @var ViewManager
+     */
+    protected $_viewManager;
 
     /**
      * 实例化当前对象，单例
      *
      * @return \Slince\View\Engine\Native\ViewRender
      */
-    static function newInstance()
+    static function newInstance(ViewManager $viewManager)
     {
         if (! self::$_instance instanceof self) {
-            self::$_instance = new self();
+            self::$_instance = new self($viewManager);
         }
         return self::$_instance;
     }
 
+    function __construct(ViewManager $viewManager)
+    {
+        $this->_viewManager = $viewManager;
+    }
+
     /**
      * (non-PHPdoc)
-     * 
+     *
      * @see \Slince\View\Engine\Native\ViewRenderInterface::setVariable()
      */
     function set($name, $value = null)
@@ -89,6 +101,7 @@ class ViewRender implements ViewRenderInterface
 
     /**
      * 添加一个block
+     * 
      * @param string $name
      * @param Block $block
      */
@@ -96,6 +109,7 @@ class ViewRender implements ViewRenderInterface
     {
         $this->_blocks[$name] = $block;
     }
+
     /**
      * 是否存在某个block
      *
@@ -148,7 +162,7 @@ class ViewRender implements ViewRenderInterface
 
     /**
      * (non-PHPdoc)
-     * 
+     *
      * @see \Slince\View\Engine\Native\ViewRenderInterface::render()
      */
     function render(ViewInterface $view)
@@ -158,7 +172,7 @@ class ViewRender implements ViewRenderInterface
 
     /**
      * (non-PHPdoc)
-     * 
+     *
      * @see \Slince\View\Engine\Native\ViewRenderInterface::renderFile()
      */
     function renderFile($file)

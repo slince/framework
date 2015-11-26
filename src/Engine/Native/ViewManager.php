@@ -1,6 +1,7 @@
 <?php
 /**
  * slince view library
+ * 
  * @author Tao <taosikai@yeah.net>
  */
 namespace Slince\View\Engine\Native;
@@ -31,17 +32,18 @@ class ViewManager extends AbstractViewManager
      */
     function getViewRender()
     {
-        return ViewRender::newInstance();
+        return ViewRender::newInstance($this);
     }
 
     /**
      * 设置局部视图位置
      *
-     * @param string $path            
+     * @param string $path
      */
     function setElementPath($path)
     {
-        $this->_elementPath = rtrim($path, '/') . DIRECTORY_SEPARATOR;;
+        $this->_elementPath = rtrim($path, '/') . DIRECTORY_SEPARATOR;
+        ;
     }
 
     /**
@@ -55,39 +57,46 @@ class ViewManager extends AbstractViewManager
     /**
      * 获取局部视图位置
      *
-     * @param string $name            
+     * @param string $name
      * @return string
      */
     function getElementFile($name)
     {
-        return "{$this->_elementPath}.{$name}.{$this->_ext}";
+        return "{$this->_elementPath}{$name}.{$this->_ext}";
     }
 
     /**
      * 获取布局文件位置
      *
-     * @param string $name            
+     * @param string $name
      * @return string
      */
     function getLayoutFile($name)
     {
-        return "{$this->_layoutPath}.{$name}.{$this->_ext}";
+        return "{$this->_layoutPath}{$name}.{$this->_ext}";
     }
-    
+
+    /**
+     * 获取视图文件位置
+     *
+     * @param string $name
+     * @return string
+     */
+    function getViewFile($name)
+    {
+        return "{$this->_viewPath}{$name}.{$this->_ext}";
+    }
+
     /**
      * 加载一个模板
      *
-     * @param string $name            
+     * @param string $name
      * @return \Slince\View\View
      */
     function load($name, $layout = null)
     {
-        $viewFilePath = "{$this->_viewPath}{$name}.{$this->_ext}";
-        if (! empty($layout)) {
-            $layout = ViewFactory::createLayout($this->getLayoutFile($layout));
-        } else {
-            $layout = null;
-        }
-        return ViewFactory::createView($viewFilePath);
+        $viewFile = $this->getViewFile($name);
+        $layoutFile = empty($layout) ? null : $this->getLayoutFile($layout);
+        return ViewFactory::createView($viewFile, $layoutFile, $this);
     }
 }

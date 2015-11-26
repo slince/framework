@@ -14,43 +14,21 @@ class ViewFactory
      * @param string $content            
      * @return Block
      */
-    static function createBlock($content)
+    static function createBlock($content = '')
     {
         return new Block($content);
     }
 
     /**
-     * 创建局部视图对象
-     *
-     * @param string $path            
-     * @return Element
-     */
-    static function createElement($elementFile)
-    {
-        return new Element($elementFile);
-    }
-    
-    /**
-     * 创建layout
-     * 
-     * @param string $layoutFile
-     * @return \Slince\View\Engine\Native\Layout
-     */
-    static function createLayout($layoutFile)
-    {
-        return new Layout($layoutFile);
-    }
-    
-    /**
      * 创建视图对象
      * 
      * @param string $viewFile
-     * @param ViewRender $viewRender
+     * @param ViewManager $viewManager
      * @param Layout $layout
      * @return \Slince\View\Engine\Native\View
      */
-    static function createView($viewFile, ViewRender $viewRender, Layout $layout = null)
+    static function createView($viewFile, $layoutFile, ViewManager $viewManager)
     {
-        return new View($viewFile, $viewRender, $layout);
+        return new View($viewFile, $layoutFile, $viewManager);
     }
 }
