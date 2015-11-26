@@ -1,6 +1,7 @@
 <?php
 /**
  * slince view library
+ * 
  * @author Tao <taosikai@yeah.net>
  */
 namespace Slince\View\Engine\Native;
@@ -12,7 +13,7 @@ class ViewRender implements ViewRenderInterface
 
     /**
      * 当前视图渲染器实例
-     * 
+     *
      * @var ViewRender
      */
     protected static $_instance;
@@ -33,13 +34,14 @@ class ViewRender implements ViewRenderInterface
 
     /**
      * 设置的变量
+     * 
      * @var array
      */
     protected $_variables = [];
 
     /**
      * 实例化当前对象，单例
-     * 
+     *
      * @return \Slince\View\Engine\Native\ViewRender
      */
     static function newInstance()
@@ -52,6 +54,7 @@ class ViewRender implements ViewRenderInterface
 
     /**
      * (non-PHPdoc)
+     * 
      * @see \Slince\View\Engine\Native\ViewRenderInterface::setVariable()
      */
     function set($name, $value = null)
@@ -66,18 +69,18 @@ class ViewRender implements ViewRenderInterface
     /**
      * 捕捉一个视图块
      *
-     * @param string $name            
+     * @param string $name
      */
     function start($name)
     {
-        $this->_block[$name] = ViewFactory::createBlock();
+        $this->_blocks[$name] = ViewFactory::createBlock();
         ob_start();
     }
 
     /**
      * 结束上一个视图块的捕捉
      */
-    function stop()
+    function end()
     {
         if (($block = end($this->_blocks)) !== false) {
             $block->setContent(ob_get_clean());
@@ -85,9 +88,18 @@ class ViewRender implements ViewRenderInterface
     }
 
     /**
+     * 添加一个block
+     * @param string $name
+     * @param Block $block
+     */
+    function addBlock($name, Block $block)
+    {
+        $this->_blocks[$name] = $block;
+    }
+    /**
      * 是否存在某个block
      *
-     * @param string $name            
+     * @param string $name
      */
     function hasBlock($name)
     {
@@ -97,7 +109,7 @@ class ViewRender implements ViewRenderInterface
     /**
      * 获取块的内容，块不存在会抛出异常
      *
-     * @param string $name            
+     * @param string $name
      * @throws Exception\ViewException
      */
     function fetch($name)
@@ -111,7 +123,7 @@ class ViewRender implements ViewRenderInterface
     /**
      * 获取块的内容
      *
-     * @param string $name            
+     * @param string $name
      * @return string|null
      */
     function fetchOrFail($name)
@@ -126,28 +138,37 @@ class ViewRender implements ViewRenderInterface
     /**
      * 获取一个局部视图的内容
      *
-     * @param string $name            
+     * @param string $name
      */
-    function read($name)
+    function element($name)
     {
-        $this->_elements[] = $name;
-        echo $this->_viewManager->getElementFile($name);exit;
-        $element = ViewFactory::createElement($this->_viewManager->getElementFile($name));
-        return $this->render($element);
+        $this->_elements[$name] = $this->renderFile($this->_viewManager->getElementFile($name));
+        return $this->_elements[$name];
     }
 
     /**
      * (non-PHPdoc)
+     * 
      * @see \Slince\View\Engine\Native\ViewRenderInterface::render()
      */
     function render(ViewInterface $view)
     {
-        if (! is_file($view->getViewFile())) {
-            throw new ViewFileNotExistsException($view->getViewFile());
+        return $this->renderFile($view->getViewFile());
+    }
+
+    /**
+     * (non-PHPdoc)
+     * 
+     * @see \Slince\View\Engine\Native\ViewRenderInterface::renderFile()
+     */
+    function renderFile($file)
+    {
+        if (! is_file($file)) {
+            throw new ViewFileNotExistsException($file);
         }
         extract($this->_variables);
         ob_start();
-        include $view->getViewFile();
+        include $file;
         $content = ob_get_clean();
         return $content;
     }

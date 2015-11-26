@@ -73,7 +73,7 @@ class ViewManager extends AbstractViewManager
     {
         return "{$this->_layoutPath}.{$name}.{$this->_ext}";
     }
-
+    
     /**
      * 加载一个模板
      *
@@ -88,6 +88,6 @@ class ViewManager extends AbstractViewManager
         } else {
             $layout = null;
         }
-        return ViewFactory::createView($viewFilePath, $this->getViewRender(), $layout);
+        return ViewFactory::createView($viewFilePath);
     }
 }

@@ -28,6 +28,7 @@ class Block implements BlockInterface
     function setContent($content)
     {
         $this->_content = $content;
+        return $this;
     }
 
     function getContent()
