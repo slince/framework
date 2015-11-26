@@ -101,7 +101,7 @@ class ViewRender implements ViewRenderInterface
 
     /**
      * 添加一个block
-     * 
+     *
      * @param string $name
      * @param Block $block
      */
@@ -185,5 +185,17 @@ class ViewRender implements ViewRenderInterface
         include $file;
         $content = ob_get_clean();
         return $content;
+    }
+
+    /**
+     * 重置render，避免对下次解析view造成影响
+     *
+     * @return void
+     */
+    function reset()
+    {
+        $this->_blocks = [];
+        $this->_elements = [];
+        $this->_variables = [];
     }
 }

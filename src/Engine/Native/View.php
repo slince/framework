@@ -1,6 +1,7 @@
 <?php
 /**
  * slince view library
+ *
  * @author Tao <taosikai@yeah.net>
  */
 namespace Slince\View\Engine\Native;
@@ -12,14 +13,13 @@ class View extends AbstractView
 {
 
     protected $_layoutFile;
-    
+
     /**
      * 视图管理者
-     * 
+     *
      * @var ViewManager
      */
     protected $_viewManager;
-    
 
     function __construct($viewFile, $layoutFile, ViewManager $viewManager)
     {
@@ -30,7 +30,7 @@ class View extends AbstractView
 
     /**
      * 设置视图渲染器
-     * 
+     *
      * @param ViewManager $viewManager
      */
     function setViewManager(ViewManager $viewManager)
@@ -40,7 +40,7 @@ class View extends AbstractView
 
     /**
      * 获取视图渲染器
-     * 
+     *
      * @return \Slince\View\Engine\Native\ViewManager
      */
     function getViewManager()
@@ -57,14 +57,16 @@ class View extends AbstractView
     {
         $viewRender = $this->_viewManager->getViewRender();
         $viewRender->set($variables);
+        $content = '';
         if (! $viewRender->hasBlock('content')) {
-//             var_dump($viewRender->render($this));exit;
-            $block = ViewFactory::createBlock($viewRender->render($this));
+            $content = $viewRender->render($this);
+            $block = ViewFactory::createBlock($content);
             $viewRender->addBlock('content', $block);
-            return $block->getContent();
         }
         if ($useLayout && ! is_null($this->_layoutFile)) {
-            return $viewRender->renderFile($this->_layoutFile);
+            $content = $viewRender->renderFile($this->_layoutFile);
         }
+        $viewRender->reset();
+        return $content;
     }
 }
