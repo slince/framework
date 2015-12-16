@@ -5,10 +5,12 @@
     "license": "Apache-2.0",
     "authors": [
         {
-            "name": "slince",
+            "name": "Tao",
             "email": "taosikai@yeah.net"
         }
     ],
     "minimum-stability": "dev",
-    "require": {}
+    "require": {
+        "php": "~5.4"
+    }
 }
