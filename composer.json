@@ -1,0 +1,14 @@
+{
+    "name": "slince/routing",
+    "description": "Slince routing component",
+    "type": "library",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "slince",
+            "email": "taosikai@yeah.net"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
