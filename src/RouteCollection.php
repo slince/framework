@@ -28,7 +28,7 @@ class RouteCollection implements \Countable, \IteratorAggregate
      *
      * @var array
      */
-    protected $_namedRoutes = [];
+    protected $_nameRoutes = [];
     
     /**
      * name集合
@@ -60,17 +60,47 @@ class RouteCollection implements \Countable, \IteratorAggregate
      */
     function add(RouteInterface $route)
     {
+        
+        if ($name = $route->getParameter('name') !== null) {
+            $this->_nameRoutes[$name] = $route;
+        }
+        $action = $route->getAction();
+        if (is_scalar($action)) {
+            $this->_actionRoutes[$action] = $route;
+        }
         $this->_routes[] = $route;
     }
 
     /**
-     * 更换路由集合
+     * 清除集合
      *
      * @param array $routes            
      */
     function clear()
     {
         $this->_routes = [];
+    }
+    
+    /**
+     * 根据name获取route
+     *
+     * @param  string  $name
+     * @return Route|null
+     */
+    public function getByName($name)
+    {
+        return isset($this->_nameRoutes[$name]) ? $this->_nameRoutes[$name] : null;
+    }
+
+    /**
+     * 根据action获取route
+     *
+     * @param  string  $action
+     * @return \Illuminate\Routing\Route|null
+     */
+    public function getByAction($action)
+    {
+        return isset($this->_actionRoutes[$action]) ? $this->_actionRoutes[$action] : null;
     }
 
     /**

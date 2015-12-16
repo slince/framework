@@ -12,22 +12,22 @@ trait RouteBuilderTrait
      * 创建一个普通路由，addRoute别名
      *
      * @param string $path            
-     * @param array $parameters            
+     * @param array $arguments            
      */
-    function http($path, $parameters)
+    function http($path, $arguments)
     {
-        return $this->addRoute($path, $parameters);
+        return $this->addRoute($path, $arguments);
     }
 
     /**
      * 创建一个https路由
      *
      * @param string $path            
-     * @param array $parameters            
+     * @param array $arguments            
      */
-    function https($path, $parameters)
+    function https($path, $arguments)
     {
-        return $this->addRoute($path, $parameters)->setSchemes([
+        return $this->addRoute($path, $arguments)->setSchemes([
             'https'
         ]);
     }
@@ -36,11 +36,11 @@ trait RouteBuilderTrait
      * 创建一个get路由
      *
      * @param string $path            
-     * @param array $parameters            
+     * @param array $arguments            
      */
-    function get($path, $parameters)
+    function get($path, $arguments)
     {
-        return $this->addRoute($path, $parameters)->setMethods([
+        return $this->addRoute($path, $arguments)->setMethods([
             HttpMethod::GET,
             HttpMethod::HEAD
         ]);
@@ -50,11 +50,11 @@ trait RouteBuilderTrait
      * 创建一个post路由
      *
      * @param string $path            
-     * @param array $parameters            
+     * @param array $arguments            
      */
-    function post($path, $parameters)
+    function post($path, $arguments)
     {
-        return $this->addRoute($path, $parameters)->setMethods([
+        return $this->addRoute($path, $arguments)->setMethods([
             HttpMethod::POST
         ]);
     }
@@ -63,11 +63,11 @@ trait RouteBuilderTrait
      * 创建一个put路由
      *
      * @param string $path            
-     * @param array $parameters            
+     * @param array $arguments            
      */
-    function put($path, $parameters)
+    function put($path, $arguments)
     {
-        return $this->addRoute($path, $parameters)->setMethods([
+        return $this->addRoute($path, $arguments)->setMethods([
             HttpMethod::PUT
         ]);
     }
@@ -76,11 +76,11 @@ trait RouteBuilderTrait
      * 创建一个patch路由
      *
      * @param string $path            
-     * @param array $parameters            
+     * @param array $arguments            
      */
-    function patch($path, $parameters)
+    function patch($path, $arguments)
     {
-        return $this->addRoute($path, $parameters)->setMethods([
+        return $this->addRoute($path, $arguments)->setMethods([
             HttpMethod::PATCH
         ]);
     }
@@ -89,11 +89,11 @@ trait RouteBuilderTrait
      * 创建一个delete路由
      *
      * @param string $path            
-     * @param array $parameters            
+     * @param array $arguments            
      */
-    function delete($path, $parameters)
+    function delete($path, $arguments)
     {
-        return $this->addRoute($path, $parameters)->setMethods([
+        return $this->addRoute($path, $arguments)->setMethods([
             HttpMethod::DELETE
         ]);
     }
@@ -102,17 +102,23 @@ trait RouteBuilderTrait
      * 创建并添加一个路由
      *
      * @param string $path            
-     * @param array $parameters            
+     * @param array $arguments            
      */
-    function addRoute($path, $parameters)
+    function addRoute($path, $arguments)
     {
-        $route = $this->newRoute($path, $parameters);
-        if (isset($parameters['as'])) {
-            $route->setOption('name', $parameters['as']);
-            $this->getRouteCollection()->addNamedRoute($parameters['as'], $route);
-        } else {
-            $this->getRouteCollection()->add($route);
+        $action = null;
+        $name = null;
+        if (is_callable($arguments)) {
+            $action = $arguments;
+        } elseif(is_array($arguments)) {
+            $action = isset($arguments['action']) ? $arguments['action'] : $arguments[0];
+            $name = isset($arguments['name']) ? $arguments['name'] : null;
         }
+        $route = $this->newRoute($path, $action);
+        if (is_string($name)) {
+            $route->setParameter('name', $name);
+        } 
+        $this->getRouteCollection()->add($route);
         return $route;
     }
 
@@ -120,12 +126,12 @@ trait RouteBuilderTrait
      * 创建一个路由
      *
      * @param string $path            
-     * @param array $parameters            
+     * @param array $arguments            
      * @return Route
      */
-    function newRoute($path, $parameters)
+    function newRoute($path, $action)
     {
-        return new Route($path, $parameters);
+        return new Route($path, $action);
     }
 
     /**
@@ -136,9 +142,6 @@ trait RouteBuilderTrait
      */
     function prefix($prefix, \Closure $callback)
     {
-        $routes = RouteCollection::create();
-        $this->getRouteCollection()->addCollection($prefix, $routes);
-        call_user_func($callback, $routes);
     }
 
     /**

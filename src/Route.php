@@ -77,11 +77,11 @@ class Route implements RouteInterface
     {
         $this->setPath($path);
         $this->setAction($action);
-        $this->_defaults = $defaults;
-        $this->_requirements = $requirements;
-        $this->_host = $host;
-        $this->_schemes = $schemes;
-        $this->_methods = $methods;
+        $this->setDefaults($defaults);
+        $this->setRequirements($requirements);
+        $this->setHost($host);
+        $this->setSchemes($schemes);
+        $this->setMethods($methods);
     }
 
     /**

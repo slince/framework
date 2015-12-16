@@ -83,7 +83,10 @@ class Generator implements GeneratorInterface
     {
         $compiledRoute = $route->getCompiledRoute();
         // 提供的初始化route parameter
-        $this->_routeParameters = array_merge($this->_context->getParameters(), $parameters);
+        $this->_routeParameters = array_replace($route->getDefaults(), 
+            $this->_context->getParameters(), 
+            $parameters
+        );
         $uri = '';
         // 生成绝对路径，需要构建scheme domain port
         if ($absolute) {
@@ -136,6 +139,7 @@ class Generator implements GeneratorInterface
     {
         $scheme = $this->_context->getScheme();
         $requiredSchemes = $route->getSchemes();
+        //如果当前请求协议不在route要求的协议内则使用第一个要求的协议
         if (! empty($requiredSchemes) && ! in_array($scheme, $requiredSchemes)) {
             $scheme = reset($requiredSchemes);
         }
