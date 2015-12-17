@@ -83,7 +83,7 @@ class Generator implements GeneratorInterface
     {
         $compiledRoute = $route->getCompiledRoute();
         // 提供的初始化route parameter
-        $this->_routeParameters = array_replace($route->getDefaults(), 
+        $this->_routeParameters = array_replace( 
             $this->_context->getParameters(), 
             $parameters
         );
@@ -101,32 +101,6 @@ class Generator implements GeneratorInterface
             $uri .= '?' . $query;
         }
         return $uri;
-    }
-
-    /**
-     * (non-PHPdoc)
-     * @see \Slince\Routing\GeneratorInterface::generateByName()
-     */
-    function generateByName($name, $parameters = [], $absolute = true)
-    {
-        $route = RouteStore::newInstance()->getByName($name);
-        if (is_null($route)) {
-            throw new RouteNotFoundException(sprintf('Route "%s" not defined.', $name));
-        }
-        return $this->generate($route, $parameters, $absolute);
-    }
-
-    /**
-     * (non-PHPdoc)
-     * @see \Slince\Routing\GeneratorInterface::generateByAction()
-     */
-    function generateByAction($action, $parameters = [], $absolute = true)
-    {
-        $route = RouteStore::newInstance()->getByAction($action);
-        if (is_null($route)) {
-            throw new RouteNotFoundException(sprintf('Action "%s" not defined.', $action));
-        }
-        return $this->generate($route, $parameters, $absolute);
     }
 
     /**

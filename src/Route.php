@@ -23,6 +23,13 @@ class Route implements RouteInterface
      * @var mixed
      */
     protected $_action;
+    
+    /**
+     * 默认参数
+     *
+     * @var array
+     */
+    protected $_defaults;
 
     /**
      * requirements
@@ -32,18 +39,18 @@ class Route implements RouteInterface
     protected $_requirements;
 
     /**
-     * 默认参数
-     *
-     * @var array
-     */
-    protected $_defaults;
-
-    /**
      * schemes
      *
      * @var array
      */
     protected $_schemes;
+    
+    /**
+     * host
+     *
+     * @var string
+     */
+    protected $_host;
 
     /**
      * methods
@@ -53,19 +60,26 @@ class Route implements RouteInterface
     protected $_methods;
 
     /**
-     * host
+     * host regex
      *
      * @var string
      */
-    protected $_host;
-
+    protected $_hostRegex;
+    
     /**
      * path regex
      * 
      * @var string
      */
     protected $_pathRegex;
-
+    
+    /**
+     * parameters
+     *
+     * @var array
+     */
+    protected $_parameters;
+    
     /**
      * 验证之后的路由参数
      *
@@ -104,7 +118,15 @@ class Route implements RouteInterface
     {
         return $this->_path;
     }
-
+    
+    function getPathRegex()
+    {
+        if (is_null($this->_pathRegex)) {
+            $this->_pathRegex = $this->_parseToRegex($this->getPath());
+        }
+        return $this->_pathRegex;
+    }
+    
     function setAction($action)
     {
         $this->_action = $action;
@@ -297,6 +319,35 @@ class Route implements RouteInterface
     /**
      * (non-PHPdoc)
      *
+     * @see \Slince\Router\RouteInterface::setHost()
+     */
+    function setHost($host)
+    {
+        $this->_host = $host;
+        return $this;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     *
+     * @see \Slince\Router\RouteInterface::getHost()
+     */
+    function getHost()
+    {
+        return $this->_host;
+    }
+    
+    function getHostRegex()
+    {
+        if (is_null($this->_hostRegex)) {
+            $this->_hostRegex = $this->_parseToRegex($this->getHost());
+        }
+        return $this->_hostRegex;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     *
      * @see \Slince\Router\RouteInterface::setMethods()
      */
     function setMethods(array $methods)
@@ -316,23 +367,34 @@ class Route implements RouteInterface
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Router\RouteInterface::setHost()
+     * 解析成标准的正则字符串
+     * 
+     * @param string $path
+     * @return string
      */
-    function setHost($host)
+    protected function _parseToRegex($path)
     {
-        $this->_host = $host;
-        return $this;
+        $regex = preg_replace_callback('#\{([a-zA-Z0-9_,]*)\}#i', function($matches){
+            return "(?P<{$matches[1]}>" . (isset($this->_requirements[$matches[1]]) ? $this->_requirements[$matches[1]] : '.+') . ')';
+        }, $path);
+        return "#{$regex}#i";
     }
-
+    
     /**
      * (non-PHPdoc)
-     *
-     * @see \Slince\Router\RouteInterface::getHost()
+     * @see \Slince\Routing\RouteInterface::setRouteParameters()
      */
-    function getHost()
+    function setRouteParameters(array $parameters)
     {
-        return $this->_host;
+        $this->_routeParameters = $parameters;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see \Slince\Routing\RouteInterface::getRouteParameters()
+     */
+    function getRouteParameters()
+    {
+        return $this->_routeParameters;
     }
 }

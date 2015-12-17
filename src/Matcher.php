@@ -63,7 +63,7 @@ class Matcher implements MatcherInterface
         if (is_null($route->getPathRegex())) {
             return true;
         }
-        if (preg_match($route->getPathRegex(), rawurldecode($context->getPathInfo()), $matches)) {
+        if (preg_match($route->getPathRegex(), rawurldecode($this->_context->getPathInfo()), $matches)) {
             $route->setParameter('_pathMatches', $matches);
             return true;
         }
@@ -94,7 +94,7 @@ class Matcher implements MatcherInterface
                 }
             }
         }
-        if (empty($this->_requiredMethods)) {
+        if (! empty($this->_requiredMethods)) {
             throw new MethodNotAllowedException($this->_requiredMethods);
         }
         throw new RouteNotFoundException();

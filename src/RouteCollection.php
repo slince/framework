@@ -145,7 +145,7 @@ class RouteCollection implements \Countable, \IteratorAggregate
         return new \ArrayIterator($this->_routes);
     }
     
-    function getCollection()
+    function getRoutes()
     {
         return $this;
     }

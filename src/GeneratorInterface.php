@@ -3,7 +3,7 @@
  * slince routing library
  * @author Tao <taosikai@yeah.net>
  */
-namespace Slince\Router;
+namespace Slince\Routing;
 
 interface GeneratorInterface
 {
@@ -16,27 +16,7 @@ interface GeneratorInterface
      * @param boolean $absolute            
      * @return string
      */
-    function generate(RouteInterface $route, $parameters = [], $absolute = true);
-
-    /**
-     * 根据route name生成url
-     *
-     * @param string $name            
-     * @param array $parameters            
-     * @param boolean $absolute            
-     * @return string
-     */
-    function generateByName($name, $parameters = [], $absolute = true);
-
-    /**
-     * 根据action生成url
-     *
-     * @param string $action            
-     * @param array $parameters            
-     * @param boolean $absolute            
-     * @return string
-     */
-    function generateByAction($action, $parameters = [], $absolute = true);
+    function generate(RouteInterface $route, $parameters = [], $absolute = false);
 
     /**
      * 设置上下文

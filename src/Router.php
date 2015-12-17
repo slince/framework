@@ -5,7 +5,6 @@
  */
 namespace Slince\Routing;
 
-use Slince\Router\GeneratorInterface;
 class Router
 {
 
@@ -37,14 +36,12 @@ class Router
      */
     protected $_context;
 
-    function __construct(RouteCollection $routes, MatcherInterface $matcher, GeneratorInterface $generator = null, RequestContext $context)
+    function __construct(RouteCollection $routes, MatcherInterface $matcher, GeneratorInterface $generator, RequestContext $context)
     {
         $this->_routes = $routes;
         $this->_matcher = $matcher;
         $this->_generator = $generator;
         $this->_context = $context;
-        $this->_matcher->setContext($context);
-        $this->_generator->setContext($context);
     }
 
     /**
@@ -66,7 +63,7 @@ class Router
      *
      * @param Route $route            
      */
-    function generate(RouteInterface $route, $parameters = [], $absolute = true)
+    function generate(RouteInterface $route, $parameters = [], $absolute = false)
     {
         return $this->_generator->generate($route, $parameters, $absolute);
     }
@@ -79,9 +76,13 @@ class Router
      * @param boolean $absolute            
      * @return string
      */
-    function generateByName($name, $parameters = [], $absolute = true)
+    function generateByName($name, $parameters = [], $absolute = false)
     {
-        return $this->_generator->generateByName($name, $parameters, $absolute);
+        $route = $this->_routes->getByName($name);
+        if (is_null($route)) {
+            throw new RouteNotFoundException(sprintf('Route "%s" not defined.', $name));
+        }
+        return $this->_generator->generate($route, $parameters, $absolute);
     }
 
     /**
@@ -92,9 +93,13 @@ class Router
      * @param boolean $absolute            
      * @return string
      */
-    function generateByAction($action, $parameters = [], $absolute = true)
+    function generateByAction($action, $parameters = [], $absolute = false)
     {
-        return $this->_generator->generateByAction($action, $parameters, $absolute);
+        $route = $this->_routes->getByAction($action);
+        if (is_null($route)) {
+            throw new RouteNotFoundException(sprintf('Action "%s" not defined.', $action));
+        }
+        return $this->_generator->generate($route, $parameters, $absolute);
     }
 
     /**

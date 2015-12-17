@@ -118,7 +118,7 @@ trait RouteBuilderTrait
         if (is_string($name)) {
             $route->setParameter('name', $name);
         } 
-        $this->getRouteCollection()->add($route);
+        $this->getRoutes()->add($route);
         return $route;
     }
 
@@ -149,5 +149,5 @@ trait RouteBuilderTrait
      *
      * @return RouteCollection
      */
-    abstract function getRouteCollection();
+    abstract function getRoutes();
 }

@@ -1,11 +1,9 @@
 <?php
 /**
- * slince router library
+ * slince routing library
  * @author Tao <taosikai@yeah.net>
  */
-namespace Slince\Router;
-
-use Slince\Router\Validator\ValidatorInterface;
+namespace Slince\Routing;
 
 interface MatcherInterface
 {
@@ -18,20 +16,6 @@ interface MatcherInterface
      * @return RouteInterface
      */
     function match($path, RouteCollection $routeCollection);
-
-    /**
-     * 设置 validator collection
-     *
-     * @param ValidatorCollection $validatorCollection            
-     */
-    function setValidators(ValidatorCollection $validatorCollection);
-
-    /**
-     * 获取validator collection
-     *
-     * @return ValidatorCollection
-     */
-    function getValidators();
 
     /**
      * 设置上下文
