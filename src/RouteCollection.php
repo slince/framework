@@ -43,17 +43,6 @@ class RouteCollection implements \Countable, \IteratorAggregate
     }
 
     /**
-     * 实例化当前对象
-     *
-     * @param arrau $routes            
-     * @return \Slince\Routing\RouteCollection
-     */
-    static function create($routes = [])
-    {
-        return new static($routes);
-    }
-
-    /**
      * 添加路由
      *
      * @param RouteInterface $route            

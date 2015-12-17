@@ -25,12 +25,96 @@ class Matcher implements MatcherInterface
      */
     protected $_requiredMethods;
 
-    function __construct(RequestContext $context)
+    function __construct(RequestContext $context = null)
     {
         $this->_context = $context;
     }
 
-    function macthHost(RouteInterface $route)
+    /**
+     * (non-PHPdoc)
+     *
+     * @see \Slince\Routing\MatcherInterface::match()
+     */
+    function match($path, RouteCollection $routes)
+    {
+        $path = '/' . ltrim($path, '/');
+        if (is_null($this->_context)) {
+            $route = $this->_findRouteWithoutRequestContext($path, $routes);
+        } else {
+            $route = $this->_findRouteWithRequestContext($path, $routes);
+        }
+        return $route;
+    }
+
+    /**
+     * (non-PHPdoc)
+     *
+     * @see \Slince\Routing\MatcherInterface::setContext()
+     */
+    function setContext(RequestContext $context)
+    {
+        $this->_context = $context;
+    }
+
+    /**
+     * (non-PHPdoc)
+     *
+     * @see \Slince\Routing\MatcherInterface::getContext()
+     */
+    function getContext()
+    {
+        return $this->_context;
+    }
+
+    /**
+     * 找出匹配path的route
+     *
+     * @param string $path            
+     * @param RouteCollection $routes            
+     * @throws MethodNotAllowedException
+     * @throws RouteNotFoundException
+     * @return RouteInterface
+     */
+    protected function _findRouteWithRequestContext($path, RouteCollection $routes)
+    {
+        $requireMethods = [];
+        // 查找符合条件的route
+        foreach ($routes as $route) {
+            if ($this->_matchSchema($route) && $this->_macthHost($route) && $this->_matchPath($path, $route)) {
+                if ($this->_matchMethod($route)) {
+                    $routeParameters = $this->_getRouteParameters($route);
+                    $route->setRouteParameters($routeParameters);
+                    return $route;
+                } else {
+                    $requireMethods += $route->getMethods();
+                }
+            }
+        }
+        if (! empty($requireMethods)) {
+            throw new MethodNotAllowedException($requireMethods);
+        }
+        throw new RouteNotFoundException();
+    }
+
+    /**
+     * 找出匹配path的route，不考虑request上下文
+     *
+     * @param string $path            
+     * @param RouteCollection $routes            
+     * @throws RouteNotFoundException
+     * @return RouteInterface
+     */
+    protected function _findRouteWithoutRequestContext($path, RouteCollection $routes)
+    {
+        foreach ($routes as $route) {
+            if ($this->_matchPath($path, $route)) {
+                return $route;
+            }
+        }
+        throw new RouteNotFoundException();
+    }
+
+    protected function _macthHost(RouteInterface $route)
     {
         if (is_null($route->getHostRegex())) {
             return true;
@@ -42,7 +126,7 @@ class Matcher implements MatcherInterface
         return false;
     }
 
-    function matchMethod(RouteInterface $route)
+    protected function _matchMethod(RouteInterface $route)
     {
         if (empty($route->getMethods())) {
             return true;
@@ -50,7 +134,7 @@ class Matcher implements MatcherInterface
         return is_array($this->_context->getMethod(), $route->getMethods());
     }
 
-    function matchSchema(RouteInterface $route)
+    protected function _matchSchema(RouteInterface $route)
     {
         if (empty($route->getSchemes())) {
             return true;
@@ -58,67 +142,18 @@ class Matcher implements MatcherInterface
         return is_array($this->_context->getScheme(), $route->getSchemes());
     }
 
-    function matchPath(RouteInterface $route)
+    protected function _matchPath($path, RouteInterface $route)
     {
         if (is_null($route->getPathRegex())) {
             return true;
         }
-        if (preg_match($route->getPathRegex(), rawurldecode($this->_context->getPathInfo()), $matches)) {
-            print_r($matches);exit;
+        if (preg_match($route->getPathRegex(), rawurldecode($path), $matches)) {
+            print_r($matches);
+            exit();
             $route->setParameter('_pathMatches', $matches);
             return true;
         }
         return false;
-    }
-
-    /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Routing\MatcherInterface::match()
-     */
-    function match($path, RouteCollection $routes)
-    {
-        $path = '/' . ltrim($path, '/');
-        $this->_requireMethods = [];
-        $this->_context->setPathInfo($path);
-        // 查找符合条件的route
-        foreach ($routes as $route) {
-            $result = $this->matchSchema($route) && $this->macthHost($route)
-                && $this->matchPath($route); 
-            if ($result) {
-                if ($this->matchMethod($route)) {
-                    $routeParameters = $this->_getRouteParameters($route);
-                    $route->setRouteParameters($routeParameters);
-                    return $route;
-                } else {
-                    $this->_requireMethods += $route->getMethods();
-                }
-            }
-        }
-        if (! empty($this->_requiredMethods)) {
-            throw new MethodNotAllowedException($this->_requiredMethods);
-        }
-        throw new RouteNotFoundException();
-    }
-
-    /**
-     * (non-PHPdoc)
-     * 
-     * @see \Slince\Routing\MatcherInterface::setContext()
-     */
-    function setContext(RequestContext $context)
-    {
-        $this->_context = $context;
-    }
-
-    /**
-     * (non-PHPdoc)
-     * 
-     * @see \Slince\Routing\MatcherInterface::getContext()
-     */
-    function getContext()
-    {
-        return $this->_context;
     }
 
     /**

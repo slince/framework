@@ -9,16 +9,14 @@ class RouterFactory
 {
 
     /**
-     * 创建一个routing
-     *
-     * @param RequestContext $context            
-     * @return Router
+     * 创建Matcher
+     * 
+     * @param RequestContext $context
+     * @return Matcher
      */
     static function create(RequestContext $context = null)
     {
-        if (is_null($context)) {
-            $context = RequestContext::create();
-        }
-        return new Router(RouteCollection::create(), new Matcher($context), new Generator($context), $context);
+        $routes = Factory::createRoutes();
+        return new Router($routes, $context);
     }
 }

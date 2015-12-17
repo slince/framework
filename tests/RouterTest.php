@@ -1,5 +1,5 @@
 <?php
-use Slince\Routing\RouterFactory;
+use Slince\Routing\Factory;
 use Slince\Routing\RequestContext;
 use Slince\Routing\RouteCollection;
 

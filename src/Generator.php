@@ -32,7 +32,7 @@ class Generator implements GeneratorInterface
      */
     protected $_routeParameters;
     
-    function __construct(RequestContext $context = null)
+    function __construct(RequestContext $context)
     {
         $this->_context = $context;
     }

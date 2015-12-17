@@ -36,12 +36,22 @@ class Router
      */
     protected $_context;
 
-    function __construct(RouteCollection $routes, MatcherInterface $matcher, GeneratorInterface $generator, RequestContext $context)
+    function __construct(RouteCollection $routes, RequestContext $context = null)
     {
         $this->_routes = $routes;
-        $this->_matcher = $matcher;
-        $this->_generator = $generator;
         $this->_context = $context;
+    }
+
+    /**
+     * 匹配给定的路径
+     *
+     * @param string $path            
+     * @return RouteInterface
+     */
+    function match($path)
+    {
+        $route = $this->getMatcher()->match($path, $this->_routes);
+        return $route;
     }
 
     /**
@@ -52,20 +62,9 @@ class Router
      * @param boolean $absolute            
      * @return string
      */
-    function match($path)
-    {
-        $route = $this->_matcher->match($path, $this->_routes);
-        return $route;
-    }
-
-    /**
-     * 生成一个路径
-     *
-     * @param Route $route            
-     */
     function generate(RouteInterface $route, $parameters = [], $absolute = false)
     {
-        return $this->_generator->generate($route, $parameters, $absolute);
+        return $this->getGenerator()->generate($route, $parameters, $absolute);
     }
 
     /**
@@ -82,7 +81,7 @@ class Router
         if (is_null($route)) {
             throw new RouteNotFoundException(sprintf('Route "%s" not defined.', $name));
         }
-        return $this->_generator->generate($route, $parameters, $absolute);
+        return $this->getGenerator()->generate($route, $parameters, $absolute);
     }
 
     /**
@@ -99,7 +98,7 @@ class Router
         if (is_null($route)) {
             throw new RouteNotFoundException(sprintf('Action "%s" not defined.', $action));
         }
-        return $this->_generator->generate($route, $parameters, $absolute);
+        return $this->getGenerator()->generate($route, $parameters, $absolute);
     }
 
     /**
@@ -119,6 +118,9 @@ class Router
      */
     function getMatcher()
     {
+        if (is_null($this->_matcher)) {
+            $this->_matcher = Factory::createMatcher($this->_context);
+        }
         return $this->_matcher;
     }
 
@@ -129,6 +131,9 @@ class Router
      */
     function getGenerator()
     {
+        if (is_null($this->_generator)) {
+            $this->_generator = Factory::createGenerator($this->_context);
+        }
         return $this->_generator;
     }
 
