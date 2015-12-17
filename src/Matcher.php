@@ -18,13 +18,6 @@ class Matcher implements MatcherInterface
      */
     protected $_context;
 
-    /**
-     * require methods
-     *
-     * @var array
-     */
-    protected $_requiredMethods;
-
     function __construct(RequestContext $context = null)
     {
         $this->_context = $context;
@@ -38,11 +31,10 @@ class Matcher implements MatcherInterface
     function match($path, RouteCollection $routes)
     {
         $path = '/' . ltrim($path, '/');
-        if (is_null($this->_context)) {
-            $route = $this->_findRouteWithoutRequestContext($path, $routes);
-        } else {
-            $route = $this->_findRouteWithRequestContext($path, $routes);
-        }
+        $route = is_null($this->_context) ? $this->_findRouteWithoutRequestContext($path, $routes) 
+            : $this->_findRoute($path, $routes); 
+        $routeParameters = $this->_getRouteParameters($route);
+        $route->setRouteParameters($routeParameters);
         return $route;
     }
 
@@ -75,15 +67,13 @@ class Matcher implements MatcherInterface
      * @throws RouteNotFoundException
      * @return RouteInterface
      */
-    protected function _findRouteWithRequestContext($path, RouteCollection $routes)
+    protected function _findRoute($path, RouteCollection $routes)
     {
         $requireMethods = [];
         // 查找符合条件的route
         foreach ($routes as $route) {
             if ($this->_matchSchema($route) && $this->_macthHost($route) && $this->_matchPath($path, $route)) {
                 if ($this->_matchMethod($route)) {
-                    $routeParameters = $this->_getRouteParameters($route);
-                    $route->setRouteParameters($routeParameters);
                     return $route;
                 } else {
                     $requireMethods += $route->getMethods();
@@ -165,8 +155,8 @@ class Matcher implements MatcherInterface
     protected function _getRouteParameters(RouteInterface $route)
     {
         return array_replace($route->getDefaults(), 
-            $route->getParameters('_hostMatches', []), 
-            $route->getParameters('_pathMatches', [])
+            $route->getParameter('_hostMatches', []), 
+            $route->getParameter('_pathMatches', [])
         );
     }
 }

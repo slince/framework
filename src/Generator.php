@@ -81,18 +81,18 @@ class Generator implements GeneratorInterface
      */
     function generate(RouteInterface $route, $parameters = [], $absolute = true)
     {
-        $compiledRoute = $route->getCompiledRoute();
         // 提供的初始化route parameter
-        $this->_routeParameters = array_replace( 
+        $this->_routeParameters = array_replace(
+            $route->getDefaults(),
             $this->_context->getParameters(), 
             $parameters
         );
         $uri = '';
-        // 生成绝对路径，需要构建scheme domain port
+        // 生成绝对路径，需要构建scheme host port
         if ($absolute) {
             list ($scheme, $port) = $this->_getRouteSchemeAndPort($route);
-            $domain = $this->_getRouteDomain($route);
-            $uri .= "{$scheme}://{$domain}{$port}";
+            $host = $this->_getRouteHost($route);
+            $uri .= "{$scheme}://{$host}{$port}";
         }
         $uri .= $this->_getRoutePath($route);
         // 提供的多出的数据作为query string
@@ -127,19 +127,19 @@ class Generator implements GeneratorInterface
     }
 
     /**
-     * 获取route的domain
+     * 获取route的host
      * @param RouteInterface $route
      * @return string
      */
-    protected function _getRouteDomain(RouteInterface $route)
+    protected function _getRouteHost(RouteInterface $route)
     {
         // 如果route没有主机域名限制则直接使用环境中主机
-        $requireDomain = $route->getDomain();
-        if (empty($requireDomain)) {
+        $requireHost = $route->getHost();
+        if (empty($requireHost)) {
             return $this->_context->getHost();
         }
         // 有限制则根据route的host限制生成域名
-        return $this->_formateRouteParameters($requireDomain, $this->_routeParameters, $route->getRequirements());
+        return $this->_formateRouteParameters($requireHost, $this->_routeParameters, $route->getRequirements());
     }
 
     /**
@@ -149,7 +149,7 @@ class Generator implements GeneratorInterface
      */
     protected function _getRoutePath(RouteInterface $route)
     {
-        return $this->_formateRouteParameters($route->getFullPath(), $this->_routeParameters, $route->getRequirements());
+        return $this->_formateRouteParameters($route->getPath(), $this->_routeParameters, $route->getRequirements());
     }
 
     /**
