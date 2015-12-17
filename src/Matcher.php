@@ -64,6 +64,7 @@ class Matcher implements MatcherInterface
             return true;
         }
         if (preg_match($route->getPathRegex(), rawurldecode($this->_context->getPathInfo()), $matches)) {
+            print_r($matches);exit;
             $route->setParameter('_pathMatches', $matches);
             return true;
         }

@@ -29,7 +29,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         });**/
         try {
            $route = $router->match('/user/2');
-           print_r($route->getPathRegex());
+//            print_r($route->getPathRegex());
            print_r($route->getRouteParameters());
            //echo $router->generate($route, ['id' => 3]);
         } catch (\Exception $e) {

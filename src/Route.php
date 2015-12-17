@@ -59,6 +59,7 @@ class Route implements RouteInterface
      */
     protected $_methods;
 
+    protected $_isCompiled = false;
     /**
      * host regex
      *
@@ -378,6 +379,14 @@ class Route implements RouteInterface
             return "(?P<{$matches[1]}>" . (isset($this->_requirements[$matches[1]]) ? $this->_requirements[$matches[1]] : '.+') . ')';
         }, $path);
         return "#{$regex}#i";
+    }
+    
+    function compile($recompile)
+    {
+        if (! $this->_isCompiled || $recompile) {
+            
+        }
+        return $this;
     }
     
     /**
