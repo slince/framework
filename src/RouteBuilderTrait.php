@@ -142,6 +142,10 @@ trait RouteBuilderTrait
      */
     function prefix($prefix, \Closure $callback)
     {
+        $originPrefix = $this->getRoutes()->getPreifx();
+        $this->getRoutes()->setPrefix($originPrefix . '/' . $prefix);
+        call_user_func($callback, $this);
+        $this->getRoutes()->setPrefix($originPrefix);
     }
 
     /**

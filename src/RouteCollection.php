@@ -102,7 +102,7 @@ class RouteCollection implements \Countable, \IteratorAggregate
         return $this->_routes;
     }
 
-    function setPreifx($prefix)
+    function setPrefix($prefix)
     {
         if (! empty($prefix)) {
             $this->_prefix = '/' . trim($prefix, '/');
