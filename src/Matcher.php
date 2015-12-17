@@ -116,11 +116,12 @@ class Matcher implements MatcherInterface
 
     protected function _macthHost(RouteInterface $route)
     {
-        if (is_null($route->getHostRegex())) {
+        if (is_null($route->compile()->getHostRegex())) {
             return true;
         }
         if (preg_match($route->getHostRegex(), $this->_context->getHost(), $matches)) {
-            $route->setParameter('_hostMatches', $matches);
+            $routeParameters = array_intersect_key($matches, array_flip($route->getVariables()));
+            $route->setParameter('_hostMatches', $routeParameters);
             return true;
         }
         return false;
@@ -144,13 +145,12 @@ class Matcher implements MatcherInterface
 
     protected function _matchPath($path, RouteInterface $route)
     {
-        if (is_null($route->getPathRegex())) {
+        if (is_null($route->compile()->getPathRegex())) {
             return true;
         }
         if (preg_match($route->getPathRegex(), rawurldecode($path), $matches)) {
-            print_r($matches);
-            exit();
-            $route->setParameter('_pathMatches', $matches);
+            $routeParameters = array_intersect_key($matches, array_flip($route->getVariables()));
+            $route->setParameter('_pathMatches', $routeParameters);
             return true;
         }
         return false;

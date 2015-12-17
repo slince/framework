@@ -58,6 +58,13 @@ class Route implements RouteInterface
      * @var array
      */
     protected $_methods;
+    
+    /**
+     * parameters
+     *
+     * @var array
+     */
+    protected $_parameters;
 
     protected $_isCompiled = false;
     /**
@@ -74,12 +81,7 @@ class Route implements RouteInterface
      */
     protected $_pathRegex;
     
-    /**
-     * parameters
-     *
-     * @var array
-     */
-    protected $_parameters;
+    protected $_variables = [];
     
     /**
      * 验证之后的路由参数
@@ -122,9 +124,6 @@ class Route implements RouteInterface
     
     function getPathRegex()
     {
-        if (is_null($this->_pathRegex)) {
-            $this->_pathRegex = $this->_parseToRegex($this->getPath());
-        }
         return $this->_pathRegex;
     }
     
@@ -340,9 +339,6 @@ class Route implements RouteInterface
     
     function getHostRegex()
     {
-        if (is_null($this->_hostRegex)) {
-            $this->_hostRegex = $this->_parseToRegex($this->getHost());
-        }
         return $this->_hostRegex;
     }
     
@@ -368,25 +364,39 @@ class Route implements RouteInterface
     }
 
     /**
-     * 解析成标准的正则字符串
+     * 编译route
      * 
+     * @param string $recompile
+     * @return Route
+     */
+    function compile($recompile = false)
+    {
+        if (! $this->_isCompiled || $recompile) {
+            $this->_hostRegex = $this->_parseToRegex($this->getHost());
+            $this->_pathRegex = $this->_parseToRegex($this->getPath());
+            $this->_isCompiled = true;
+        }
+        return $this;
+    }
+    
+    function getVariables()
+    {
+        return $this->_variables;
+    }
+    
+    /**
+     * 解析成标准的正则字符串
+     *
      * @param string $path
      * @return string
      */
     protected function _parseToRegex($path)
     {
-        $regex = preg_replace_callback('#\{([a-zA-Z0-9_,]*)\}#i', function($matches){
+        $regex = preg_replace_callback('#\{([a-zA-Z0-9_,]*)\}#i', function($matches) {
+            $this->_variables[] = $matches[1];
             return "(?P<{$matches[1]}>" . (isset($this->_requirements[$matches[1]]) ? $this->_requirements[$matches[1]] : '.+') . ')';
         }, $path);
-        return "#{$regex}#i";
-    }
-    
-    function compile($recompile)
-    {
-        if (! $this->_isCompiled || $recompile) {
-            
-        }
-        return $this;
+        return "#^{$regex}$#i";
     }
     
     /**
