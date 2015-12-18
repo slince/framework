@@ -26,11 +26,11 @@ class Generator implements GeneratorInterface
     protected $_strictRequirements = false;
 
     /**
-     * 存储最近一个route的route param
+     * 最近一个route的variables
      *
      * @var array
      */
-    protected $_routeParameters;
+    protected $_routeVariables;
     
     function __construct(RequestContext $context)
     {
@@ -81,26 +81,30 @@ class Generator implements GeneratorInterface
      */
     function generate(RouteInterface $route, $parameters = [], $absolute = true)
     {
-        // 提供的初始化route parameter
-        $this->_routeParameters = array_replace(
-            $route->getDefaults(),
-            $this->_context->getParameters(), 
-            $parameters
-        );
+        $parameters = $this->getParameters($route, $parameters);
         $uri = '';
         // 生成绝对路径，需要构建scheme host port
         if ($absolute) {
             list ($scheme, $port) = $this->_getRouteSchemeAndPort($route);
-            $host = $this->_getRouteHost($route);
+            $host = $this->_getRouteHost($route, $parameters);
             $uri .= "{$scheme}://{$host}{$port}";
         }
-        $uri .= $this->_getRoutePath($route);
+        $uri .= $this->_getRoutePath($route, $parameters);
         // 提供的多出的数据作为query string
-        $extra = array_diff_key($parameters, $route->getRequirements());
-        if ($extra && $query = http_build_query($extra, '', '&')) {
+        $extraParameters = array_diff_key($parameters, array_flip($this->_routeVariables));
+        if ($extraParameters && $query = http_build_query($extraParameters, '', '&')) {
             $uri .= '?' . $query;
         }
         return $uri;
+    }
+    
+    function getParameters(RouteInterface $route, $parameters)
+    {
+        return array_replace(
+            $route->getDefaults(),
+            $this->_context->getParameters(), 
+            $parameters
+        );
     }
 
     /**
@@ -131,7 +135,7 @@ class Generator implements GeneratorInterface
      * @param RouteInterface $route
      * @return string
      */
-    protected function _getRouteHost(RouteInterface $route)
+    protected function _getRouteHost(RouteInterface $route, $parameters)
     {
         // 如果route没有主机域名限制则直接使用环境中主机
         $requireHost = $route->getHost();
@@ -139,7 +143,7 @@ class Generator implements GeneratorInterface
             return $this->_context->getHost();
         }
         // 有限制则根据route的host限制生成域名
-        return $this->_formateRouteParameters($requireHost, $this->_routeParameters, $route->getRequirements());
+        return $this->_formateRouteHostOrPath($requireHost, $parameters, $route->getRequirements());
     }
 
     /**
@@ -147,9 +151,9 @@ class Generator implements GeneratorInterface
      * @param RouteInterface $route
      * @return string
      */
-    protected function _getRoutePath(RouteInterface $route)
+    protected function _getRoutePath(RouteInterface $route, $parameters)
     {
-        return $this->_formateRouteParameters($route->getPath(), $this->_routeParameters, $route->getRequirements());
+        return $this->_formateRouteHostOrPath($route->getPath(), $parameters, $route->getRequirements());
     }
 
     /**
@@ -160,10 +164,12 @@ class Generator implements GeneratorInterface
      * @throws InvalidParameterException
      * @return string
      */
-    protected function _formateRouteParameters($path, $parameters, $requirements = [])
+    protected function _formateRouteHostOrPath($path, $parameters, $requirements = [])
     {
         return preg_replace_callback('#\{([a-zA-Z0-9_,]*)\}#', function ($matches) use($parameters, $requirements)
         {
+            //为了避免重新编译route得到variable此处代为获取route variable
+            $this->_routeVariables[] = $matches[1];
             $supportVariable = isset($parameters[$matches[1]]) ? $parameters[$matches[1]] : '';
             //非严格匹配类型直接返回提供的类型
             if (! $this->_strictRequirements) {

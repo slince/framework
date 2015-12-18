@@ -9,6 +9,25 @@ trait RouteBuilderTrait
 {
 
     /**
+     * 路由前缀
+     *
+     * @var string
+     */
+    protected $_prefix = '/';
+    
+    function setPrefix($prefix)
+    {
+        if (! empty($prefix)) {
+            $this->_prefix = '/' . trim($prefix, '/');
+        }
+    }
+    
+    function getPreifx()
+    {
+        return $this->_prefix;
+    }
+    
+    /**
      * 创建一个普通路由，addRoute别名
      *
      * @param string $path            
@@ -106,19 +125,16 @@ trait RouteBuilderTrait
      */
     function addRoute($path, $arguments)
     {
-        $action = null;
         $name = null;
-        if (is_callable($arguments)) {
+        $action = null;
+        if (is_callable($arguments) || is_string($arguments)) {
             $action = $arguments;
         } elseif(is_array($arguments)) {
-            $action = isset($arguments['action']) ? $arguments['action'] : $arguments[0];
             $name = isset($arguments['name']) ? $arguments['name'] : null;
+            $action = isset($arguments['action']) ? $arguments['action'] : $arguments[0];
         }
         $route = $this->newRoute($path, $action);
-        if (is_string($name)) {
-            $route->setParameter('name', $name);
-        } 
-        $this->getRoutes()->add($route);
+        $this->getRoutes()->add($route, $name);
         return $route;
     }
 
@@ -131,6 +147,7 @@ trait RouteBuilderTrait
      */
     function newRoute($path, $action)
     {
+        $path = $this->getPreifx() . '/' . trim($path, '/');
         return new Route($path, $action);
     }
 
@@ -142,10 +159,10 @@ trait RouteBuilderTrait
      */
     function prefix($prefix, \Closure $callback)
     {
-        $originPrefix = $this->getRoutes()->getPreifx();
-        $this->getRoutes()->setPrefix($originPrefix . '/' . $prefix);
+        $originPrefix = $this->getPreifx();
+        $this->setPrefix($originPrefix . '/' . $prefix);
         call_user_func($callback, $this);
-        $this->getRoutes()->setPrefix($originPrefix);
+        $this->setPrefix($originPrefix);
     }
 
     /**

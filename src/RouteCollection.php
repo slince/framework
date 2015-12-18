@@ -9,13 +9,7 @@ class RouteCollection implements \Countable, \IteratorAggregate
 {
 
     use RouteBuilderTrait;
-    /**
-     * 路由集合的前缀
-     *
-     * @var string
-     */
-    protected $_prefix = '';
-
+    
     /**
      * route集合
      *
@@ -28,14 +22,14 @@ class RouteCollection implements \Countable, \IteratorAggregate
      *
      * @var array
      */
-    protected $_nameRoutes = [];
+    protected $_names = [];
     
     /**
-     * name集合
+     * action集合
      *
      * @var array
      */
-    protected $_actionRoutes = [];
+    protected $_actions = [];
 
     function __construct(array $routes = [])
     {
@@ -47,49 +41,48 @@ class RouteCollection implements \Countable, \IteratorAggregate
      *
      * @param RouteInterface $route            
      */
-    function add(RouteInterface $route)
+    function add(RouteInterface $route, $name = null)
     {
-        
-        if ($name = $route->getParameter('name') !== null) {
-            $this->_nameRoutes[$name] = $route;
+        if (! is_null($name)) {
+            $this->_names[$name] = $route;
         }
         $action = $route->getAction();
         if (is_scalar($action)) {
-            $this->_actionRoutes[$action] = $route;
+            $this->_actions[$action] = $route;
         }
         $this->_routes[] = $route;
     }
 
     /**
-     * 清除集合
-     *
-     * @param array $routes            
-     */
-    function clear()
-    {
-        $this->_routes = [];
-    }
-    
-    /**
      * 根据name获取route
      *
-     * @param  string  $name
+     * @param string $name
      * @return Route|null
      */
     public function getByName($name)
     {
-        return isset($this->_nameRoutes[$name]) ? $this->_nameRoutes[$name] : null;
+        return isset($this->_names[$name]) ? $this->_names[$name] : null;
     }
 
     /**
      * 根据action获取route
      *
-     * @param  string  $action
-     * @return \Illuminate\Routing\Route|null
+     * @param string $action
+     * @return Route|null
      */
     public function getByAction($action)
     {
-        return isset($this->_actionRoutes[$action]) ? $this->_actionRoutes[$action] : null;
+        return isset($this->_actions[$action]) ? $this->_actions[$action] : null;
+    }
+
+    function getNameRoute()
+    {
+        return $this->_namedRoutes;
+    }
+    
+    function getActionRoutes()
+    {
+        return $this->_actions;
     }
 
     /**
@@ -101,19 +94,7 @@ class RouteCollection implements \Countable, \IteratorAggregate
     {
         return $this->_routes;
     }
-
-    function setPrefix($prefix)
-    {
-        if (! empty($prefix)) {
-            $this->_prefix = '/' . trim($prefix, '/');
-        }
-    }
-
-    function getPreifx()
-    {
-        return $this->_prefix;
-    }
-
+    
     /**
      * (non-PHPdoc)
      *

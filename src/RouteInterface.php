@@ -163,19 +163,4 @@ interface RouteInterface
      * @return string
      */
     function getHostRegex();
-
-    /**
-     * 设置处理之后的路由参数
-     *
-     * @param array $parameters            
-     * @return RouteInterface
-     */
-    function setRouteParameters(array $parameters);
-
-    /**
-     * 获取路由参数
-     *
-     * @return array
-     */
-    function getRouteParameters();
 }

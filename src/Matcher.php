@@ -34,7 +34,7 @@ class Matcher implements MatcherInterface
         $route = is_null($this->_context) ? $this->_findRouteWithoutRequestContext($path, $routes) 
             : $this->_findRoute($path, $routes); 
         $routeParameters = $this->_getRouteParameters($route);
-        $route->setRouteParameters($routeParameters);
+        $route->setParameters($routeParameters);
         return $route;
     }
 

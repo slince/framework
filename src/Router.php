@@ -5,6 +5,8 @@
  */
 namespace Slince\Routing;
 
+use Slince\Routing\Exception\RouteNotFoundException;
+
 class Router
 {
 
