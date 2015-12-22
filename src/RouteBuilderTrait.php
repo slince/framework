@@ -13,7 +13,7 @@ trait RouteBuilderTrait
      *
      * @var string
      */
-    protected $_prefix = '/';
+    protected $_prefix = '';
     
     function setPrefix($prefix)
     {

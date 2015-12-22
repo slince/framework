@@ -26,6 +26,10 @@ class RouterTest extends \PHPUnit_Framework_TestCase
                 $routes->http('/account', 'UsersController@me');
             });
         });
+        $routes->prefix('admin', function(RouteCollection $routes){
+            $routes->http('/dashboard/', 'HomeController@index');
+        });
+//         print_r($routes->getActionRoutes());
         try {
            $route = $router->match('/users/1256');
            print_r($route->getParameters());
@@ -33,5 +37,6 @@ class RouterTest extends \PHPUnit_Framework_TestCase
             throw $e;
         }
         echo $router->generateByName('home.dash', ['subdomain'=>'b', 'id' => '1235'], true);
+        echo $router->generateByAction('MessagesController@show', ['subdomain'=>'b', 'id' => '1235'], true);
     }
 }
