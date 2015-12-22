@@ -36,7 +36,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         } catch (\Exception $e) {
             throw $e;
         }
-        echo $router->generateByName('home.dash', ['subdomain'=>'b', 'id' => '1235'], true);
-        echo $router->generateByAction('MessagesController@show', ['subdomain'=>'b', 'id' => '1235'], true);
+        echo $router->generateByName('home.dash', ['subdomain'=>'www', 'id' => '1235'], true);
+        echo $router->generateByAction('MessagesController@show', ['subdomain'=>'www', 'id' => '1235'], true);
     }
 }
