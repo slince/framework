@@ -13,7 +13,7 @@ class EventStore
     const APP_INITED = 'App.inited';
 
     const PROCESS_REQUEST = 'processRequest';
-    
+
     const DISPATCH_ROUTE = 'dispatchRoute';
 
     const APP_RUN = 'App.run';

@@ -1,7 +1,7 @@
 <?php
 use Slince\Di\Container;
-use Slince\Router\RequestContext;
-use Slince\Router\RouterFactory;
+use Slince\Routing\RequestContext;
+use Slince\Routing\RouterFactory;
 use Slince\View\ServiceFactory;
 
 return [
