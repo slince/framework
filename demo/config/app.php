@@ -1,11 +1,6 @@
 <?php
-use Slince\Application\EventStore;
-use Slince\Event\Event;
-
 return [
     'debug' => false,
-    'rootPath' => ROOT_PATH,
-    'timezone' => 'Asia/shanghai',
     'locale' => 'zh_cn',
     'datasources' => [
         'default' => [

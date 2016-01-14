@@ -1,7 +1,8 @@
 <?php
-use Slince\Router\RouteCollection;
+use Slince\Routing\RouteCollection;
 
-return function(RouteCollection $routes){
-    $routes->http('/', 'Pages@index');
-    $routes->http('/show', 'Pages@show');
+return function(RouteCollection $routes) {
+    $routes->http('/', 'Web@PagesController@index');
+    $routes->http('/{id}', 'Web@PagesController@show')
+        ->setRequirement('id', '\w+');
 };

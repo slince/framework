@@ -17,9 +17,9 @@ class Controller
     /**
      * app
      * 
-     * @var WebApplication
+     * @var Application
      */
-    protected $app;
+    protected $application;
     
     /**
      * request
@@ -35,6 +35,8 @@ class Controller
      */
     protected $response;
     
+    protected $action;
+    
     /**
      * view manager
      * 
@@ -43,6 +45,13 @@ class Controller
     protected $viewManager;
     
     protected $rendered = false;
+    
+    function __construct(ApplicationInterface $application)
+    {
+        $this->application = $application;
+        $this->request = $application->getKernel()->getParameter('request');
+        $this->response = new Response();
+    }
     
     function __get($name)
     {
@@ -84,7 +93,7 @@ class Controller
     {
         //如果没有选择render，则取当前action
         if (is_null($templateName)) {
-            $templateName = $this->app->getParameter('action');
+            $templateName = $this->action;
         }
         $content = $this->getViewManager()->load($templateName, $layout)->render();
         $this->response->setContent($content);
@@ -115,14 +124,10 @@ class Controller
      * @throws LogicException
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    function invokeAction(Event $event)
+    function invokeAction($action, $parameters)
     {
-        $app = $event->getSubject();
-        $this->app = $app;
-        $this->request = $app->getRequest();
-        $this->response = $event->getArgument('response');
-        $action = $app->getParameter('action');
-        $response = call_user_func([$this, $action], $app->getParameter('routeParameters', []));
+        $this->action = $action;
+        $response = call_user_func([$this, $action], $parameters);
         //如果没有返回response并且没有渲染过视图则渲染视图
         if (is_null($response)) {
             if (! $this->rendered) {
@@ -135,5 +140,6 @@ class Controller
                 $this->response = $response;
             }
         }
+        return $this->response;
     }
 }

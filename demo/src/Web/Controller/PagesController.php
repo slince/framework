@@ -1,20 +1,18 @@
 <?php
-namespace App\Controller;
+namespace Web\Controller;
 
 use Slince\Application\Controller;
 
 class PagesController extends Controller
 {
+
     function index()
     {
-//         echo 'hello';
-        $this->render();
-        $articles = $this->loadModel('Links')->getName(1);
-        print_r($articles);
+        $this->response->setContent('home page');
+        return $this->response;
     }
-    function show()
+    function show($id)
     {
-        echo 'hi show';
-        trigger_error(E_USER_ERROR);
+        echo print_r($id);exit;
     }
 }

@@ -12,61 +12,110 @@ use Slince\Event\Event;
 use Slince\Application\Exception\LogicException;
 use Symfony\Component\HttpFoundation\Request;
 use Slince\Routing\RequestContext;
+use Symfony\Component\HttpFoundation\Response;
+use Slince\Routing\RouteCollection;
 
-class Kernel
+abstract class Kernel
 {
-    protected $_rootPath = '';
-    
-    protected $_src = '';
-    
-    protected $_applications = [];
-    
+
+    protected $src = '';
+
     /**
      * Container Instance
      *
      * @var Container
      */
-    protected $_container;
-    
-    /**
-     * Dispatcher Instance
-     *
-     * @var Dispatcher
-     */
-    protected $_dispatcher;
-    
-    function registerApplication(ApplicationInterface $application, $name= null)
+    protected $container;
+
+    protected $applications = [];
+
+    protected $routePathSeparator = '@';
+
+    public function __construct()
     {
-        if (is_null($name)) {
-            $name = get_class($application);
-        }
-        $this->_applications[$name] = $application;
+        $this->container = $this->createContainer();
+        $this->registerServices($this->container);
+        $this->registerRoutes($this->container->get('router')
+            ->getRoutes());
+        $this->registerApplications();
     }
+
+    public function run()
+    {
+        $request = Request::createFromGlobals();
+        $this->dispatchEvent(EventStore::PROCESS_REQUEST, [
+            'request' => $request
+        ]);
+        $response = $this->request($request);
+        exit($response);
+    }
+
+    public function registerApplication($name, ApplicationInterface $application)
+    {
+        $this->applications[$name] = $application;
+    }
+
+    abstract public function registerApplications();
     
+    abstract public function registerServices(Container $container);
+
+    abstract public function registerRoutes(RouteCollection $routes);
 
     /**
      * 获取DI容器
-     * 
+     *
      * @return \Slince\Di\Container
      */
-    function getContainer()
+    public function getContainer()
     {
-        return $this->_container;
+        return $this->container;
+    }
+
+    public function request(Request $request)
+    {
+        $route = $this->container->get('router')->match($request->getPathInfo());
+        $this->container->get('kernelCache')->set('request', $request);
+        $this->container->get('kernelCache')->set('route', $route);
+        $action = $route->getAction();
+        if (is_callable($action)) {
+            $response = $this->runCallableAction($action, $route->getParameters());
+        } else {
+            list($applicationName, $controllerName, $action) = explode('@', $action);
+            $response = $this->runApplication($applicationName, $controllerName, $action, $route->getParameters());
+        }
+        return $response;
+    }
+
+    function getParameter($name, $default = null)
+    {
+        return $this->container->get('kernelCache')->get($name, $default);
     }
     
-    function request(Request $request)
+    public function dispatchEvent($eventName, $parameters = [])
     {
-        $router
+        $event = new Event($eventName, $this, $this->container->get('dispatcher'), $parameters);
+        $this->container->get('dispatcher')->dispatch($eventName, $event);
     }
-    
-    protected function _getAction(Request $request)
+
+    protected function runCallableAction($action, $parameters = [])
     {
-        $router = $this->getContainer()->get('router');
-        $route = $router->match($request->getPathInfo());
-        return $route;
+        $response = call_user_func($action, $parameters);
+        if (! $response instanceof Response) {
+            throw new LogicException("Route action must return a response instance");
+        }
+        return $response;
     }
-    
-    protected function _bindRequestToContext(Request $request, RequestContext $context)
+
+    protected function runApplication($applicationName, $controllerName, $actionName, $parameters = [])
+    {
+        if (! isset($this->applications[$applicationName])) {
+            throw new LogicException("Application {$applicationName} is not fund");
+        }
+        $application = $this->applications[$applicationName];
+        return $application->run($this, $controllerName, $actionName, $parameters);
+    }
+
+    protected function bindRequestToContext(Request $request, RequestContext $context)
     {
         $context->setBaseUrl($request->getBaseUrl());
         $context->setPathInfo($request->getPathInfo());
@@ -77,5 +126,10 @@ class Kernel
         $context->setHttpsPort($request->isSecure() ? $request->getPort() : $this->httpsPort);
         $context->setQueryString($request->server->get('QUERY_STRING', ''));
         return $context;
+    }
+    
+    protected function createContainer()
+    {
+        return new Container();
     }
 }

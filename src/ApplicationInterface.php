@@ -7,5 +7,8 @@ namespace Slince\Application;
 
 interface ApplicationInterface
 {
-    function run();
+
+    public function getKernel();
+
+    public function run(Kernel $kernel, $contollerName, $action, $parameters);
 }
