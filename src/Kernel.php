@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Slince\Routing\RequestContext;
 use Symfony\Component\HttpFoundation\Response;
 use Slince\Routing\RouteCollection;
+use Slince\Config\Config;
 
 abstract class Kernel
 {
@@ -35,19 +36,19 @@ abstract class Kernel
     {
         $this->container = $this->createContainer();
         $this->registerServices($this->container);
-        $this->registerRoutes($this->container->get('router')
-            ->getRoutes());
+        $this->registerConfigs($this->container->get('config'));
+        $this->registerSubscribers($this->container->get('dispatcher'));
+        $this->registerRoutes($this->container->get('router')->getRoutes());
         $this->registerApplications();
+        $this->dispatchEvent(EventStore::KERNEL_INITED);
     }
 
     public function run()
     {
         $request = Request::createFromGlobals();
-        $this->dispatchEvent(EventStore::PROCESS_REQUEST, [
-            'request' => $request
-        ]);
         $response = $this->request($request);
-        exit($response);
+        $response->sendContent();
+        exit();
     }
 
     public function registerApplication($name, ApplicationInterface $application)
@@ -58,6 +59,10 @@ abstract class Kernel
     abstract public function registerApplications();
     
     abstract public function registerServices(Container $container);
+    
+    abstract public function registerConfigs(Config $config);
+    
+    abstract public function registerSubscribers(Dispatcher $dispatcher);
 
     abstract public function registerRoutes(RouteCollection $routes);
 
@@ -76,6 +81,11 @@ abstract class Kernel
         $route = $this->container->get('router')->match($request->getPathInfo());
         $this->container->get('kernelCache')->set('request', $request);
         $this->container->get('kernelCache')->set('route', $route);
+        //request匹配完毕，待派发
+        $this->dispatchEvent(EventStore::PROCESS_REQUEST, [
+            'request' => $request,
+            'route' => $route
+        ]);
         $action = $route->getAction();
         if (is_callable($action)) {
             $response = $this->runCallableAction($action, $route->getParameters());

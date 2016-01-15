@@ -1,5 +1,5 @@
 <?php
-namespace App\Model\Table;
+namespace DefaultApplication\Model\Table;
 
 use Cake\Event\Event;
 

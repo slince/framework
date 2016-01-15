@@ -1,7 +1,13 @@
 <?php
+namespace App;
+
 use Slince\Application\Kernel;
 use Slince\Routing\RouteCollection;
 use Slince\Di\Container;
+use Slince\Application\EventStore;
+use Slince\Event\Dispatcher;
+use Slince\Application\Subscriber\CakeSubscriber;
+use Slince\Config\Config;
 
 class AppKernel extends Kernel
 {
@@ -13,7 +19,12 @@ class AppKernel extends Kernel
 
     function registerApplications()
     {
-        $this->registerApplication('Web',  new Web\WebApplication());
+        $this->registerApplication('Default', new \DefaultApplication\DefaultApplication());
+    }
+
+    function registerConfigs(Config $config)
+    {
+        $config->load($this->getRootPath() . '/config/app.php');
     }
 
     function registerServices(Container $container)
@@ -22,6 +33,11 @@ class AppKernel extends Kernel
         call_user_func($callback, $container);
     }
 
+    function registerSubscribers(Dispatcher $dispatcher)
+    {
+        $dispatcher->addSubscriber(new CakeSubscriber());
+    }
+    
     function registerRoutes(RouteCollection $routes)
     {
         $callback = include $this->getRootPath() . 'config/routes.php';

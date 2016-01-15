@@ -35,6 +35,11 @@ class Controller
      */
     protected $response;
     
+    /**
+     * request action
+     * 
+     * @var string
+     */
     protected $action;
     
     /**
@@ -44,6 +49,11 @@ class Controller
      */
     protected $viewManager;
     
+    /**
+     * 是否渲染过view
+     * 
+     * @var boolean
+     */
     protected $rendered = false;
     
     function __construct(ApplicationInterface $application)
@@ -76,26 +86,40 @@ class Controller
         $this->response;
     }
     
-    function loadModel($modelClass)
+    /**
+     * load table
+     * 
+     * @param string $modelClass
+     * @param array $options
+     */
+    function loadModel($modelClass, array $options = [])
     {
-        $this->$modelClass = TableRegistry::get($modelClass);
+        if ($applicationName = strstr($modelClass, '::', true)) {
+            $namespace = $this->application->getKernel()->getApplication($applicationName)->getNamespace();
+        } else {
+            $namespace = $this->application->getNamespace();
+        }
+        if (! isset($options['className'])) {
+            $options['className'] =  "{$namespace}\\Model\\Table\\{$modelClass}Table";
+        }
+        $this->$modelClass = TableRegistry::get($modelClass, $options);
         return $this->$modelClass;
     }
     
     /**
      * 渲染模板
      * 
-     * @param string $templateName
+     * @param string $template
      * @param string $layout
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    function render($templateName = null, $layout = true)
+    function render($template = null, $layout = true)
     {
         //如果没有选择render，则取当前action
-        if (is_null($templateName)) {
-            $templateName = $this->action;
+        if (is_null($template)) {
+            $template = $this->action;
         }
-        $content = $this->getViewManager()->load($templateName, $layout)->render();
+        $content = $this->getViewManager()->load($template, $layout)->render();
         $this->response->setContent($content);
         $this->rendered = true;
         return $this->response;
@@ -109,9 +133,10 @@ class Controller
     function getViewManager()
     {
         if (is_null($this->viewManager)) {
-            $controllerDir = $this->app->getParameter('controller');
-            $viewManager = $this->app->getContainer()->get('view');
-            $viewManager->setViewPath($viewManager->getViewPath() . '/' . $controllerDir);
+            $rootPath = $this->application->getRootPath();
+            $controllerDir = Inflector::tableize(substr(basename(get_class($this)), 0, -10));
+            $viewManager = $this->application->getKernel()->getContainer()->get('view');
+            $viewManager->setViewPath("{$rootPath}views/templates/{$controllerDir}/");
             $this->viewManager = $viewManager;
         }
         return $this->viewManager;
@@ -127,7 +152,7 @@ class Controller
     function invokeAction($action, $parameters)
     {
         $this->action = $action;
-        $response = call_user_func([$this, $action], $parameters);
+        $response = $this->reflectAndInvokeAction($action, $parameters);
         //如果没有返回response并且没有渲染过视图则渲染视图
         if (is_null($response)) {
             if (! $this->rendered) {
@@ -141,5 +166,29 @@ class Controller
             }
         }
         return $this->response;
+    }
+    
+    /**
+     * 反射并执行action
+     * 
+     * @param string $action
+     * @param array $parameters
+     * @return mixed
+     */
+    protected function reflectAndInvokeAction($action, $parameters)
+    {
+        $reflectionMethod = new \ReflectionMethod($this, $action);
+        $arguments = [];
+        foreach ($reflectionMethod->getParameters() as $parameter) {
+            $parameterName = $parameter->getName();
+            if (isset($parameters[$parameterName])) {
+                $arguments[] = $parameters[$parameterName];
+            } elseif ($parameter->isOptional()) {
+                $arguments[] = $parameter->getDefaultValue();
+            } else {
+                $arguments[] = null;
+            }
+        }
+        return $reflectionMethod->invokeArgs($this, $arguments);
     }
 }

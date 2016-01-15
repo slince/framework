@@ -1,5 +1,5 @@
 <?php
-namespace App\Model\Table;
+namespace DefaultApplication\Model\Table;
 
 use Cake\ORM\Query;
 use Cake\ORM\Table;
@@ -11,7 +11,6 @@ use Cake\Validation\Validator;
 class LinksTable extends Table
 {
 
-    
     use TimeUpdateTrait;
     /**
      * Initialize method

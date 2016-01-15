@@ -25,16 +25,6 @@ abstract class AbstractApplication implements ApplicationInterface
         return $this->kernel; 
     }
     
-    function registerService($container)
-    {
-        
-    }
-    
-    function registerConfig($config)
-    {
-        
-    }
-    
     public function run(Kernel $kernel, $contollerName, $action, $parameters)
     {
         $this->kernel = $kernel;
@@ -54,7 +44,12 @@ abstract class AbstractApplication implements ApplicationInterface
 
     protected function getControllerClass($contollerName)
     {
-        $namespace = dirname(get_class($this));
+        $namespace = $this->getNamespace();
         return "{$namespace}\\Controller\\{$contollerName}";
+    }
+    
+    function getNamespace()
+    {
+        return  dirname(get_class($this));
     }
 }
