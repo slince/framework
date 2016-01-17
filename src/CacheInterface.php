@@ -15,7 +15,7 @@ interface CacheInterface
      * @param mixed $value            
      * @param int $duration            
      */
-    function set($key, $value, $duration);
+    function set($key, $value, $duration = null);
 
     /**
      * 添加一个值
@@ -24,7 +24,7 @@ interface CacheInterface
      * @param mixed $value            
      * @param int $duration            
      */
-    function add($key, $value, $duration);
+    function add($key, $value, $duration = null);
 
     /**
      * 获取一个值
@@ -33,6 +33,17 @@ interface CacheInterface
      */
     function get($key);
 
+
+    /**
+     * 读取一个缓存，读取失败则创建
+     *
+     * @param string $key
+     * @param callable $create
+     * @param int $duration
+     * @return mixed
+     */
+    function read($key, $create, $duration = null);
+    
     /**
      * 删除一个值
      *
