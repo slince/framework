@@ -81,14 +81,31 @@ abstract class AbstractCache extends AbstractStorage implements CacheInterface
     /**
      * 获取一个值
      *
-     * @param unknown $key            
+     * @param string $key            
      * @param string $defaultValue            
      * @return mixed
      */
-    function get($key, $defaultValue = null)
+    function get($key)
     {
-        $value = $this->_doGet($key);
-        return ($value === false) ? $defaultValue : $value;
+        return $this->_doGet($key);
+    }
+    
+    /**
+     * 读取一个缓存，读取失败则创建
+     *
+     * @param string $key            
+     * @param string $create          
+     * @param int $duration 
+     * @return mixed
+     */
+    function read($key, $create, $duration = null)
+    {
+        $value = $this->get($key);
+        if ($value === false) {
+            $value = call_user_func($create);
+            $this->set($key, $value, $duration);
+        }
+        return $value;
     }
 
     /**
