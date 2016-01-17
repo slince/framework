@@ -9,12 +9,55 @@ abstract class AbstractApplication implements ApplicationInterface
 {
 
     /**
+     * application name
+     * 
+     * @var string
+     */
+    protected $name;
+    
+    /**
+     * 命令空间
+     * 
+     * @var 
+     */
+    protected $namespace;
+    
+    /**
      * kernel
      * 
      * @var Kernel
      */
     protected $kernel;
     
+
+    /**
+     * (non-PHPdoc)
+     * @see \Slince\Application\ApplicationInterface::getName()
+     */
+    function getName()
+    {
+        return $this->name;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see \Slince\Application\ApplicationInterface::setName()
+     */
+    function setName($name)
+    {
+        $this->name = $name;
+    }
+    /**
+     * (non-PHPdoc)
+     * @see \Slince\Application\ApplicationInterface::getNamespace()
+     */
+    function getNamespace()
+    {
+        if (is_null($this->namespace)) {
+            $this->namespace = dirname(get_class($this));
+        }
+        return $this->namespace;
+    }
     /**
      * Get kernel
      * 
@@ -25,31 +68,33 @@ abstract class AbstractApplication implements ApplicationInterface
         return $this->kernel; 
     }
     
-    public function run(Kernel $kernel, $contollerName, $action, $parameters)
+    /**
+     * (non-PHPdoc)
+     * @see \Slince\Application\ApplicationInterface::run()
+     */
+    public function run(Kernel $kernel, $controller, $action, $parameters)
     {
         $this->kernel = $kernel;
-        $controllerClass = $this->getControllerClass($contollerName);
-        $controller = $this->getKernel()->getContainer()->create($controllerClass, [$this]);
-        if (empty($controller)) {
-            throw new MissControllerException($controllerName);
+        $controllerClass = $this->getControllerClass($controller);
+        $controllerInstance = $this->getKernel()->getContainer()->create($controllerClass, [$this]);
+        if (empty($controllerInstance)) {
+            throw new MissControllerException($controller);
         }
-        if(! $controller instanceof Controller) {
-            throw new LogicException('Controller action can only return an instance of Response');
-        }
-        if (! method_exists($controller, $action)) {
+        if (! method_exists($controllerInstance, $action)) {
             throw new MissActionException($controller, $action);
         }
-        return $controller->invokeAction($action, $parameters);
+        return $controllerInstance->invokeAction($action, $parameters);
     }
 
-    protected function getControllerClass($contollerName)
+    /**
+     * 获取完整的controller class
+     * 
+     * @param string $controller
+     * @return string
+     */
+    protected function getControllerClass($controller)
     {
         $namespace = $this->getNamespace();
-        return "{$namespace}\\Controller\\{$contollerName}";
-    }
-    
-    function getNamespace()
-    {
-        return  dirname(get_class($this));
+        return "{$namespace}\\Controller\\{$controller}";
     }
 }

@@ -12,6 +12,10 @@ use Cake\Datasource\ConnectionManager;
 use Cake\Cache\Cache;
 use Cake\Core\Configure;
 
+/**
+ * 项目使用部分cake组件
+ * cake组件配置工作采用订阅者方式
+ */
 class CakeSubscriber implements SubscriberInterface
 {
 
@@ -34,7 +38,5 @@ class CakeSubscriber implements SubscriberInterface
         foreach ($configs['cache'] as $name => $config) {
             Cache::config($name, $config);
         }
-        // 设置config
-        Configure::write('App.namespace', 'App');
     }
 }

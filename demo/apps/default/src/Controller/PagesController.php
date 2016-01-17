@@ -12,9 +12,12 @@ class PagesController extends Controller
         return $this->response;
     }
 
-    function show($c, $id)
+    function show($id)
     {
-        $link = $this->loadModel('Links')->get($id);
-        print_r($link);
+        $link = $this->getContainer()->get('cache')->read('link', function() use ($id){
+            return $this->loadModel('Links')->get($id);
+        });
+        var_dump($link);
+        //$this->render('show');
     }
 }

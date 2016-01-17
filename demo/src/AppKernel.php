@@ -19,7 +19,7 @@ class AppKernel extends Kernel
 
     function registerApplications()
     {
-        $this->registerApplication('Default', new \DefaultApplication\DefaultApplication());
+        $this->registerApplication(new \DefaultApplication\DefaultApplication());
     }
 
     function registerConfigs(Config $config)
@@ -30,7 +30,7 @@ class AppKernel extends Kernel
     function registerServices(Container $container)
     {
         $callback = include $this->getRootPath() . 'config/services.php';
-        call_user_func($callback, $container);
+        call_user_func($callback, $container, $this);
     }
 
     function registerSubscribers(Dispatcher $dispatcher)
