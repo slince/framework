@@ -94,7 +94,7 @@ abstract class AbstractCache extends AbstractStorage implements CacheInterface
      * 读取一个缓存，读取失败则创建
      *
      * @param string $key            
-     * @param string $create          
+     * @param callable $create          
      * @param int $duration 
      * @return mixed
      */
