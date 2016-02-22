@@ -8,35 +8,35 @@ use Slince\Console\Context\Io;
 
 class ClearCommand extends Command
 {
+
     protected $name = 'clear';
-    
+
     function configure()
     {
-        $this->addArgument('type', Argument::VALUE_OPTIONAL, 'The tmp file type you want clear', null);
+        $this->addOption('type', Argument::VALUE_OPTIONAL, 'The tmp file type you want clear', null);
     }
-    
+
     function execute(Io $io, Argv $argv)
     {
         $type = $argv->getOption('type');
         $paths = $this->getClearPaths();
-        if ($type == 'logs') {
-            unset($paths['sessions']);
-        } elseif ($type == 'sessions') {
-            unset($paths['logs']);
+        if (! empty($type)) {
+            $paths = array_intersect_key($paths, array_flip(explode(',', $type)));
         }
         $this->clearPaths($paths);
         $io->writeln('Clear ok!');
     }
-    
+
     function getClearPaths()
     {
         $kernel = $this->getKernel();
         return [
             'logs' => $kernel->getRootPath() . '/tmp/logs',
-            'sessions' => $kernel->getRootPath() . '/tmp/sessions'
+            'sessions' => $kernel->getRootPath() . '/tmp/sessions',
+            'cache' => $kernel->getRootPath() . '/tmp/cache'
         ];
     }
-    
+
     function clearPaths(array $paths)
     {
         foreach ($paths as $path) {
