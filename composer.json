@@ -26,6 +26,7 @@
         "slince/event": "dev-master@dev",
         "slince/view": "dev-master@dev",
         "slince/cache": "dev-master@dev",
+        "slince/console": "dev-master@dev",
         "symfony/http-foundation": "~2.6.0",
         "kriswallsmith/assetic": "~1.2.0",
         "filp/whoops": "~1.1.0",

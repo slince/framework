@@ -1,10 +1,10 @@
 <?php
 namespace Slince\Application\Command;
 
-use Slince\Console\Command;
+use Slince\Console\Command as BaseCommand;
 use Slince\Application\Kernel;
 
-class Command extends Command
+class Command extends BaseCommand
 {
     /**
      * kernel
