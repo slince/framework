@@ -1,9 +1,9 @@
 <?php
 namespace DefaultApplication;
 
-use Slince\Application\AbstractApplication;
+use Slince\Application\Application;
 
-class DefaultApplication extends AbstractApplication
+class DefaultApplication extends Application
 {
 
     protected $name = 'Default';
@@ -11,5 +11,9 @@ class DefaultApplication extends AbstractApplication
     function getRootPath()
     {
         return __DIR__ . '/../';
+    }
+    
+    function initlize()
+    {
     }
 }

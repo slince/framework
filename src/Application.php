@@ -5,7 +5,11 @@
  */
 namespace Slince\Application;
 
-abstract class AbstractApplication implements ApplicationInterface
+use Slince\Config\Config;
+use Slince\Di\Container;
+use Slince\Event\Dispatcher;
+
+abstract class Application implements ApplicationInterface
 {
 
     /**
@@ -75,8 +79,9 @@ abstract class AbstractApplication implements ApplicationInterface
     public function run(Kernel $kernel, $controller, $action, $parameters)
     {
         $this->kernel = $kernel;
+        $this->initalize();
         $controllerClass = $this->getControllerClass($controller);
-        $controllerInstance = $this->getKernel()->getContainer()->create($controllerClass, [$this]);
+        $controllerInstance = $this->kernel->getContainer()->create($controllerClass, [$this]);
         if (empty($controllerInstance)) {
             throw new MissControllerException($controller);
         }
@@ -86,6 +91,35 @@ abstract class AbstractApplication implements ApplicationInterface
         return $controllerInstance->invokeAction($action, $parameters);
     }
 
+    protected function initalize()
+    {
+        $this->registerConfigs($this->kernel->getContainer()->get('config'));
+        $this->registerServices($this->kernel->getContainer());
+        $this->registerSubscribers($this->kernel->getContainer()->get('dispatcher'));
+    }
+    
+    /**
+     * 注册service
+     * @param Container $container
+    */
+    public function registerServices(Container $container)
+    {}
+    
+    /**
+     * 注册config
+     * @param Config $config
+    */
+    public function registerConfigs(Config $config)
+    {}
+    
+    /**
+     * 注册subscriber
+     *
+     * @param Dispatcher $dispatcher
+    */
+    public function registerSubscribers(Dispatcher $dispatcher)
+    {}
+    
     /**
      * 获取完整的controller class
      * 

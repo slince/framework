@@ -102,16 +102,10 @@ abstract class Kernel
         return $this->container;
     }
 
-    /**
-     * 创建DI容器
-     *
-     * @return \Slince\Di\Container
-     */
-    protected function createContainer()
+    function getKernelCache()
     {
-        return new Container();
+        
     }
-    
     /**
      * 运行项目
      */
@@ -132,8 +126,8 @@ abstract class Kernel
     public function handleRequest(Request $request)
     {
         $route = $this->container->get('router')->match($request->getPathInfo());
-        $this->container->get('kernelCache')->set('request', $request);
-        $this->container->get('kernelCache')->set('route', $route);
+        $this->setParamter('request', $request);
+        $this->setParamter('route', $route);
         //request匹配完毕，待派发
         $this->dispatchEvent(EventStore::PROCESS_REQUEST, [
             'request' => $request,
@@ -153,11 +147,22 @@ abstract class Kernel
      * 核心内存缓存参数读取
      * 
      * @param string $name
-     * @param string $default
+     * @param mixed $default
      */
     function getParameter($name, $default = null)
     {
         return $this->container->get('kernelCache')->get($name, $default);
+    }
+    
+    /**
+     * 核心内存缓存设置
+     * 
+     * @param string $name
+     * @param mixed $value
+     */
+    function setParamter($name, $value)
+    {
+        $this->container->get('kernelCache')->set($name, $value);
     }
     
     /**
@@ -172,6 +177,7 @@ abstract class Kernel
         $this->container->get('dispatcher')->dispatch($eventName, $event);
     }
 
+    abstract function getRootPath();
     /**
      * 调度回调
      * 
@@ -218,5 +224,15 @@ abstract class Kernel
         $context->setHttpsPort($request->isSecure() ? $request->getPort() : $this->httpsPort);
         $context->setQueryString($request->server->get('QUERY_STRING', ''));
         return $context;
+    }
+    
+    /**
+     * 创建DI容器
+     *
+     * @return \Slince\Di\Container
+     */
+    protected function createContainer()
+    {
+        return new Container();
     }
 }
