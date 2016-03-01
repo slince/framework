@@ -13,9 +13,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Slince\\Application\\": "src/",
-            "App\\": "demo/src/",
-            "DefaultApplication\\": "demo/apps/default/src"
+            "Slince\\Application\\": "",
         }
     },
     "require": {
