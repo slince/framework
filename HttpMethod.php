@@ -1,6 +1,7 @@
 <?php
 /**
  * slince routing library
+ * 
  * @author Tao <taosikai@yeah.net>
  */
 namespace Slince\Routing;
@@ -77,11 +78,4 @@ class HttpMethod
      * @var string
      */
     const CONNECT = 'CONNECT';
-
-    /**
-     * delete
-     *
-     * @var string
-     */
-    const DELETE = 'DELETE';
 }
