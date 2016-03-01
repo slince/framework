@@ -11,7 +11,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Slince\\Routing\\": "src/"
+            "Slince\\Routing\\": ""
         }
     },
     "minimum-stability": "dev",
