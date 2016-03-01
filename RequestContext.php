@@ -337,7 +337,7 @@ class RequestContext
     /**
      * 实例化当前对象
      *
-     * @return \Slince\Router\RequestContext
+     * @return \Slince\Routing\RequestContext
      */
     static function create()
     {
@@ -345,7 +345,7 @@ class RequestContext
     }
     
     /**
-     * 是否是安全支付
+     * 是否是https
      * 
      * @return boolean
      */
