@@ -40,8 +40,16 @@ abstract class Kernel
      */
     protected $application;
     
-    public function __construct()
+    /**
+     * 是否是debug模式
+     * 
+     * @var boolean
+     */
+    protected $debug;
+    
+    public function __construct($debug = false)
     {
+        $this->$debug = $debug;
         //初始化
         $this->initalize();
         $this->dispatchEvent(EventStore::KERNEL_INITED);
@@ -49,7 +57,7 @@ abstract class Kernel
 
     protected function initalize()
     {
-        //$this->registerErrorHandler();
+        $this->registerErrorHandler();
         $this->container = $this->createContainer();
         $this->registerServices($this->container);
         $this->registerConfigs($this->container->get('config'));
@@ -125,6 +133,15 @@ abstract class Kernel
     }
 
     /**
+     * 是否工作在debug模式下
+     * 
+     * @return boolean
+     */
+    public function debug()
+    {
+        return $this->debug;
+    }
+    /**
      * 运行项目
      */
     public function run()
@@ -195,6 +212,21 @@ abstract class Kernel
         $this->container->get('dispatcher')->dispatch($eventName, $event);
     }
 
+    /**
+     * 获取当前正在运行的application
+     * 
+     * @return \Slince\Application\ApplicationInterface
+     */
+    public function getApplication()
+    {
+        return $this->application;
+    }
+    
+    /**
+     * 获取项目root path
+     * 
+     * @return string
+     */
     abstract function getRootPath();
     /**
      * 调度回调
@@ -216,10 +248,10 @@ abstract class Kernel
     /**
      * 运行application
      * 
-     * @param string $applicationName
-     * @param string $controllerName
-     * @param unknown $actionName
-     * @param unknown $parameters
+     * @param string $name
+     * @param string $controller
+     * @param string $action
+     * @param array $parameters
      * @throws LogicException
      */
     protected function runApplication($name, $controller, $action, $parameters = [])

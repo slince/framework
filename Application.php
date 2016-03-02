@@ -35,6 +35,12 @@ abstract class Application implements ApplicationInterface
     
 
     /**
+     * 当前执行的controller
+     * 
+     * @var Controller
+     */
+    protected $controller;
+    /**
      * (non-PHPdoc)
      * @see \Slince\Application\ApplicationInterface::getName()
      */
@@ -81,14 +87,25 @@ abstract class Application implements ApplicationInterface
         $this->kernel = $kernel;
         $this->initalize();
         $controllerClass = $this->getControllerClass($controller);
-        $controllerInstance = $this->kernel->getContainer()->create($controllerClass, [$this]);
-        if (empty($controllerInstance)) {
+        $this->controller = $this->kernel->getContainer()->create($controllerClass, [$this]);
+        
+        if (empty($this->controller)) {
             throw new MissControllerException($controller);
         }
-        if (! method_exists($controllerInstance, $action)) {
+        if (! method_exists($this->controller, $action)) {
             throw new MissActionException($controller, $action);
         }
-        return $controllerInstance->invokeAction($action, $parameters);
+        return $this->controller->invokeAction($action, $parameters);
+    }
+    
+    /**
+     * 获取controller
+     * 
+     * @return \Slince\Application\Controller
+     */
+    function getController()
+    {
+        return $this->controller;
     }
 
     protected function initalize()
