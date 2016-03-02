@@ -13,4 +13,8 @@ class EventStore
     const APP_INITED = 'App.inited';
 
     const PROCESS_REQUEST = 'processRequest';
+    
+    const ERROR_OCCURRED = 'errorOccurred';
+    
+    const EXCEPTION_OCCURRED = 'exceptionOccurred';
 }

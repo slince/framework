@@ -11,6 +11,7 @@ use Slince\Application\Exception\LogicException;
 use Slince\Event\Event;
 use Cake\Utility\Inflector;
 use Cake\ORM\TableRegistry;
+use Slince\Di\Container;
 
 class Controller
 {
@@ -108,6 +109,11 @@ class Controller
         $this->response;
     }
 
+    /**
+     * 获取container
+     * 
+     * @return Container
+     */
     function getContainer()
     {
         return $this->application->getKernel()->getContainer();

@@ -42,15 +42,37 @@ abstract class Kernel
     
     public function __construct()
     {
-        $this->container = $this->createContainer();
-        $this->registerServices($this->container);
-        $this->registerConfigs($this->container->get('config'));
-        $this->registerSubscribers($this->container->get('dispatcher'));
-        $this->registerRoutes($this->container->get('router')->getRoutes());
-        $this->registerApplications();
+        //初始化
+        $this->initalize();
         $this->dispatchEvent(EventStore::KERNEL_INITED);
     }
 
+    protected function initalize()
+    {
+        //$this->registerErrorHandler();
+        $this->container = $this->createContainer();
+        $this->registerServices($this->container);
+        $this->registerConfigs($this->container->get('config'));
+        $this->registerEvents($this->container->get('dispatcher'));
+        $this->registerRoutes($this->container->get('router')->getRoutes());
+        $this->registerApplications();
+    }
+    
+    protected function registerErrorHandler()
+    {
+        set_error_handler(function($errno, $errstr, $errfile, $errline = '', $errcontext = '') {
+            $this->dispatchEvent(EventStore::ERROR_OCCURRED, func_get_args());
+        });
+        set_exception_handler(function (\Exception $excetion) {
+            $this->dispatchEvent(EventStore::EXCEPTION_OCCURRED, ['exception' => $excetion]);
+        });
+        register_shutdown_function(function(){
+            if($error = error_get_last()){
+                $this->dispatchEvent(EventStore::ERROR_OCCURRED, $error);
+            }
+        });
+    }
+    
     /**
      * 注册application
      * 
@@ -79,11 +101,11 @@ abstract class Kernel
     abstract public function registerConfigs(Config $config);
     
     /**
-     * 注册subscriber
+     * 注册事件监听
      * 
      * @param Dispatcher $dispatcher
      */
-    abstract public function registerSubscribers(Dispatcher $dispatcher);
+    abstract public function registerEvents(Dispatcher $dispatcher);
 
     /**
      * 注册route
@@ -102,10 +124,6 @@ abstract class Kernel
         return $this->container;
     }
 
-    function getKernelCache()
-    {
-        
-    }
     /**
      * 运行项目
      */
@@ -171,7 +189,7 @@ abstract class Kernel
      * @param string $eventName
      * @param array $parameters
      */
-    public function dispatchEvent($eventName, $parameters = [])
+    public function dispatchEvent($eventName, array $parameters = [])
     {
         $event = new Event($eventName, $this, $this->container->get('dispatcher'), $parameters);
         $this->container->get('dispatcher')->dispatch($eventName, $event);
