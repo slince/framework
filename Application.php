@@ -40,6 +40,9 @@ abstract class Application implements ApplicationInterface
      * @var Controller
      */
     protected $controller;
+    
+    protected $theme = false;
+    
     /**
      * (non-PHPdoc)
      * @see \Slince\Application\ApplicationInterface::getName()
@@ -107,7 +110,52 @@ abstract class Application implements ApplicationInterface
     {
         return $this->controller;
     }
+    
+    /**
+     * 获取application的跟目录
+     * 
+     * @return string
+     */
+    abstract function getRootPath();
 
+    /**
+     * 设置theme
+     * 
+     * @param string $theme
+     */
+    function setTheme($theme)
+    {
+        $this->theme = $theme;
+    }
+    
+    /**
+     * 获取theme
+     * 
+     * @return boolean|string
+     */
+    function getTheme()
+    {
+        return $this->theme;
+    }
+    
+    /**
+     * 获取view path
+     * 
+     * @return string
+     */
+    function getViewPath()
+    {
+        if ($this->theme === false) {
+            $path = $this->getRootPath() . 'views/';
+        } else {
+            $path = $this->getRootPath() . "themes/{$this->theme}/";
+        }
+        return $path;
+    }
+    
+    /**
+     * 初始化application
+     */
     protected function initalize()
     {
         $this->registerConfigs($this->kernel->getContainer()->get('config'));

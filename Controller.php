@@ -196,7 +196,7 @@ class Controller
             $viewManager = $this->application->getKernel()
                 ->getContainer()
                 ->get('view');
-            $viewManager->setViewPath("{$rootPath}views/templates/{$controllerDir}/");
+            $viewManager->setViewPath($this->application->getViewPath() . "templates/{$controllerDir}/");
             $this->viewManager = $viewManager;
         }
         return $this->viewManager;

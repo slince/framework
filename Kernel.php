@@ -49,7 +49,7 @@ abstract class Kernel
     
     public function __construct($debug = false)
     {
-        $this->$debug = $debug;
+        $this->debug = $debug;
         //初始化
         $this->initalize();
         $this->dispatchEvent(EventStore::KERNEL_INITED);
@@ -228,6 +228,7 @@ abstract class Kernel
      * @return string
      */
     abstract function getRootPath();
+    
     /**
      * 调度回调
      * 

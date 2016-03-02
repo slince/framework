@@ -4,6 +4,7 @@ namespace Slince\Application\Subscriber;
 use Slince\Event\SubscriberInterface;
 use Slince\Event\Event;
 use Slince\Application\EventStore;
+use Slince\Application\Kernel;
 
 class ErrorHandler implements SubscriberInterface
 {
@@ -19,13 +20,21 @@ class ErrorHandler implements SubscriberInterface
     function onError(Event $event)
     {
         $event->stopPropagation();
-        $kernel = $event->getSubject();
-        $kernel->getContainer()->get('view')->load('500')->render();
+        $viewManager = $this->getViewManager($event->getSubject());
+        $viewManager->load('500')->render();
     }
     
     function onException(Event $event)
     {
         $event->stopPropagation();
-        $event->getSubject()->getApplication()->getController()->getViewManager()->load('404')->render();
+        $viewManager = $this->getViewManager($event->getSubject());
+        $viewManager->load('404')->render();
+    }
+    
+    function getViewManager(Kernel $kernel)
+    {
+        $viewManager = $kernel->getContainer()->get('view');
+        $viewManager->setViewPath($kernel->getApplication()->getViewPath() . 'error/');
+        return $viewManager;
     }
 }
