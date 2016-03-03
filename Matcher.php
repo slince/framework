@@ -104,12 +104,18 @@ class Matcher implements MatcherInterface
         throw new RouteNotFoundException();
     }
 
+    /**
+     * 匹配host
+     * 
+     * @param RouteInterface $route
+     * @return boolean
+     */
     protected function _macthHost(RouteInterface $route)
     {
-        if (is_null($route->compile()->getHostRegex())) {
+        if (empty($route->getHost())) {
             return true;
         }
-        if (preg_match($route->getHostRegex(), $this->_context->getHost(), $matches)) {
+        if (preg_match($route->compile()->getHostRegex(), $this->_context->getHost(), $matches)) {
             $routeParameters = array_intersect_key($matches, array_flip($route->getVariables()));
             $route->setParameter('_hostMatches', $routeParameters);
             return true;
@@ -117,6 +123,12 @@ class Matcher implements MatcherInterface
         return false;
     }
 
+    /**
+     * 匹配method
+     * 
+     * @param RouteInterface $route
+     * @return boolean
+     */
     protected function _matchMethod(RouteInterface $route)
     {
         if (empty($route->getMethods())) {
@@ -125,20 +137,35 @@ class Matcher implements MatcherInterface
         return is_array($this->_context->getMethod(), $route->getMethods());
     }
 
+    /**
+     * 匹配scheme
+     * 
+     * @param RouteInterface $route
+     * @return boolean
+     */
     protected function _matchSchema(RouteInterface $route)
     {
+        //没有scheme直接忽略
         if (empty($route->getSchemes())) {
             return true;
         }
         return is_array($this->_context->getScheme(), $route->getSchemes());
     }
 
+    /**
+     * 匹配path
+     * 
+     * @param string $path
+     * @param RouteInterface $route
+     * @return boolean
+     */
     protected function _matchPath($path, RouteInterface $route)
     {
-        if (is_null($route->compile()->getPathRegex())) {
+        //如果没有path则直接忽略
+        if (empty($route->getPath())) {
             return true;
         }
-        if (preg_match($route->getPathRegex(), rawurldecode($path), $matches)) {
+        if (preg_match($route->compile()->getPathRegex(), rawurldecode($path), $matches)) {
             $routeParameters = array_intersect_key($matches, array_flip($route->getVariables()));
             $route->setParameter('_pathMatches', $routeParameters);
             return true;
