@@ -52,13 +52,6 @@ class Controller
     protected $viewManager;
 
     /**
-     * theme
-     *
-     * @var string
-     */
-    protected $theme;
-
-    /**
      * layout
      *
      * @var string
@@ -128,7 +121,7 @@ class Controller
     function loadModel($modelClass, array $options = [])
     {
         if ($applicationName = strstr($modelClass, '::', true)) {
-            $namespace = $this->application->getKernel()
+            $namespace = $applicationName == 'App' ? 'App' : $this->application->getKernel()
                 ->getApplication($applicationName)
                 ->getNamespace();
             $modelClass = strstr($modelClass, '::');
@@ -178,6 +171,7 @@ class Controller
         $content = $this->getViewManager()
             ->load($template, $this->layout)
             ->render($this->viewVariables, $withLayout);
+        var_dump($template);
         $this->response->setContent($content);
         $this->rendered = true;
         return $this->response;
@@ -197,6 +191,7 @@ class Controller
                 ->getContainer()
                 ->get('view');
             $viewManager->setViewPath($this->application->getViewPath() . "templates/{$controllerDir}/");
+            $viewManager->setLayoutPath($this->application->getViewPath() . 'layouts/');
             $this->viewManager = $viewManager;
         }
         return $this->viewManager;
