@@ -55,6 +55,9 @@ abstract class Kernel
         $this->dispatchEvent(EventStore::KERNEL_INITED);
     }
 
+    /**
+     * 初始化kernel
+     */
     protected function initalize()
     {
         $this->registerErrorHandler();
@@ -66,6 +69,11 @@ abstract class Kernel
         $this->registerApplications();
     }
     
+    /**
+     * 注册错误和异常的捕获事件
+     * 
+     * return void
+     */
     protected function registerErrorHandler()
     {
         set_error_handler(function($errno, $errstr, $errfile, $errline = '', $errcontext = '') {
@@ -165,8 +173,11 @@ abstract class Kernel
     public function handleRequest(Request $request)
     {
         $this->setParamter('request', $request);
+        //绑定Request到RequestContext
+        $context = $this->bindRequestToContext($request, RequestContext::create());
+        $this->container->get('router')->setContext($context);
         $route = $this->container->get('router')->match($request->getPathInfo());
-        $this->setParamter('route', $route);
+        $this->setParamter('route', $route); //匹配出来的route存入核心缓存
         //request匹配完毕，待派发
         $this->dispatchEvent(EventStore::PROCESS_REQUEST, [
             'request' => $request,
@@ -268,6 +279,13 @@ abstract class Kernel
         return $this->application->run($this, $controller, $action, $parameters);
     }
 
+    /**
+     * 绑定request到routing的context
+     * 
+     * @param Request $request
+     * @param RequestContext $context
+     * @return RequestContext
+     */
     protected function bindRequestToContext(Request $request, RequestContext $context)
     {
         $context->setBaseUrl($request->getBaseUrl());
@@ -275,8 +293,7 @@ abstract class Kernel
         $context->setMethod($request->getMethod());
         $context->setHost($request->getHost());
         $context->setScheme($request->getScheme());
-        $context->setHttpPort($request->isSecure() ? $this->httpPort : $request->getPort());
-        $context->setHttpsPort($request->isSecure() ? $request->getPort() : $this->httpsPort);
+        $context->setHttpPort($request->getPort());
         $context->setQueryString($request->server->get('QUERY_STRING', ''));
         return $context;
     }
