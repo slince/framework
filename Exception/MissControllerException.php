@@ -5,7 +5,7 @@
  */
 namespace Slince\Application\Exception;
 
-class MissControllerException extends \Exception
+class MissControllerException extends NotFoundException
 {
     function __construct($controllerName, $code = 404)
     {

@@ -8,6 +8,7 @@ namespace Slince\Application;
 use Slince\Config\Config;
 use Slince\Di\Container;
 use Slince\Event\Dispatcher;
+use Slince\Application\Exception\MissActionException;
 
 abstract class Application implements ApplicationInterface
 {

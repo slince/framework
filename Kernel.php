@@ -11,8 +11,8 @@ use Slince\Event\Dispatcher;
 use Slince\Event\Event;
 use Slince\Application\Exception\LogicException;
 use Symfony\Component\HttpFoundation\Request;
-use Slince\Routing\RequestContext;
 use Symfony\Component\HttpFoundation\Response;
+use Slince\Routing\RequestContext;
 use Slince\Routing\RouteCollection;
 use Slince\Config\Config;
 
@@ -148,10 +148,14 @@ abstract class Kernel
     {
         $request = Request::createFromGlobals();
         $response = $this->handleRequest($request);
-        $response->sendContent();
-        exit();
+        $this->sendResponse($response);
     }
     
+    public function sendResponse(Response $response)
+    {
+        $response->send();
+        exit();
+    }
     /**
      * 开始处理请求
      * 
@@ -160,8 +164,8 @@ abstract class Kernel
      */
     public function handleRequest(Request $request)
     {
-        $route = $this->container->get('router')->match($request->getPathInfo());
         $this->setParamter('request', $request);
+        $route = $this->container->get('router')->match($request->getPathInfo());
         $this->setParamter('route', $route);
         //request匹配完毕，待派发
         $this->dispatchEvent(EventStore::PROCESS_REQUEST, [

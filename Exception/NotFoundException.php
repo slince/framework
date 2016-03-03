@@ -5,7 +5,6 @@
  */
 namespace Slince\Application\Exception;
 
-class LogicException extends \LogicException
+class NotFoundException extends RuntimeException
 {
-    
 }

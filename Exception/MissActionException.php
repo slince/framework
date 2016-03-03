@@ -5,7 +5,7 @@
  */
 namespace Slince\Application\Exception;
 
-class MissActionException extends \Exception
+class MissActionException extends NotFoundException
 {
     function __construct($controllerName, $actionName, $code = 404)
     {
