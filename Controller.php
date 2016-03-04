@@ -171,7 +171,6 @@ class Controller
         $content = $this->getViewManager()
             ->load($template, $this->layout)
             ->render($this->viewVariables, $withLayout);
-        var_dump($template);
         $this->response->setContent($content);
         $this->rendered = true;
         return $this->response;
