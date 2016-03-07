@@ -5,6 +5,9 @@
  */
 namespace Slince\View;
 
+use Slince\View\Helper\HelperInterface;
+use Slince\View\Exception\InvalidArgumentException;
+
 abstract class AbstractViewManager implements ViewManagerInterface
 {
 
@@ -22,6 +25,9 @@ abstract class AbstractViewManager implements ViewManagerInterface
      */
     protected $_layoutPath;
 
+    protected $helperClasses = [];
+    
+    protected $helpers = [];
     /**
      * configs
      * 
@@ -75,5 +81,28 @@ abstract class AbstractViewManager implements ViewManagerInterface
     function getLayoutPath()
     {
         return $this->_layoutPath;
+    }
+    
+    function registerHelperClass($name, $class)
+    {
+        $this->helperClasses[$name] = $class;
+    }
+    
+    /**
+     * 获取helper
+     * 
+     * @param string $name
+     * @throws InvalidArgumentException
+     * @return HelperInterface
+     */
+    function getHelper($name)
+    {
+        if (isset($this->helpers[$name])) {
+            return $this->helpers[$name];
+        }
+        if (! isset($this->helperClasses[$name])) {
+            throw new InvalidArgumentException(sprintf('The helper "%s" is unknow', $name));
+        }
+        return $this->helpers[$name] = new $this->helperClasses[$name];
     }
 }
