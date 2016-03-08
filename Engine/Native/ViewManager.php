@@ -6,9 +6,9 @@
  */
 namespace Slince\View\Engine\Native;
 
-use Slince\View\AbstractViewManager;
+use Slince\View\ViewManager as BaseViewManager;
 
-class ViewManager extends AbstractViewManager
+class ViewManager extends BaseViewManager
 {
 
     /**
@@ -43,7 +43,6 @@ class ViewManager extends AbstractViewManager
     function setElementPath($path)
     {
         $this->_elementPath = rtrim($path, '/') . DIRECTORY_SEPARATOR;
-        ;
     }
 
     /**

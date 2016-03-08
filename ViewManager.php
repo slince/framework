@@ -8,7 +8,7 @@ namespace Slince\View;
 use Slince\View\Helper\HelperInterface;
 use Slince\View\Exception\InvalidArgumentException;
 
-abstract class AbstractViewManager implements ViewManagerInterface
+abstract class ViewManager
 {
 
     /**
@@ -44,9 +44,9 @@ abstract class AbstractViewManager implements ViewManagerInterface
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\View\ViewManagerInterface::setViewPath()
+     * 设置视图位置
+     * 
+     * @param string $path            
      */
     function setViewPath($path)
     {
@@ -54,9 +54,7 @@ abstract class AbstractViewManager implements ViewManagerInterface
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\View\ViewManagerInterface::getViewPath()
+     * 返回视图位置
      */
     function getViewPath()
     {
@@ -64,9 +62,9 @@ abstract class AbstractViewManager implements ViewManagerInterface
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\View\ViewManagerInterface::setLayoutPath()
+     * 设置布局文件位置
+     * 
+     * @param string $path            
      */
     function setLayoutPath($path)
     {
@@ -74,15 +72,19 @@ abstract class AbstractViewManager implements ViewManagerInterface
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\View\ViewManagerInterface::getLayoutPath()
+     * 返回布局位置
      */
     function getLayoutPath()
     {
         return $this->_layoutPath;
     }
     
+    /**
+     * 注册一个helper class
+     * 
+     * @param string $name
+     * @param string $class
+     */
     function registerHelperClass($name, $class)
     {
         $this->helperClasses[$name] = $class;
@@ -103,6 +105,6 @@ abstract class AbstractViewManager implements ViewManagerInterface
         if (! isset($this->helperClasses[$name])) {
             throw new InvalidArgumentException(sprintf('The helper "%s" is unknow', $name));
         }
-        return $this->helpers[$name] = new $this->helperClasses[$name];
+        return $this->helpers[$name] = new $this->helperClasses[$name]($this);
     }
 }

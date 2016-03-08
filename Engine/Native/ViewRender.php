@@ -8,7 +8,7 @@ namespace Slince\View\Engine\Native;
 
 use Slince\View\Exception\ViewFileNotExistsException;
 
-class ViewRender implements ViewRenderInterface
+class ViewRender
 {
 
     /**
@@ -65,9 +65,20 @@ class ViewRender implements ViewRenderInterface
     }
 
     /**
-     * (non-PHPdoc)
+     * 加载一个helper
+     * 
+     * @param string $name
+     */
+    function __get($name)
+    {
+        $this->$name = $this->_viewManager->getHelper($name);
+    }
+    
+    /**
+     * 设置一个变量
      *
-     * @see \Slince\View\Engine\Native\ViewRenderInterface::setVariable()
+     * @param string $name
+     * @param string $value
      */
     function set($name, $value = null)
     {
@@ -161,9 +172,9 @@ class ViewRender implements ViewRenderInterface
     }
 
     /**
-     * (non-PHPdoc)
+     * 渲染一个视图对象
      *
-     * @see \Slince\View\Engine\Native\ViewRenderInterface::render()
+     * @param ViewInterface $viewFile
      */
     function render(ViewInterface $view)
     {
@@ -171,9 +182,9 @@ class ViewRender implements ViewRenderInterface
     }
 
     /**
-     * (non-PHPdoc)
+     * 渲染一个视图文件
      *
-     * @see \Slince\View\Engine\Native\ViewRenderInterface::renderFile()
+     * @param string $file
      */
     function renderFile($file)
     {
