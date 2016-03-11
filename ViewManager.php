@@ -91,6 +91,18 @@ abstract class ViewManager
     }
     
     /**
+     * 注册一组helper class
+     *
+     * @param array $classes
+     */
+    function registerHelperClasses($classes)
+    {
+        foreach ($classes as $name => $class) {
+            $this->registerHelperClass($name, $class);
+        }
+    }
+    
+    /**
      * 获取helper
      * 
      * @param string $name

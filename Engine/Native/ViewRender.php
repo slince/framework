@@ -71,7 +71,7 @@ class ViewRender
      */
     function __get($name)
     {
-        $this->$name = $this->_viewManager->getHelper($name);
+        return $this->$name = $this->_viewManager->getHelper($name);
     }
     
     /**
