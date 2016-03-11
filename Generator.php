@@ -30,7 +30,7 @@ class Generator implements GeneratorInterface
      *
      * @var array
      */
-    protected $_routeVariables;
+    protected $_routeVariables = [];
     
     function __construct(RequestContext $context)
     {
