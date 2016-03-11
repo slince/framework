@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Slince\Routing\RequestContext;
 use Slince\Routing\RouteCollection;
 use Slince\Config\Config;
+use Slince\Routing\Router;
 
 abstract class Kernel
 {
@@ -47,12 +48,15 @@ abstract class Kernel
      */
     protected $debug;
     
+    protected static $kernel;
+    
     public function __construct($debug = false)
     {
         $this->debug = $debug;
         //初始化
         $this->initalize();
         $this->dispatchEvent(EventStore::KERNEL_INITED);
+        static::$kernel = $this;
     }
 
     /**
@@ -139,6 +143,16 @@ abstract class Kernel
     {
         return $this->container;
     }
+    
+    /**
+     * 获取router
+     * 
+     * @return Router
+     */
+    public function getRouter()
+    {
+        return $this->container->get('router');
+    }
 
     /**
      * 是否工作在debug模式下
@@ -175,8 +189,8 @@ abstract class Kernel
         $this->setParamter('request', $request);
         //绑定Request到RequestContext
         $context = $this->bindRequestToContext($request, RequestContext::create());
-        $this->container->get('router')->setContext($context);
-        $route = $this->container->get('router')->match($request->getPathInfo());
+        $this->getRouter()->setContext($context);
+        $route = $this->getRouter()->match($request->getPathInfo());
         $this->setParamter('route', $route); //匹配出来的route存入核心缓存
         //request匹配完毕，待派发
         $this->dispatchEvent(EventStore::PROCESS_REQUEST, [
@@ -306,5 +320,15 @@ abstract class Kernel
     protected function createContainer()
     {
         return new Container();
+    }
+    
+    /**
+     * 获取正在运行的kernel实例
+     * 
+     * @return Kernel
+     */
+    static function instance()
+    {
+        return static::$kernel;
     }
 }
