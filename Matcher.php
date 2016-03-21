@@ -134,7 +134,7 @@ class Matcher implements MatcherInterface
         if (empty($route->getMethods())) {
             return true;
         }
-        return is_array($this->_context->getMethod(), $route->getMethods());
+        return in_array($this->_context->getMethod(), $route->getMethods());
     }
 
     /**
@@ -149,7 +149,7 @@ class Matcher implements MatcherInterface
         if (empty($route->getSchemes())) {
             return true;
         }
-        return is_array($this->_context->getScheme(), $route->getSchemes());
+        return in_array($this->_context->getScheme(), $route->getSchemes());
     }
 
     /**
