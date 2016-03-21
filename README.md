@@ -14,6 +14,7 @@ composer require slince/routing *@dev
 use Slince\Routing\RouterFactory;
 use Slince\Routing\RequestContext;
 use Slince\Routing\RouteCollection;
+use Slince\Routing\Exception\MethodNotAllowedException;
 use Slince\Routing\Exception\RouteNotFoundException;
 
 //Create Router
