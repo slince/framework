@@ -5,40 +5,39 @@
  */
 namespace Slince\Session\Handler;
 
-use Slince\Session\StorageInterface;
 use Slince\Cache\Cache;
 use Slince\Session\SessionManager;
 
-class CacheStorage implements StorageInterface
+class CacheStorage extends AbstractStorage
 {
 
     /**
      * cache handler
      * 
-     * @var Slince\Cache\Cache
+     * @var \Slince\Cache\Cache
      */
-    private $_cacheHandler;
+    protected $cacheHandler;
 
     /**
      * 缓存时间
      * 
      * @var int
      */
-    private $_duration;
+    protected $duration;
 
-    function __construct(Cache $cacheHandler, $duration = null)
+    function __construct(Cache $cacheHandler)
     {
-        $this->_cacheHandler = $cacheHandler;
+        $this->cacheHandler = $cacheHandler;
     }
 
     /**
      * (non-PHPdoc)
      * 
-     * @see \Slince\Session\StorageInterface::init()
+     * @see StorageInterface::init()
      */
     function init(SessionManager $sessionManager)
     {
-        $this->_duration = $sessionManager->getGcMaxlifeTime();
+        $this->duration = $sessionManager->getGcMaxlifeTime();
         parent::init($sessionManager);
     }
 
@@ -49,17 +48,17 @@ class CacheStorage implements StorageInterface
      */
     function setCacheHandler(Cache $cacheHandler)
     {
-        $this->_cacheHandler = $cacheHandler;
+        $this->cacheHandler = $cacheHandler;
     }
 
     /**
      * 获取缓存句柄
      * 
-     * @return \Slince\Session\Handler\Slince\Cache\Cache
+     * @return \Slince\Cache\Cache
      */
     function getCacheHandler()
     {
-        return $this->_cacheHandler;
+        return $this->cacheHandler;
     }
 
     /**
@@ -69,7 +68,7 @@ class CacheStorage implements StorageInterface
      */
     function open($savePath, $sessionId)
     {
-        $this->_cacheHandler->setDuration($this->_duration);
+        $this->cacheHandler->setDuration($this->duration);
         return true;
     }
 
@@ -80,7 +79,7 @@ class CacheStorage implements StorageInterface
      */
     function write($sessionId, $sessionData)
     {
-        return $this->_cacheHandler->set($sessionId, $sessionData);
+        return $this->cacheHandler->set($sessionId, $sessionData);
     }
 
     /**
@@ -90,7 +89,7 @@ class CacheStorage implements StorageInterface
      */
     function read($sessionId)
     {
-        return $this->_cacheHandler->get($sessionId);
+        return $this->cacheHandler->get($sessionId);
     }
 
     /**
@@ -100,7 +99,7 @@ class CacheStorage implements StorageInterface
      */
     function destroy($sessionId)
     {
-        return $this->_cacheHandler->delete($sessionId);
+        return $this->cacheHandler->delete($sessionId);
     }
 
     /**

@@ -3,7 +3,7 @@
  * slince session library
  * @author Tao <taosikai@yeah.net>
  */
-namespace Slince\Session\BridgeInterface;
+namespace Slince\Session\Bridge;
 
 interface BridgeInterface
 {

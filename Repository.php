@@ -13,11 +13,11 @@ class Repository implements \ArrayAccess, \Countable
      *
      * @var SessionManager
      */
-    private $_sessionManager;
+    protected $sessionManager;
 
     function __construct(SessionManager $sessionManager)
     {
-        $this->_sessionManager = $sessionManager;
+        $this->sessionManager = $sessionManager;
     }
 
     /**
@@ -28,8 +28,8 @@ class Repository implements \ArrayAccess, \Countable
      */
     function exists($key)
     {
-        if (! $this->_sessionManager->hasStarted()) {
-            $this->_sessionManager->start();
+        if (! $this->sessionManager->hasStarted()) {
+            $this->sessionManager->start();
         }
         return isset($_SESSION[$key]);
     }
@@ -42,10 +42,10 @@ class Repository implements \ArrayAccess, \Countable
      */
     function delete($key)
     {
-        if (! $this->_sessionManager->hasStarted()) {
-            $this->_sessionManager->start();
+        if (! $this->sessionManager->hasStarted()) {
+            $this->sessionManager->start();
         }
-        return $_SESSION[$key];
+        unset($_SESSION[$key]);
     }
 
     /**
@@ -53,8 +53,8 @@ class Repository implements \ArrayAccess, \Countable
      */
     function clear()
     {
-        if (! $this->_sessionManager->hasStarted()) {
-            $this->_sessionManager->start();
+        if (! $this->sessionManager->hasStarted()) {
+            $this->sessionManager->start();
         }
         $_SESSION = [];
     }
@@ -67,8 +67,8 @@ class Repository implements \ArrayAccess, \Countable
      */
     function set($key, $value)
     {
-        if (! $this->_sessionManager->hasStarted()) {
-            $this->_sessionManager->start();
+        if (! $this->sessionManager->hasStarted()) {
+            $this->sessionManager->start();
         }
         $_SESSION[$key] = $value;
     }
@@ -82,8 +82,8 @@ class Repository implements \ArrayAccess, \Countable
      */
     function get($key, $defaultValue = null)
     {
-        if (! $this->_sessionManager->hasStarted()) {
-            $this->_sessionManager->start();
+        if (! $this->sessionManager->hasStarted()) {
+            $this->sessionManager->start();
         }
         return $this->exists($key) ? $_SESSION[$key] : $defaultValue;
     }

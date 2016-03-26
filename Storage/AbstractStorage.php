@@ -5,16 +5,15 @@
  */
 namespace Slince\Session\Storage;
 
-use Slince\Session\StorageInterface;
 use Slince\Session\SessionManager;
 
-class AbstractStorage implements StorageInterface
+abstract class AbstractStorage implements StorageInterface
 {
 
     /**
      * (non-PHPdoc)
      * 
-     * @see \Slince\Session\StorageInterface::init()
+     * @see StorageInterface::init()
      */
     function init(SessionManager $sessionManager)
     {

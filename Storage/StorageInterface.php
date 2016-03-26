@@ -3,7 +3,9 @@
  * slince session library
  * @author Tao <taosikai@yeah.net>
  */
-namespace Slince\Session;
+namespace Slince\Session\Storage;
+
+use Slince\Session\SessionManager;
 
 interface StorageInterface extends \SessionHandlerInterface
 {

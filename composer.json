@@ -8,18 +8,18 @@
     "authors": [
         {
             "name": "Tao",
-            "email": "taosikai@sina.cn"
+            "email": "taosikai@yeah.net"
         }
     ],
     "autoload": {
         "psr-4": {
-            "Slince\\Session\\": "src/"
+            "Slince\\Session\\": ""
         }
     },
     "minimum-stability": "dev",
     "require": {
         "php": "~5.4",
         "slince/cache": "dev-master@dev",
-        "slince/filesystem": "dev-master@dev"
+        "symfony/filesystem": "~3.0"
     }
 }
