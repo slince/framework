@@ -13,19 +13,19 @@ class FileCache extends AbstractCache
      *
      * @var string
      */
-    private $_path;
+    private $path;
 
     /**
      * 缓存文件扩展名
      *
      * @var string
      */
-    private $_ext;
+    private $ext;
 
-    function __construct($path, $ext = '')
+    function _construct($path, $ext = '')
     {
         $this->setPath($path);
-        $this->_ext = $ext;
+        $this->ext = $ext;
     }
 
     /**
@@ -36,7 +36,7 @@ class FileCache extends AbstractCache
     function setPath($path)
     {
         $path = rtrim($path, '\\/') . '/';
-        $this->_path = str_replace('\\', '/', $path);
+        $this->path = str_replace('\\', '/', $path);
     }
 
     /**
@@ -44,7 +44,7 @@ class FileCache extends AbstractCache
      */
     function getPath()
     {
-        return $this->_path;
+        return $this->path;
     }
 
     /**
@@ -54,7 +54,7 @@ class FileCache extends AbstractCache
      */
     function setExt($ext)
     {
-        $this->_ext = $ext;
+        $this->ext = $ext;
     }
 
     /**
@@ -62,17 +62,17 @@ class FileCache extends AbstractCache
      */
     function getExt()
     {
-        return $this->_ext;
+        return $this->ext;
     }
 
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\AbstractStorage::_doSet()
+     * @see \Slince\Cache\AbstractStorage::doSet()
      */
-    protected function _doSet($key, $value, $duration)
+    protected function doSet($key, $value, $duration)
     {
-        $filePath = $this->_getFilePath($key);
+        $filePath = $this->getFilePath($key);
         $expire = ($duration == 0) ? 0 : time() + $duration;
         $data = $expire . "\r\n" . serialize($value);
         return @file_put_contents($filePath, $data) !== false;
@@ -81,11 +81,11 @@ class FileCache extends AbstractCache
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\AbstractStorage::_doGet()
+     * @see \Slince\Cache\AbstractStorage::doGet()
      */
-    protected function _doGet($key)
+    protected function doGet($key)
     {
-        $filePath = $this->_getFilePath($key);
+        $filePath = $this->getFilePath($key);
         if (is_file($filePath)) {
             list ($expire, $value) = explode("\r\n", @file_get_contents($filePath));
             if ($expire == 0 || time() < $expire) {
@@ -100,31 +100,31 @@ class FileCache extends AbstractCache
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\AbstractStorage::_doExists()
+     * @see \Slince\Cache\AbstractStorage::doExists()
      */
-    protected function _doExists($key)
+    protected function doExists($key)
     {
-        return file_exists($this->_getFilePath($key));
+        return file_exists($this->getFilePath($key));
     }
 
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\AbstractStorage::_doDelete()
+     * @see \Slince\Cache\AbstractStorage::doDelete()
      */
-    protected function _doDelete($key)
+    protected function doDelete($key)
     {
-        return @unlink($this->_getFilePath($key));
+        return @unlink($this->getFilePath($key));
     }
 
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\AbstractStorage::_doFlush()
+     * @see \Slince\Cache\AbstractStorage::doFlush()
      */
-    protected function _doFlush()
+    protected function doFlush()
     {
-        foreach (glob("{$this->_path}*{$this->_ext}") as $filename) {
+        foreach (glob("{$this->path}*{$this->ext}") as $filename) {
             @unlink($filename);
         }
     }
@@ -135,8 +135,8 @@ class FileCache extends AbstractCache
      * @param string $key            
      * @return string
      */
-    private function _getFilePath($key)
+    private function getFilePath($key)
     {
-        return $this->_path . md5($key) . $this->_ext;
+        return $this->path . md5($key) . $this->ext;
     }
 }

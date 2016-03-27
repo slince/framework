@@ -8,58 +8,58 @@ namespace Slince\Cache;
 class ArrayCache extends AbstractCache
 {
 
-    private $_data = [];
+    private $data = [];
 
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\AbstractStorage::_doSet()
+     * @see \Slince\Cache\AbstractStorage::doSet()
      */
-    protected function _doSet($key, $value, $duration)
+    protected function doSet($key, $value, $duration)
     {
-        $this->_data[$key] = $value;
+        $this->data[$key] = $value;
         return true;
     }
 
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\AbstractStorage::_doGet()
+     * @see \Slince\Cache\AbstractStorage::doGet()
      */
-    protected function _doGet($key)
+    protected function doGet($key)
     {
-        return $this->_doExists($key) ? $this->_data[$key] : false;
+        return $this->doExists($key) ? $this->data[$key] : false;
     }
 
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\AbstractStorage::_doGet()
+     * @see \Slince\Cache\AbstractStorage::doGet()
      */
-    protected function _doExists($key)
+    protected function doExists($key)
     {
-        return isset($this->_data[$key]);
+        return isset($this->data[$key]);
     }
 
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\AbstractStorage::_doDelete()
+     * @see \Slince\Cache\AbstractStorage::doDelete()
      */
-    protected function _doDelete($key)
+    protected function doDelete($key)
     {
-        unset($this->_data[$key]);
+        unset($this->data[$key]);
         return true;
     }
 
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\AbstractStorage::_doFlush()
+     * @see \Slince\Cache\AbstractStorage::doFlush()
      */
-    protected function _doFlush()
+    protected function doFlush()
     {
-        $this->_data = [];
+        $this->data = [];
         return true;
     }
 }

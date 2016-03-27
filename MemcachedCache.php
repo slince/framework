@@ -13,11 +13,11 @@ class MemcachedCache extends AbstractCache
      *
      * @var \Memcache
      */
-    private $_memcached;
+    private $memcached;
 
-    function __construct(\Memcached $memcached)
+    function _construct(\Memcached $memcached)
     {
-        $this->_memcached = $memcached;
+        $this->memcached = $memcached;
     }
 
     /**
@@ -27,7 +27,7 @@ class MemcachedCache extends AbstractCache
      */
     function setMemcached(\Memcached $memcached)
     {
-        $this->_memcache = $memcache;
+        $this->memcache = $memcache;
     }
 
     /**
@@ -37,37 +37,37 @@ class MemcachedCache extends AbstractCache
      */
     function getMemcached()
     {
-        return $this->_memcached;
+        return $this->memcached;
     }
 
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\AbstractStorage::_doSet()
+     * @see \Slince\Cache\AbstractStorage::doSet()
      */
-    protected function _doSet($key, $value, $duration)
+    protected function doSet($key, $value, $duration)
     {
-        return $this->_memcached->set($key, $value, false, time() + $duration);
+        return $this->memcached->set($key, $value, false, time() + $duration);
     }
 
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\AbstractStorage::_doAdd()
+     * @see \Slince\Cache\AbstractStorage::doAdd()
      */
-    protected function _doAdd($key, $value, $duration)
+    protected function doAdd($key, $value, $duration)
     {
-        return $this->_memcached->add($key, $value, false, time() + $duration);
+        return $this->memcached->add($key, $value, false, time() + $duration);
     }
 
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\AbstractStorage::_doGet()
+     * @see \Slince\Cache\AbstractStorage::doGet()
      */
-    protected function _doGet($key)
+    protected function doGet($key)
     {
-        $val = $this->_memcached->get($key);
+        $val = $this->memcached->get($key);
         if (is_null($val)) {
             $val = false;
         }
@@ -77,9 +77,9 @@ class MemcachedCache extends AbstractCache
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\AbstractStorage::_doExists()
+     * @see \Slince\Cache\AbstractStorage::doExists()
      */
-    protected function _doExists($key)
+    protected function doExists($key)
     {
         return $this->get($key) !== false;
     }
@@ -87,20 +87,20 @@ class MemcachedCache extends AbstractCache
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\AbstractStorage::_doDelete()
+     * @see \Slince\Cache\AbstractStorage::doDelete()
      */
-    protected function _doDelete($key)
+    protected function doDelete($key)
     {
-        return $this->_memcached->delete($key);
+        return $this->memcached->delete($key);
     }
 
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\AbstractStorage::_doFlush()
+     * @see \Slince\Cache\AbstractStorage::doFlush()
      */
-    protected function _doFlush()
+    protected function doFlush()
     {
-        return $this->_memcached->flush();
+        return $this->memcached->flush();
     }
 }

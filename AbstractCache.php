@@ -13,7 +13,7 @@ abstract class AbstractCache extends AbstractStorage implements CacheInterface
      *
      * @var int
      */
-    protected $_duration = 3600;
+    protected $duration = 3600;
 
     /**
      * 设置默认的缓存时间
@@ -22,7 +22,7 @@ abstract class AbstractCache extends AbstractStorage implements CacheInterface
      */
     function setDuration($duration)
     {
-        $this->_duration = $duration;
+        $this->duration = $duration;
     }
 
     /**
@@ -32,7 +32,7 @@ abstract class AbstractCache extends AbstractStorage implements CacheInterface
      */
     function getDuration()
     {
-        return $this->_duration;
+        return $this->duration;
     }
 
     /**
@@ -46,9 +46,9 @@ abstract class AbstractCache extends AbstractStorage implements CacheInterface
     function set($key, $value, $duration = null)
     {
         if (is_null($duration)) {
-            $duration = $this->_duration;
+            $duration = $this->duration;
         }
-        return $this->_doSet($key, $value, $duration);
+        return $this->doSet($key, $value, $duration);
     }
 
     /**
@@ -62,9 +62,9 @@ abstract class AbstractCache extends AbstractStorage implements CacheInterface
     function add($key, $value, $duration = null)
     {
         if (is_null($duration)) {
-            $duration = $this->_duration;
+            $duration = $this->duration;
         }
-        return $this->_doAdd($key, $value, $duration);
+        return $this->doAdd($key, $value, $duration);
     }
 
     /**
@@ -75,7 +75,7 @@ abstract class AbstractCache extends AbstractStorage implements CacheInterface
      */
     function exists($key)
     {
-        return $this->_doExists($key);
+        return $this->doExists($key);
     }
 
     /**
@@ -87,7 +87,7 @@ abstract class AbstractCache extends AbstractStorage implements CacheInterface
      */
     function get($key)
     {
-        return $this->_doGet($key);
+        return $this->doGet($key);
     }
     
     /**
@@ -116,7 +116,7 @@ abstract class AbstractCache extends AbstractStorage implements CacheInterface
      */
     function delete($key)
     {
-        return $this->_doDelete($key);
+        return $this->doDelete($key);
     }
 
     /**
@@ -124,13 +124,13 @@ abstract class AbstractCache extends AbstractStorage implements CacheInterface
      */
     function flush()
     {
-        $this->_doFlush();
+        $this->doFlush();
     }
 
-    protected function _doAdd($key, $value, $duration)
+    protected function doAdd($key, $value, $duration)
     {
-        if (! $this->_doExists($key)) {
-            return $this->_doSet($key, $value, $duration);
+        if (! $this->doExists($key)) {
+            return $this->doSet($key, $value, $duration);
         }
         return false;
     }

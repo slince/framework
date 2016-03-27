@@ -11,9 +11,9 @@ class ApcCache extends AbstractCache
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\StorageInterface::_doSet()
+     * @see \Slince\Cache\StorageInterface::doSet()
      */
-    protected function _doSet($key, $value, $duration)
+    protected function doSet($key, $value, $duration)
     {
         return apc_store($key, $value, $duration);
     }
@@ -21,9 +21,9 @@ class ApcCache extends AbstractCache
     /**
      * (non-PHPdoc)
      * 
-     * @see \Slince\Cache\AbstractCache::_doAdd()
+     * @see \Slince\Cache\AbstractCache::doAdd()
      */
-    protected function _doAdd($key, $value, $duration)
+    protected function doAdd($key, $value, $duration)
     {
         return apc_add($key, $value, $duration);
     }
@@ -31,9 +31,9 @@ class ApcCache extends AbstractCache
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\StorageInterface::_doGet()
+     * @see \Slince\Cache\StorageInterface::doGet()
      */
-    protected function _doGet($key)
+    protected function doGet($key)
     {
         return apc_fetch($key);
     }
@@ -41,9 +41,9 @@ class ApcCache extends AbstractCache
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\StorageInterface::_doDelete()
+     * @see \Slince\Cache\StorageInterface::doDelete()
      */
-    protected function _doDelete($key)
+    protected function doDelete($key)
     {
         return apc_delete($key);
     }
@@ -51,9 +51,9 @@ class ApcCache extends AbstractCache
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\StorageInterface::_doExists()
+     * @see \Slince\Cache\StorageInterface::doExists()
      */
-    protected function _doExists($key)
+    protected function doExists($key)
     {
         return apc_exists($key);
     }
@@ -61,9 +61,9 @@ class ApcCache extends AbstractCache
     /**
      * (non-PHPdoc)
      *
-     * @see \Slince\Cache\StorageInterface::_doFlush()
+     * @see \Slince\Cache\StorageInterface::doFlush()
      */
-    protected function _doFlush()
+    protected function doFlush()
     {
         apc_clear_cache('user');
     }
