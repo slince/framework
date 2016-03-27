@@ -9,7 +9,7 @@
     </php>
 
     <testsuites>
-        <testsuite name="Slince Session Test Suite">
+        <testsuite name="Slince Cache Test Suite">
             <directory>./Tests/</directory>
         </testsuite>
     </testsuites>
