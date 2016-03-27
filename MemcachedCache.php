@@ -15,7 +15,7 @@ class MemcachedCache extends AbstractCache
      */
     private $memcached;
 
-    function _construct(\Memcached $memcached)
+    function __construct(\Memcached $memcached)
     {
         $this->memcached = $memcached;
     }

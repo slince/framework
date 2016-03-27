@@ -13,16 +13,23 @@ class FileCache extends AbstractCache
      *
      * @var string
      */
-    private $path;
+    protected $path;
 
     /**
      * 缓存文件扩展名
      *
      * @var string
      */
-    private $ext;
+    protected $ext;
 
-    function _construct($path, $ext = '')
+    /**
+     * 缓存文件名前缀，防止flush误删除
+     *
+     * @var string
+     */
+    protected $prefix = 'tmp_';
+
+    function __construct($path, $ext = '')
     {
         $this->setPath($path);
         $this->ext = $ext;
@@ -124,7 +131,7 @@ class FileCache extends AbstractCache
      */
     protected function doFlush()
     {
-        foreach (glob("{$this->path}*{$this->ext}") as $filename) {
+        foreach (glob("{$this->path}{$this->prefix}*{$this->ext}") as $filename) {
             @unlink($filename);
         }
     }
@@ -135,8 +142,27 @@ class FileCache extends AbstractCache
      * @param string $key            
      * @return string
      */
-    private function getFilePath($key)
+    protected function getFilePath($key)
     {
-        return $this->path . md5($key) . $this->ext;
+        return $this->path . $this->prefix . md5($key) . $this->ext;
+    }
+
+    /**
+     * 设置文件名前前缀
+     * @param $prefix
+     */
+    function setPrefix($prefix)
+    {
+        $this->prefix = $prefix;
+    }
+
+    /**
+     * 获取缓存文件名前缀
+     *
+     * @return string
+     */
+    function getPrefix()
+    {
+        return $this->prefix;
     }
 }

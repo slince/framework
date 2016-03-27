@@ -129,7 +129,7 @@ abstract class AbstractCache extends AbstractStorage implements CacheInterface
 
     protected function doAdd($key, $value, $duration)
     {
-        if (! $this->doExists($key)) {
+        if (!$this->doExists($key)) {
             return $this->doSet($key, $value, $duration);
         }
         return false;

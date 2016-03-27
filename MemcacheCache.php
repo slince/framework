@@ -5,7 +5,7 @@
  */
 namespace Slince\Cache;
 
-class memcacheCache extends AbstractCache
+class MemcacheCache extends AbstractCache
 {
 
     /**
@@ -15,7 +15,7 @@ class memcacheCache extends AbstractCache
      */
     private $memcache;
 
-    function _construct(\Memcache $memcache)
+    function __construct(\Memcache $memcache)
     {
         $this->memcache = $memcache;
     }

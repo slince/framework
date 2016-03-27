@@ -79,11 +79,4 @@ abstract class CacheTestCase extends \PHPUnit_Framework_TestCase
         $this->assertEmpty($val1);
         $this->assertEmpty($val2);
     }
-
-    function test0Duration()
-    {
-        $this->cacheHandler->set('key8', 'a', 0);
-        $val = $this->cacheHandler->get('key8');
-        $this->assertNotEmpty($val);
-    }
 }
