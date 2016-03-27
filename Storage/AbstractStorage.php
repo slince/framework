@@ -9,13 +9,12 @@ use Slince\Session\SessionManager;
 
 abstract class AbstractStorage implements StorageInterface
 {
-
+    
     /**
-     * (non-PHPdoc)
-     * 
+     * @param SessionManager $sessionManager
      * @see StorageInterface::init()
      */
-    function init(SessionManager $sessionManager)
+    function initialize (SessionManager $sessionManager)
     {
         session_set_save_handler($this);
     }

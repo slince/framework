@@ -2,33 +2,32 @@
 /**
  * Session Test Casse
  */
+namespace Slince\Session\Tests;
+
 use Slince\Session\SessionManager;
 use Slince\Session\Storage\FileStorage;
+use Slince\Session\Storage\StorageInterface;
 
-class SessionTest extends \PHPUnit_Framework_TestCase
+abstract class SessionTestCase extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var SessionManager
      */
     protected $sessionManager;
 
+    /**
+     * @var StorageInterface
+     */
     protected $storage;
 
     /**
      * @return FileStorage
      */
-    protected function createStorage()
-    {
-        return new FileStorage(__DIR__ . '/tmp');
-    }
+    abstract protected function createStorage();
 
     function setUp()
     {
         $this->storage = $this->createStorage();
-        //使用文件存储的先创建目录
-        if ($this->storage instanceof FileStorage) {
-            $this->storage->getFilesystem()->mkdir($this->storage->getSavePath());
-        }
         $this->sessionManager = new SessionManager($this->storage);
     }
 
@@ -36,7 +35,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
     {
         //使用文件存储的结束之后要移除文件
         if ($this->storage instanceof FileStorage) {
-            $this->storage->getFilesystem()->remove($this->storage->getSavePath());
+            //$this->storage->getFilesystem()->remove($this->storage->getSavePath());
         }
         $this->storage = null;
         $this->sessionManager = null;
@@ -44,6 +43,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
 
     function testStart()
     {
+        $this->assertFalse($this->sessionManager->isStarted());
         $this->assertEquals('', $this->sessionManager->getId());
         $this->sessionManager->start();
         $id = $this->sessionManager->getId();

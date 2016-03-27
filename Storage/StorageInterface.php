@@ -15,5 +15,5 @@ interface StorageInterface extends \SessionHandlerInterface
      *
      * @param SessionManager $sessionManager            
      */
-    function init(SessionManager $sessionManager);
+    function initialize (SessionManager $sessionManager);
 }

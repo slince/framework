@@ -13,5 +13,5 @@ interface BridgeInterface
      *
      * @param SessionManager $sessionManager            
      */
-    function init(SessionManager $sessionManager);
+    function initialize (SessionManager $sessionManager);
 }

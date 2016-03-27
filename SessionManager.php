@@ -1,13 +1,13 @@
 <?php
 /**
  * slince session component
- * 
+ *
  * session组件是对session管理的抽象
  * 组件所有对session的设置都不会持久化到ini文件中
  * 同样组件对ini文件的读取是懒惰的；如果客户端没有主动
  * 修改session运行参数；组件不会主动从ini中读取默认参数
- * 
- * @author Taosikai <taosikai@yeah.net>
+ *
+ * @author Tao <taosikai@yeah.net>
  */
 namespace Slince\Session;
 
@@ -34,14 +34,14 @@ class SessionManager
 
     /**
      * session id
-     * 
+     *
      * @var string
      */
     protected $id;
 
     /**
      * session name
-     * 
+     *
      * @var string
      */
     protected $name;
@@ -51,28 +51,28 @@ class SessionManager
      *
      * @var int
      */
-    protected $_gcMaxLifeTime;
+    protected $gcMaxLifeTime;
 
     /**
      * 是否已经启动
      *
      * @var boolean
      */
-    protected $_hasStarted = false;
+    protected $started = false;
 
     function __construct(StorageInterface $storage = null, BridgeInterface $bridge = null)
     {
-        if (! is_null($storage)) {
+        if (!is_null($storage)) {
             $this->setStorage($storage);
         }
-        if (! is_null($bridge)) {
+        if (!is_null($bridge)) {
             $this->setBridge($bridge);
         }
     }
 
     function setStorage(StorageInterface $storage)
     {
-        if ($this->hasStarted()) {
+        if ($this->isStarted()) {
             $this->destroy();
         }
         $this->storage = $storage;
@@ -88,47 +88,52 @@ class SessionManager
      */
     function start()
     {
-        if (! $this->hasStarted()) {
-            $this->_init();
+        if (! $this->isStarted()) {
+            $this->initialize();
             session_start();
-            $this->_hasStarted = true;
+            $this->started = true;
         }
     }
 
     /**
      * 启动前调用
      */
-    protected function _init()
+    protected function initialize()
     {
-        if (! is_null($this->_handler)) {
+        if (!is_null($this->_handler)) {
             session_set_save_handler($this->_handler, true);
         }
         // 初始化桥配置
-        if (! is_null($this->bridge)) {
-            $this->bridge->init($this);
+        if (!is_null($this->bridge)) {
+            $this->bridge->initialize($this);
         }
         // 初始化存储接口
-        if (! is_null($this->storage)) {
-            $this->storage->init($this);
+        if (!is_null($this->storage)) {
+            $this->storage->initialize($this);
         }
         // 设置session id;如果设置了id则不会再生成session文件
-        if (! is_null($this->id)) {
+        if (!is_null($this->id)) {
             session_id($this->id);
         }
         // 自定义session；name
-        if (! is_null($this->name)) {
+        if (!is_null($this->name)) {
             session_name($this->name);
         }
     }
 
     /**
-     * 是否已经启用
+     * 是否已经启动session
+     * @return boolean
      */
-    function hasStarted()
+    function isStarted()
     {
-        return $this->_hasStarted || $this->getStatus() == PHP_SESSION_ACTIVE;
+        return $this->started || $this->getStatus() == PHP_SESSION_ACTIVE;
     }
 
+    /**
+     * 获取session存储参数
+     * @return Repository
+     */
     function getRepository()
     {
         return new Repository($this);
@@ -162,11 +167,11 @@ class SessionManager
     function destroy()
     {
         // 已经启动才能销毁
-        if ($this->hasStarted()) {
+        if ($this->isStarted()) {
             session_destroy();
         }
         $_SESSION = [];
-        $this->_hasStarted = false;
+        $this->started = false;
     }
 
     /**
@@ -176,7 +181,7 @@ class SessionManager
      */
     function regenerateId()
     {
-        if (! $this->hasStarted()) {
+        if (!$this->isStarted()) {
             $this->start();
         }
         return session_regenerate_id();
@@ -193,13 +198,13 @@ class SessionManager
     /**
      * 设置名称
      *
-     * @param string $name            
+     * @param string $name
      * @throws SessionException
      * @return string
      */
     function setName($name)
     {
-        if (! preg_match("/[A-z]/", $name)) {
+        if (!preg_match("/[A-z]/", $name)) {
             throw new SessionException('Session name contains at least one letter');
         }
         // session已经启动则销毁当前会话
@@ -209,7 +214,7 @@ class SessionManager
 
     /**
      * 读取id
-     * 
+     *
      * @return string
      */
     function getId()
@@ -219,8 +224,8 @@ class SessionManager
 
     /**
      * 设置id
-     * 
-     * @param unknown $id            
+     *
+     * @param unknown $id
      * @return string
      */
     function setId($id)
@@ -236,10 +241,10 @@ class SessionManager
      */
     function getGcMaxlifeTime()
     {
-        if (is_null($this->_gcMaxLifeTime)) {
-            $this->_gcMaxLifeTime = intval(ini_get('session.gc_maxlifetime'));
+        if (is_null($this->gcMaxLifeTime)) {
+            $this->gcMaxLifeTime = intval(ini_get('session.gc_maxlifetime'));
         }
-        return $this->_gcMaxLifeTime;
+        return $this->gcMaxLifeTime;
     }
 
     /**

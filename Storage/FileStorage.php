@@ -12,8 +12,19 @@ use Symfony\Component\Filesystem\Exception\IOException;
 class FileStorage extends AbstractStorage
 {
 
+    /**
+     * session文件保存位置
+     *
+     * @var string
+     */
     protected $savePath;
 
+    /**
+     * 写入session时hasher
+     *
+     * @var string|callable
+     */
+    protected $hasher;
     /**
      * file handler
      * 
@@ -23,6 +34,11 @@ class FileStorage extends AbstractStorage
 
     function __construct($savePath)
     {
+        $savePath = trim($savePath, '\\/') . '/';
+        $this->filesystem = new Filesystem();
+        if (! file_exists($savePath)) {
+            $this->filesystem->mkdir($savePath);
+        }
         if (! is_dir($savePath)) {
             throw new SessionException(sprintf('Directory "%s" is not valid', $savePath));
         }
@@ -36,7 +52,6 @@ class FileStorage extends AbstractStorage
      */
     function open($savePath, $sessionName)
     {
-        $this->filesystem = new Filesystem();
         return true;
     }
 
@@ -100,7 +115,7 @@ class FileStorage extends AbstractStorage
      */
     function close()
     {
-        $this->filesystem = null;
+        return true;
     }
 
     /**
