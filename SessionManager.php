@@ -181,7 +181,7 @@ class SessionManager
      */
     function regenerateId()
     {
-        if (!$this->isStarted()) {
+        if (! $this->isStarted()) {
             $this->start();
         }
         return session_regenerate_id();
@@ -239,7 +239,7 @@ class SessionManager
      *
      * @return int
      */
-    function getGcMaxlifeTime()
+    function getGcMaxLifeTime()
     {
         if (is_null($this->gcMaxLifeTime)) {
             $this->gcMaxLifeTime = intval(ini_get('session.gc_maxlifetime'));

@@ -14,7 +14,7 @@ abstract class AbstractStorage implements StorageInterface
      * @param SessionManager $sessionManager
      * @see StorageInterface::init()
      */
-    function initialize (SessionManager $sessionManager)
+    function initialize(SessionManager $sessionManager)
     {
         session_set_save_handler($this);
     }

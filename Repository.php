@@ -28,9 +28,7 @@ class Repository implements \ArrayAccess, \Countable
      */
     function exists($key)
     {
-        if (! $this->sessionManager->hasStarted()) {
-            $this->sessionManager->start();
-        }
+        $this->checkAndActiveSession();
         return isset($_SESSION[$key]);
     }
 
@@ -42,9 +40,7 @@ class Repository implements \ArrayAccess, \Countable
      */
     function delete($key)
     {
-        if (! $this->sessionManager->hasStarted()) {
-            $this->sessionManager->start();
-        }
+        $this->checkAndActiveSession();
         unset($_SESSION[$key]);
     }
 
@@ -53,9 +49,7 @@ class Repository implements \ArrayAccess, \Countable
      */
     function clear()
     {
-        if (! $this->sessionManager->hasStarted()) {
-            $this->sessionManager->start();
-        }
+        $this->checkAndActiveSession();
         $_SESSION = [];
     }
 
@@ -67,9 +61,7 @@ class Repository implements \ArrayAccess, \Countable
      */
     function set($key, $value)
     {
-        if (! $this->sessionManager->hasStarted()) {
-            $this->sessionManager->start();
-        }
+        $this->checkAndActiveSession();
         $_SESSION[$key] = $value;
     }
 
@@ -82,9 +74,7 @@ class Repository implements \ArrayAccess, \Countable
      */
     function get($key, $defaultValue = null)
     {
-        if (! $this->sessionManager->hasStarted()) {
-            $this->sessionManager->start();
-        }
+        $this->checkAndActiveSession();
         return $this->exists($key) ? $_SESSION[$key] : $defaultValue;
     }
 
@@ -136,5 +126,12 @@ class Repository implements \ArrayAccess, \Countable
     function count()
     {
         return count($_SESSION);
+    }
+
+    protected function checkAndActiveSession()
+    {
+        if (! $this->sessionManager->isStarted()) {
+            $this->sessionManager->start();
+        }
     }
 }

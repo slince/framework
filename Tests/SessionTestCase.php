@@ -35,7 +35,7 @@ abstract class SessionTestCase extends \PHPUnit_Framework_TestCase
     {
         //使用文件存储的结束之后要移除文件
         if ($this->storage instanceof FileStorage) {
-            //$this->storage->getFilesystem()->remove($this->storage->getSavePath());
+            $this->storage->getFilesystem()->remove($this->storage->getSavePath());
         }
         $this->storage = null;
         $this->sessionManager = null;
@@ -50,7 +50,9 @@ abstract class SessionTestCase extends \PHPUnit_Framework_TestCase
         $this->assertNotEquals('', $id);
         $this->assertEquals($id, $this->sessionManager->getId());
     }
-
+    /**
+     * @depends testStart
+     */
     function testRegenerate()
     {
         $this->sessionManager->start();
@@ -67,5 +69,32 @@ abstract class SessionTestCase extends \PHPUnit_Framework_TestCase
         $newSessionName = 'HelloWorld';
         $this->sessionManager->setName($newSessionName);
         $this->assertEquals($newSessionName, $this->sessionManager->getName());
+    }
+
+    /**
+     * @depends testStart
+     */
+    function testSetAndGet()
+    {
+        $this->sessionManager->start();
+        $repository = $this->sessionManager->getRepository();
+        $sessionKey = 'hello';
+        $sessionValue = 'world';
+        $repository[$sessionKey] = $sessionValue;
+        $this->assertEquals($sessionValue, $repository->get($sessionKey));
+        $repository->delete($sessionKey);
+        $this->assertEquals(null, $repository->get($sessionKey));
+    }
+
+    function testDestroy()
+    {
+        $this->sessionManager->start();
+        $repository = $this->sessionManager->getRepository();
+        $sessionKey = 'hello';
+        $sessionValue = 'world';
+        $repository[$sessionKey] = $sessionValue;
+        $this->assertEquals($sessionValue, $repository->get($sessionKey));
+        $this->sessionManager->destroy();
+        $this->assertEquals(null, $repository->get($sessionKey));
     }
 }

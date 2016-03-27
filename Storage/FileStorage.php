@@ -25,6 +25,13 @@ class FileStorage extends AbstractStorage
      * @var string|callable
      */
     protected $hasher;
+
+    /**
+     * session文件名后缀
+     *
+     * @var string
+     */
+    protected $suffix = 'sess';
     /**
      * file handler
      * 
@@ -102,8 +109,13 @@ class FileStorage extends AbstractStorage
      */
     function gc($maxlifetime)
     {
+        $result = true;
         try {
-            $result = $this->filesystem->remove($this->savePath);
+            foreach (glob("{$this->savePath}*_{$this->suffix}") as $file) {
+                if(time() - filemtime($file) > $maxlifetime) {
+                    $this->filesystem->remove($file);
+                }
+            }
         } catch (IOException $e) {
             $result = false;
         }
@@ -143,8 +155,28 @@ class FileStorage extends AbstractStorage
      * @param string $sessionId            
      * @return string
      */
-    protected function getSessionFile($sessionId)
+    function getSessionFile($sessionId)
     {
-        return "{$this->savePath}{$sessionId}";
+        return "{$this->savePath}{$sessionId}_{$this->suffix}";
+    }
+
+    /**
+     * 获取session文件名后缀
+     * 
+     * @return string
+     */
+    function getSuffix()
+    {
+        return $this->suffix;
+    }
+
+    /**
+     * 设置session文件名后缀
+     *
+     * @param $suffix string
+     */
+    function setSuffix($suffix)
+    {
+        $this->suffix = $suffix;
     }
 }

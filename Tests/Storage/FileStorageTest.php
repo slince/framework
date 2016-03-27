@@ -14,9 +14,13 @@ class FileStorageTest extends SessionTestCase
         return new FileStorage($this->sessionDir);
     }
 
-    function setUp()
+    function testDestroy()
     {
-        parent::setUp();
         $this->sessionManager->start();
+        $this->sessionManager->commit();
+        $sessionFile = $this->storage->getSessionFile($this->sessionManager->getId());
+        $this->assertFileExists($sessionFile);
+        parent::testDestroy();
+        $this->assertFileNotExists($sessionFile);
     }
 }

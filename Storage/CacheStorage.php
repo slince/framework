@@ -3,7 +3,7 @@
  * slince session library
  * @author Tao <taosikai@yeah.net>
  */
-namespace Slince\Session\Handler;
+namespace Slince\Session\Storage;
 
 use Slince\Cache\Cache;
 use Slince\Session\SessionManager;
@@ -27,7 +27,7 @@ class CacheStorage extends AbstractStorage
 
     function __construct(Cache $cacheHandler)
     {
-        $this->cacheHandler = $cacheHandler;
+        $this->setCacheHandler($cacheHandler);
     }
 
     /**
@@ -35,10 +35,10 @@ class CacheStorage extends AbstractStorage
      * 
      * @see StorageInterface::init()
      */
-    function init(SessionManager $sessionManager)
+    function initialize(SessionManager $sessionManager)
     {
-        $this->duration = $sessionManager->getGcMaxlifeTime();
-        parent::init($sessionManager);
+        $this->duration = $sessionManager->getGcMaxLifeTime();
+        parent::initialize($sessionManager);
     }
 
     /**
@@ -108,6 +108,14 @@ class CacheStorage extends AbstractStorage
      * @see SessionHandlerInterface::gc()
      */
     function gc($maxlifetime)
+    {
+        return true;
+    }
+
+    /**
+     * @see \SessionHandlerInterface::close();
+     */
+    function close()
     {
         return true;
     }
