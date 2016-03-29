@@ -25,13 +25,15 @@
         "slince/view": "dev-master@dev",
         "slince/cache": "dev-master@dev",
         "slince/console": "dev-master@dev",
-        "kriswallsmith/assetic": "~1.2.0",
+        "slince/session": "dev-master@dev",
+        "slince/upload": "dev-master@dev",
+        "cakephp/orm": "~3.0",
+        "symfony/http-foundation": "~3.0",
         "filp/whoops": "~1.1.0",
         "monolog/monolog": "~1.16.0",
-        "cakephp/orm": "~3.0",
-        "cakephp/utility": "~3.0",
-        "cakephp/cache": "~3.0",
-        "symfony/http-foundation": "~3.0"
+        "kriswallsmith/assetic": "~1.2.0"
+ 
+
     },
     "minimum-stability": "stable"
 }
