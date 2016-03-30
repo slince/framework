@@ -36,7 +36,7 @@ class CakeSubscriber implements SubscriberInterface
         }
         // 设置缓存
         foreach ($configs['cache'] as $name => $config) {
-            Cache::config($name, $config);
+         Cache::config($name, $config);
         }
     }
 }

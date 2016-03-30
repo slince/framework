@@ -5,10 +5,10 @@
  */
 namespace Slince\Application;
 
+use Cake\ORM\Table;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Slince\Application\Exception\LogicException;
-use Slince\Event\Event;
 use Cake\Utility\Inflector;
 use Cake\ORM\TableRegistry;
 use Slince\Di\Container;
@@ -96,10 +96,11 @@ class Controller
 
     /**
      * 获取response
+     * @return Response
      */
     function getResponse()
     {
-        $this->response;
+        return $this->response;
     }
 
     /**
@@ -116,7 +117,8 @@ class Controller
      * load table
      *
      * @param string $modelClass            
-     * @param array $options            
+     * @param array $options
+     * @return Table
      */
     function loadModel($modelClass, array $options = [])
     {
@@ -199,7 +201,8 @@ class Controller
     /**
      * 与application交互的接口，返回response
      *
-     * @param WebApplication $app            
+     * @param string $action 要触发的action
+     * @param array $parameters 路由参数
      * @throws LogicException
      * @return \Symfony\Component\HttpFoundation\Response
      */
