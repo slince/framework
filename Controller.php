@@ -187,7 +187,8 @@ class Controller
     {
         if (is_null($this->viewManager)) {
             $rootPath = $this->application->getRootPath();
-            $controllerDir = Inflector::tableize(substr(basename(get_class($this)), 0, - 10));
+            $controllerDir = Inflector::tableize(substr(strrchr(get_class($this), '\\'), 0, - 10));
+            $controllerDir = trim($controllerDir, '\\/');
             $viewManager = $this->application->getKernel()
                 ->getContainer()
                 ->get('view');

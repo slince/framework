@@ -68,7 +68,7 @@ abstract class Application implements ApplicationInterface
     function getNamespace()
     {
         if (is_null($this->namespace)) {
-            $this->namespace = dirname(get_class($this));
+            $this->namespace = strstr(get_class($this), '\\', true);
         }
         return $this->namespace;
     }
