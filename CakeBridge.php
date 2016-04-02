@@ -1,10 +1,15 @@
 <?php
+/**
+ * slince cake bridge
+ *
+ * @author Tao <taosikai@yeah.net>
+ */
 namespace Slince\CakeBridge;
 
+use Slince\Application\Bridge;
 use Slince\Di\Container;
 use Cake\Datasource\ConnectionManager;
 use Cake\Cache\Cache;
-use Cake\Core\Configure;
 
 class CakeBridge extends Bridge
 {

@@ -6,6 +6,7 @@
     "require": {
         "php": ">=5.5.9",
         "slince/application": "dev-master@dev",
+        "slince/di": "dev-master@dev",
         "cakephp/orm": "~3.0",
         "cakephp/cache": "~3.0"
     },
