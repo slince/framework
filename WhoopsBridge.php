@@ -6,9 +6,12 @@
  */
 namespace Slince\WhoopsBridge;
 
+use Slince\Application\Bridge;
+use Slince\Di\Container;
+
 class WhoopsBridge extends Bridge
 {
-    function initialize()
+    function initialize(Container $container)
     {
         $whoops = new \Whoops\Run;
         $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
