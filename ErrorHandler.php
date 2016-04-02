@@ -3,13 +3,10 @@
  * slince application library
  * @author Tao <taosikai@yeah.net>
  */
-namespace Slince\Application\Subscriber;
+namespace Slince\Application;
 
 use Slince\Event\SubscriberInterface;
 use Slince\Event\Event;
-use Slince\Application\EventStore;
-use Slince\Application\Kernel;
-use Slince\Application\Application;
 use Slince\Application\Exception\NotFoundException;
 use Slince\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\HttpFoundation\Response;
