@@ -4,7 +4,7 @@
     "type": "library",
     "license": "Apache-2.0",
     "require": {
-        "php": "~5.4",
+        "php": ">=5.5.9",
         "slince/application": "dev-master@dev",
         "cakephp/orm": "~3.0",
         "cakephp/cache": "~3.0"
