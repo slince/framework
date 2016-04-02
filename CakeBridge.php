@@ -19,13 +19,13 @@ class CakeBridge extends Bridge
     function initialize(Container $container)
     {
         parent::initialize($container);
-        list($datasources, $cache) = $this->getConfigs();
+        $configs = $this->getConfigs();
         // 设置数据库
-        foreach ($datasources as $name => $config) {
+        foreach ($configs['datasources'] as $name => $config) {
             ConnectionManager::config($name, $config);
         }
         // 设置缓存
-        foreach ($cache as $name => $config) {
+        foreach ($configs['cache'] as $name => $config) {
             Cache::config($name, $config);
         }
     }
