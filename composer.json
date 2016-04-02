@@ -1,17 +1,19 @@
 {
     "name": "slince/cake-bridge",
     "description": "Slince cakephp bridge",
-    "type": "project",
+    "type": "library",
+    "license": "Apache-2.0",
     "require": {
         "php": "~5.4",
-        "slince/application": "dev-master@dev"
+        "slince/application": "dev-master@dev",
+        "cakephp/orm": "~3.0",
+        "cakephp/cache": "~3.0"
     },
     "autoload": {
         "psr-4": {
             "Slince\\CakeBridge\\": ""
         }
     },
-    "license": "Apache-2.0",
     "authors": [
         {
             "name": "Tao",

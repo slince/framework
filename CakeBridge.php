@@ -1,5 +1,5 @@
 <?php
-namespace Slince\Application;
+namespace Slince\CakeBridge;
 
 use Slince\Di\Container;
 use Cake\Datasource\ConnectionManager;
