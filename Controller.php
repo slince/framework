@@ -45,13 +45,6 @@ class Controller
     protected $action;
 
     /**
-     * view manager
-     *
-     * @var \Slince\View\Engine\Native\ViewManager
-     */
-    protected $viewManager;
-
-    /**
      * layout
      *
      * @var string
@@ -170,33 +163,12 @@ class Controller
         if (is_null($template)) {
             $template = $this->action;
         }
-        $content = $this->getViewManager()
+        $content = $this->application->getViewManager()
             ->load($template, $this->layout)
             ->render($this->viewVariables, $withLayout);
         $this->response->setContent($content);
         $this->rendered = true;
         return $this->response;
-    }
-
-    /**
-     * 获取ViewManager
-     *
-     * @return \Slince\View\Engine\Native\ViewManager
-     */
-    function getViewManager()
-    {
-        if (is_null($this->viewManager)) {
-            $rootPath = $this->application->getRootPath();
-            $controllerDir = Inflector::tableize(substr(strrchr(get_class($this), '\\'), 0, - 10));
-            $controllerDir = trim($controllerDir, '\\/');
-            $viewManager = $this->application->getKernel()
-                ->getContainer()
-                ->get('view');
-            $viewManager->setViewPath($this->application->getViewPath() . "templates/{$controllerDir}/");
-            $viewManager->setLayoutPath($this->application->getViewPath() . 'layouts/');
-            $this->viewManager = $viewManager;
-        }
-        return $this->viewManager;
     }
 
     /**

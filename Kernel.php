@@ -235,6 +235,9 @@ abstract class Kernel
             $response = $this->runCallableAction($action, $route->getParameters());
         } else {
             list($applicationName, $controller, $action) = explode('@', $action);
+            $this->setParameter('application', $applicationName);
+            $this->setParameter('controller', $controller);
+            $this->setParameter('action', $action);
             $response = $this->runApplication($applicationName, $controller, $action, $route->getParameters());
         }
         return $response;

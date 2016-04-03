@@ -5,6 +5,7 @@
  */
 namespace Slince\Application;
 
+use Cake\Utility\Inflector;
 use Slince\Config\Config;
 use Slince\Di\Container;
 use Slince\Event\Dispatcher;
@@ -26,7 +27,14 @@ abstract class Application implements ApplicationInterface
      * @var 
      */
     protected $namespace;
-    
+
+    /**
+     * application所在的根目录
+     * 注意与kernel的root path
+     * @var string
+     */
+    protected $rootPath;
+
     /**
      * kernel
      * 
@@ -34,16 +42,27 @@ abstract class Application implements ApplicationInterface
      */
     protected $kernel;
     
-
     /**
      * 当前执行的controller
      * 
      * @var Controller
      */
     protected $controller;
-    
+
+    /**
+     * application使用的主题，false表示不启用
+     * 主题功能
+     * @var false|string
+     */
     protected $theme = false;
-    
+
+    /**
+     * view manager
+     *
+     * @var \Slince\View\Engine\Native\ViewManager
+     */
+    protected $viewManager;
+
     /**
      * (non-PHPdoc)
      * @see \Slince\Application\ApplicationInterface::getName()
@@ -61,6 +80,7 @@ abstract class Application implements ApplicationInterface
     {
         $this->name = $name;
     }
+
     /**
      * (non-PHPdoc)
      * @see \Slince\Application\ApplicationInterface::getNamespace()
@@ -72,6 +92,36 @@ abstract class Application implements ApplicationInterface
         }
         return $this->namespace;
     }
+
+    /**
+     * 获取application的跟目录
+     *
+     * @return string
+     */
+    public function getRootPath()
+    {
+        if (is_null($this->rootPath)) {
+            $reflection = new \ReflectionObject($this);
+            $this->rootPath = dirname(dirname($reflection->getFileName()));
+        }
+        return $this->rootPath;
+    }
+
+    /**
+     * 获取view path
+     *
+     * @return string
+     */
+    public function getViewPath()
+    {
+        if ($this->theme === false) {
+            $path = $this->getRootPath() . '/views';
+        } else {
+            $path = $this->getRootPath() . "/themes/{$this->theme}";
+        }
+        return $path;
+    }
+
     /**
      * Get kernel
      * 
@@ -89,10 +139,9 @@ abstract class Application implements ApplicationInterface
     public function run(Kernel $kernel, $controller, $action, $parameters)
     {
         $this->kernel = $kernel;
-        $this->initalize();
+        $this->initialize();
         $controllerClass = $this->getControllerClass($controller);
         $this->controller = $this->kernel->getContainer()->create($controllerClass, [$this]);
-        
         if (empty($this->controller)) {
             throw new MissControllerException($controller);
         }
@@ -107,24 +156,17 @@ abstract class Application implements ApplicationInterface
      * 
      * @return \Slince\Application\Controller
      */
-    function getController()
+    public function getController()
     {
         return $this->controller;
     }
-    
-    /**
-     * 获取application的跟目录
-     * 
-     * @return string
-     */
-    abstract function getRootPath();
 
     /**
      * 设置theme
      * 
      * @param string $theme
      */
-    function setTheme($theme)
+    public function setTheme($theme)
     {
         $this->theme = $theme;
     }
@@ -134,30 +176,15 @@ abstract class Application implements ApplicationInterface
      * 
      * @return boolean|string
      */
-    function getTheme()
+    public function getTheme()
     {
         return $this->theme;
     }
     
     /**
-     * 获取view path
-     * 
-     * @return string
-     */
-    function getViewPath()
-    {
-        if ($this->theme === false) {
-            $path = $this->getRootPath() . 'views/';
-        } else {
-            $path = $this->getRootPath() . "themes/{$this->theme}/";
-        }
-        return $path;
-    }
-    
-    /**
      * 初始化application
      */
-    protected function initalize()
+    protected function initialize()
     {
         $this->registerConfigs($this->kernel->getContainer()->get('config'));
         $this->registerServices($this->kernel->getContainer());
@@ -196,5 +223,23 @@ abstract class Application implements ApplicationInterface
     {
         $namespace = $this->getNamespace();
         return "{$namespace}\\Controller\\{$controller}";
+    }
+
+    /**
+     * 获取ViewManager
+     *
+     * @return \Slince\View\Engine\Native\ViewManager
+     */
+    public function getViewManager()
+    {
+        if (is_null($this->viewManager)) {
+            $controller = $this->getKernel()->getParameter('controller');
+            $controllerDir = Inflector::tableize(substr($controller, 0, -10));
+            $viewManager = $this->getKernel()->getContainer()->get('view');
+            $viewManager->setViewPath($this->getViewPath() . "/templates/{$controllerDir}/");
+            $viewManager->setLayoutPath($this->getViewPath() . '/layouts/');
+            $this->viewManager = $viewManager;
+        }
+        return $this->viewManager;
     }
 }

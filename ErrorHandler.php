@@ -32,7 +32,7 @@ class ErrorHandler implements SubscriberInterface
         $event->stopPropagation();
         $kernel = $event->getSubject();
         $application = $kernel->getApplication();
-        $content = $this->getErrorContent($kernel, $application, [
+        $content = $this->getErrorContent($application, [
             'path' => $kernel->getParameter('request')->getPathInfo(),
             'message' => $event->getArgument(1)
         ]);
@@ -61,7 +61,7 @@ class ErrorHandler implements SubscriberInterface
             $content = $this->getNotFoundContent($kernel, $application, $parameters);
         } else {
             $status = 500;
-            $content = $this->getErrorContent($kernel, $application, $parameters);
+            $content = $this->getErrorContent($application, $parameters);
         }
         $response = $this->createResponse($content, $status);
         $kernel->sendResponse($response);
@@ -78,7 +78,7 @@ class ErrorHandler implements SubscriberInterface
     protected function getNotFoundContent(Kernel $kernel, Application $application = null, array $parameters = [])
     {
         if (! is_null($application)) {
-            $content = $this->renderContentFromView($kernel, $application, '404', $parameters);
+            $content = $this->renderContentFromView($application, '404', $parameters);
         } else {
             $content = <<<EOT
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
@@ -101,12 +101,12 @@ EOT;
      * @param array $parameters
      * @return string
      */
-    protected function getErrorContent(Kernel $kernel, Application $application = null, array $parameters = [])
+    protected function getErrorContent(Application $application = null, array $parameters = [])
     {
         //如果错误发生在application级别，则渲染application对应的错误模版
         //否则使用默认错误
         if (! is_null($application)) {
-            $content = $this->renderContentFromView($kernel, $application, '500', $parameters);
+            $content = $this->renderContentFromView($application, '500', $parameters);
         } else {
             $content = <<<EOT
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
@@ -136,10 +136,10 @@ EOT;
      * @param string $templateName
      * @param array $parameters
      */
-    protected function renderContentFromView(Kernel $kernel, Application $application, $templateName, array $parameters = [])
+    protected function renderContentFromView(Application $application, $templateName, array $parameters = [])
     {
-        $viewManager = $kernel->getContainer()->get('view');
-        $viewManager->setViewPath($application->getViewPath() . 'error/');
+        $viewManager = $application->getViewManager();
+        $viewManager->setViewPath($application->getViewPath() . '/error/');
         return $viewManager->load($templateName)->render($parameters);
     }
     
