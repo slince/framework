@@ -45,8 +45,8 @@ class FileCache extends AbstractCache
     function setPath($path)
     {
         $path = rtrim($path, '\\/') . '/';
-        if (file_exists($path) && !@mkdir($path, 0777, true)) {
-            throw new CacheException(sprintf('Path "%s could not create"', $path));
+        if (!file_exists($path) && !@mkdir($path, 0777, true)) {
+            throw new CacheException(sprintf('Path "%s could not be created"', $path));
         }
         $this->path = $path;
     }
