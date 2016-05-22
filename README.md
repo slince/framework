@@ -1,8 +1,8 @@
-﻿# Cache component
+﻿# Cache Component
 
 缓存机制是很常见的在现在的web应用中，改组件致力于用简单完善的逻辑实现缓存在项目中的应用。目前支持的缓存形式有file，apc，memcache,array(临时缓存，只对当前请求有效)
 
-### 安装
+## 安装
 
 在composer.json中添加
 ```
@@ -12,7 +12,7 @@
     }
 }
 ```
-### 用法
+## 用法
 ```
 $fileCache = new Slince\Cache\FileCache('./tmp/');
 
