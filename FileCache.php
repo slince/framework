@@ -5,6 +5,8 @@
  */
 namespace Slince\Cache;
 
+use Slince\Cache\Exception\CacheException;
+
 class FileCache extends AbstractCache
 {
 
@@ -38,12 +40,15 @@ class FileCache extends AbstractCache
     /**
      * 设置缓存目录
      *
-     * @param string $path            
+     * @param string $path
      */
     function setPath($path)
     {
         $path = rtrim($path, '\\/') . '/';
-        $this->path = str_replace('\\', '/', $path);
+        if (file_exists($path) && !@mkdir($path, 0777, true)) {
+            throw new CacheException(sprintf('Path "%s could not create"', $path));
+        }
+        $this->path = $path;
     }
 
     /**
@@ -56,8 +61,7 @@ class FileCache extends AbstractCache
 
     /**
      * 设置缓存文件扩展名
-     *
-     * @param string $ext            
+     * @param string $ext
      */
     function setExt($ext)
     {
@@ -66,6 +70,7 @@ class FileCache extends AbstractCache
 
     /**
      * 获取缓存文件扩展名
+     * @return string
      */
     function getExt()
     {
@@ -73,9 +78,29 @@ class FileCache extends AbstractCache
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Cache\AbstractStorage::doSet()
+     * 设置文件名前前缀
+     * @param $prefix
+     */
+    function setPrefix($prefix)
+    {
+        $this->prefix = $prefix;
+    }
+
+    /**
+     * 获取缓存文件名前缀
+     * @return string
+     */
+    function getPrefix()
+    {
+        return $this->prefix;
+    }
+
+    /**
+     * 设置一个变量，会覆盖已有变量
+     * @param string $key
+     * @param mixed $value
+     * @param int $duration
+     * @return boolean
      */
     protected function doSet($key, $value, $duration)
     {
@@ -86,9 +111,9 @@ class FileCache extends AbstractCache
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Cache\AbstractStorage::doGet()
+     * 获取变量对应的值
+     * @param string $key
+     * @return array|null
      */
     protected function doGet($key)
     {
@@ -105,9 +130,9 @@ class FileCache extends AbstractCache
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Cache\AbstractStorage::doExists()
+     * 判断变量是否存在
+     * @param string $key
+     * @return boolean
      */
     protected function doExists($key)
     {
@@ -115,9 +140,9 @@ class FileCache extends AbstractCache
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Cache\AbstractStorage::doDelete()
+     * 删除一个变量
+     * @param string $key
+     * @return boolean
      */
     protected function doDelete($key)
     {
@@ -125,9 +150,8 @@ class FileCache extends AbstractCache
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Cache\AbstractStorage::doFlush()
+     * 清空所有存储变量
+     * @return void
      */
     protected function doFlush()
     {
@@ -138,31 +162,11 @@ class FileCache extends AbstractCache
 
     /**
      * 获取缓存文件路径
-     *
-     * @param string $key            
+     * @param string $key
      * @return string
      */
     protected function getFilePath($key)
     {
         return $this->path . $this->prefix . md5($key) . $this->ext;
-    }
-
-    /**
-     * 设置文件名前前缀
-     * @param $prefix
-     */
-    function setPrefix($prefix)
-    {
-        $this->prefix = $prefix;
-    }
-
-    /**
-     * 获取缓存文件名前缀
-     *
-     * @return string
-     */
-    function getPrefix()
-    {
-        return $this->prefix;
     }
 }

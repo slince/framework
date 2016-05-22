@@ -11,25 +11,25 @@ interface CacheInterface
     /**
      * 设置一个值
      *
-     * @param string $key            
-     * @param mixed $value            
-     * @param int $duration            
+     * @param string $key
+     * @param mixed $value
+     * @param int $duration
      */
     function set($key, $value, $duration = null);
 
     /**
      * 添加一个值
      *
-     * @param string $key            
-     * @param mixed $value            
-     * @param int $duration            
+     * @param string $key
+     * @param mixed $value
+     * @param int $duration
      */
     function add($key, $value, $duration = null);
 
     /**
      * 获取一个值
      *
-     * @param string $key            
+     * @param string $key
      */
     function get($key);
 
@@ -43,18 +43,18 @@ interface CacheInterface
      * @return mixed
      */
     function read($key, $create, $duration = null);
-    
+
     /**
      * 删除一个值
      *
-     * @param string $key            
+     * @param string $key
      */
     function delete($key);
 
     /**
      * 判断一个值是否存在
      *
-     * @param string $key            
+     * @param string $key
      */
     function exists($key);
 

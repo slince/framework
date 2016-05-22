@@ -7,11 +7,12 @@ namespace Slince\Cache;
 
 class ApcCache extends AbstractCache
 {
-
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Cache\StorageInterface::doSet()
+     * 设置一个变量，会覆盖已有变量
+     * @param string $key
+     * @param mixed $value
+     * @param int $duration
+     * @return boolean
      */
     protected function doSet($key, $value, $duration)
     {
@@ -19,9 +20,11 @@ class ApcCache extends AbstractCache
     }
 
     /**
-     * (non-PHPdoc)
-     * 
-     * @see \Slince\Cache\AbstractCache::doAdd()
+     * 添加一个变量如果存在，则添加失败
+     * @param string $key
+     * @param mixed $value
+     * @param int $duration
+     * @return boolean
      */
     protected function doAdd($key, $value, $duration)
     {
@@ -29,9 +32,9 @@ class ApcCache extends AbstractCache
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Cache\StorageInterface::doGet()
+     * 获取变量对应的值
+     * @param string $key
+     * @return array|null
      */
     protected function doGet($key)
     {
@@ -39,9 +42,9 @@ class ApcCache extends AbstractCache
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Cache\StorageInterface::doDelete()
+     * 删除一个变量
+     * @param string $key
+     * @return boolean
      */
     protected function doDelete($key)
     {
@@ -49,9 +52,9 @@ class ApcCache extends AbstractCache
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Cache\StorageInterface::doExists()
+     * 判断变量是否存在
+     * @param string $key
+     * @return boolean
      */
     protected function doExists($key)
     {
@@ -59,9 +62,8 @@ class ApcCache extends AbstractCache
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Cache\StorageInterface::doFlush()
+     * 清空所有存储变量
+     * @return void
      */
     protected function doFlush()
     {
