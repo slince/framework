@@ -1,23 +1,23 @@
 {
-  "name": "slince/cache",
-  "description": "Slince Cache Component",
-  "require-dev": {
-    "phpunit/phpunit": ">=4.6"
-  },
-  "license": "Apache-2.0",
-  "authors": [
-    {
-      "name": "Tao",
-      "email": "taosikai@yeah.net"
+    "name": "slince/cache",
+    "description": "Slince Cache Component",
+    "require-dev": {
+        "phpunit/phpunit": ">=4.6"
+    },
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Tao",
+            "email": "taosikai@yeah.net"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.5.9"
+    },
+    "autoload": {
+        "psr-4": {
+            "Slince\\Cache\\": ""
+        }
     }
-  ],
-  "minimum-stability": "dev",
-  "require": {
-    "php": ">=5.5.9"
-  },
-  "autoload": {
-    "psr-4": {
-      "Slince\\Cache\\": ""
-    }
-  }
 }
