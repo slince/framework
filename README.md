@@ -4,7 +4,7 @@
 
 ## 安装
 ```
-composer require slince/webapp *@dev
+composer require slince/slince *@dev
 ```
 ## 文档
 
