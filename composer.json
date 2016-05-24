@@ -28,6 +28,9 @@
         "slince/cake-bridge": "self.version",
         "slince/whoops-bridge": "self.version"
     },
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    },
     "autoload": {
         "psr-4": {
             "Slince\\": ""
