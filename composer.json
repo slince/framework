@@ -1,0 +1,14 @@
+{
+    "name": "slince/slince",
+    "description": "The Slince Framework",
+    "type": "project",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "tao",
+            "email": "taosikai@yeah.net"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
