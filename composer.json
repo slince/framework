@@ -1,8 +1,10 @@
 {
     "name": "slince/slince",
     "description": "The Slince Framework",
-    "type": "project",
+    "type": "library",
+    "keywords": ["slince", "framework"],
     "license": "Apache-2.0",
+    "homepage": "http://www.qimuyu.com",
     "authors": [
         {
             "name": "tao",
@@ -10,5 +12,25 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {}
+    "require": {
+        "php": ">=5.5.9"
+    },
+    "replace": {
+        "slince/application": "self.version",
+        "slince/config": "self.version",
+        "slince/event": "self.version",
+        "slince/di": "self.version",
+        "slince/cache": "self.version",
+        "slince/session": "self.version",
+        "slince/view": "self.version",
+        "slince/routing": "self.version",
+        "slince/monolog-bridge": "self.version",
+        "slince/cake-bridge": "self.version",
+        "slince/whoops-bridge": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "Slince\\": ""
+        }
+    }
 }
