@@ -5,86 +5,92 @@
  */
 namespace Slince\Routing;
 
-use Slince\Routing\Exception\InvalidParameterException;
-
 class Route implements RouteInterface
 {
 
     /**
      * path
-     *
      * @var string
      */
-    protected $_path;
+    protected $path;
 
     /**
      * action
-     *
      * @var mixed
      */
-    protected $_action;
-    
+    protected $action;
+
     /**
      * 默认参数
-     *
      * @var array
      */
-    protected $_defaults;
+    protected $defaults;
 
     /**
      * requirements
-     *
      * @var array
      */
-    protected $_requirements;
+    protected $requirements;
 
     /**
      * schemes
-     *
      * @var array
      */
-    protected $_schemes;
-    
+    protected $schemes;
+
     /**
      * host
-     *
      * @var string
      */
-    protected $_host;
+    protected $host;
 
     /**
      * methods
-     *
      * @var array
      */
-    protected $_methods;
-    
+    protected $methods;
+
     /**
      * parameters
-     *
      * @var array
      */
-    protected $_parameters;
+    protected $parameters;
 
-    protected $_isCompiled = false;
+    /**
+     * 是否已经编译
+     * @var bool
+     */
+    protected $isCompiled = false;
+
     /**
      * host regex
      *
      * @var string
      */
-    protected $_hostRegex;
-    
+    protected $hostRegex;
+
     /**
      * path regex
-     * 
+     *
      * @var string
      */
-    protected $_pathRegex;
-    
-    protected $_variables = [];
-    
-    function __construct($path, $action, array $defaults = [], array $requirements = [], $host = '', array $schemes = [], array $methods = [])
-    {
+    protected $pathRegex;
+
+    /**
+     * 变量
+     * @var array
+     */
+    protected $variables = [];
+
+    function __construct(
+        $path,
+        $action,
+        array $defaults = [],
+        array $requirements = [],
+        $host = '',
+        array $schemes = [],
+        array $methods = []
+    ) {
         $this->setPath($path);
         $this->setAction($action);
         $this->setDefaults($defaults);
@@ -95,299 +101,314 @@ class Route implements RouteInterface
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Routing\RouteInterface::setPath()
+     * 设置path
+     * @param string $path
+     * @return $this
      */
     function setPath($path)
     {
-        $this->_path = '/' . trim($path, '/');
+        $this->path = '/' . trim($path, '/');
         return $this;
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Routing\RouteInterface::getPath()
+     * 获取path
+     * @return string
      */
     function getPath()
     {
-        return $this->_path;
-    }
-    
-    function getPathRegex()
-    {
-        return $this->_pathRegex;
-    }
-    
-    function setAction($action)
-    {
-        $this->_action = $action;
-        return $this;
-    }
-
-    function getAction()
-    {
-        return $this->_action;
+        return $this->path;
     }
 
     /**
-     * Returns the defaults.
-     *
-     * @return array The defaults
+     * 获取path regex
+     * @return string
+     */
+    function getPathRegex()
+    {
+        return $this->pathRegex;
+    }
+
+    /**
+     * 设置action
+     * @param $action
+     * @return $this
+     */
+    function setAction($action)
+    {
+        $this->action = $action;
+        return $this;
+    }
+
+    /**
+     * 获取action
+     * @return mixed
+     */
+    function getAction()
+    {
+        return $this->action;
+    }
+
+    /**
+     * 获取默认
+     * @return array
      */
     public function getDefaults()
     {
-        return $this->_defaults;
+        return $this->defaults;
     }
 
     /**
-     * Sets the defaults.
-     *
-     * This method implements a fluent interface.
-     *
+     * 设置默认参数
      * @param array $defaults
-     *            The defaults
-     *            
-     * @return Route The current Route instance
+     * @return $this
      */
     public function setDefaults(array $defaults)
     {
-        $this->_defaults = $defaults;
+        $this->defaults = $defaults;
         return $this;
     }
 
     /**
-     * Gets a default value.
-     *
-     * @param string $name
-     *            A variable name
-     *            
-     * @return mixed The default value or null when not given
+     * 获取默认参数
+     * @param $name
+     * @return mixed|null
      */
     public function getDefault($name)
     {
-        return isset($this->_defaults[$name]) ? $this->_defaults[$name] : null;
+        return isset($this->defaults[$name]) ? $this->defaults[$name] : null;
     }
 
     /**
-     * Checks if a default value is set for the given variable.
-     *
-     * @param string $name
-     *            A variable name
-     *            
-     * @return bool true if the default value is set, false otherwise
+     * 检查是否有默认参数
+     * @param $name
+     * @return bool
      */
     public function hasDefault($name)
     {
-        return isset($this->_defaults[$name]);
+        return isset($this->defaults[$name]);
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Routing\RouteInterface::setParameter()
+     * 设置parameter
+     * @param string $name
+     * @param mixed $parameter
+     * @return $this
      */
     function setParameter($name, $parameter)
     {
-        $this->_parameters[$name] = $parameter;
+        $this->parameters[$name] = $parameter;
         return $this;
     }
 
+
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Routing\RouteInterface::getParameter()
+     * 获取parameter
+     * @param string $name
+     * @param null $default
+     * @return mixed|null
      */
     function getParameter($name, $default = null)
     {
-        return isset($this->_parameters[$name]) ? $this->_parameters[$name] : $default;
+        return isset($this->parameters[$name]) ? $this->parameters[$name] : $default;
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Routing\RouteInterface::hasParameter()
+     * 是否存在参数
+     * @param string $name
+     * @return bool
      */
     function hasParameter($name)
     {
-        return isset($this->_parameters[$name]);
+        return isset($this->parameters[$name]);
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Routing\RouteInterface::setParameters()
+     * 设置parameters
+     * @param array $parameters
+     * @return $this\
      */
     function setParameters(array $parameters)
     {
-        $this->_parameters = $parameters;
+        $this->parameters = $parameters;
         return $this;
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Routing\RouteInterface::getParameters()
+     * 获取parameters
+     * @return array
      */
     function getParameters()
     {
-        return $this->_parameters;
+        return $this->parameters;
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Routing\RouteInterface::setRequirements()
+     * 设置requirements
+     * @param array $requirements
+     * @return $this
      */
     function setRequirements(array $requirements)
     {
-        $this->_requirements = $requirements;
+        $this->requirements = $requirements;
         return $this;
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Routing\RouteInterface::setRequirement()
+     * 设置单个requirement
+     * @param string $name
+     * @param string $requirement
+     * @return $this
      */
     function setRequirement($name, $requirement)
     {
-        $this->_requirements[$name] = $requirement;
+        $this->requirements[$name] = $requirement;
         return $this;
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Routing\RouteInterface::getRequirements()
-     */
-    function getRequirements()
-    {
-        return $this->_requirements;
-    }
-
-    /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Routing\RouteInterface::addRequirements()
+     * 添加requirements
+     * @param array $requirements
+     * @return RouteInterface
      */
     function addRequirements(array $requirements)
     {
-        $this->_requirements += $requirements;
+        $this->requirements += $requirements;
         return $this;
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Routing\RouteInterface::getRequirement()
+     * 获取requirements
+     * @return array
+     */
+    function getRequirements()
+    {
+        return $this->requirements;
+    }
+
+    /**
+     * 获取requirement
+     * @param string $name
+     * @param null $default
+     * @return string|null
      */
     function getRequirement($name, $default = null)
     {
-        return isset($this->_requirements[$name]) ? $this->_requirements[$name] : $default;
+        return isset($this->requirements[$name]) ? $this->requirements[$name] : $default;
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Routing\RouteInterface::setSchemes()
+     * 设置schemes
+     * @param array $schemes
+     * @return $this
      */
     function setSchemes(array $schemes)
     {
-        $this->_schemes = $schemes;
+        $this->schemes = $schemes;
         return $this;
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Routing\RouteInterface::getSchemes()
+     * 获取schemes
+     * @return array
      */
     function getSchemes()
     {
-        return $this->_schemes;
+        return $this->schemes;
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Routing\RouteInterface::setHost()
-     */
-    function setHost($host)
-    {
-        $this->_host = $host;
-        return $this;
-    }
-    
-    /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Routing\RouteInterface::getHost()
-     */
-    function getHost()
-    {
-        return $this->_host;
-    }
-    
-    function getHostRegex()
-    {
-        return $this->_hostRegex;
-    }
-    
-    /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Routing\RouteInterface::setMethods()
+     * 设置methods
+     * @param array $methods
+     * @return $this
      */
     function setMethods(array $methods)
     {
-        $this->_methods = array_map('strtolower', $methods);
+        $this->methods = array_map('strtolower', $methods);
         return $this;
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Routing\RouteInterface::getMethods()
+     * 获取method
+     * @return array
      */
     function getMethods()
     {
-        return $this->_methods;
+        return $this->methods;
     }
 
     /**
+     * 设置host
+     * @param string $host
+     * @return $this
+     */
+    function setHost($host)
+    {
+        $this->host = $host;
+        return $this;
+    }
+
+    /**
+     * 获取host
+     * @return string
+     */
+    function getHost()
+    {
+        return $this->host;
+    }
+
+    /**
+     * 获取host regex
+     * @return string
+     */
+    function getHostRegex()
+    {
+        return $this->hostRegex;
+    }
+
+    /**
+     * route是否已经编译
+     * @return boolean
+     */
+    public function isCompiled()
+    {
+        return $this->isCompiled;
+    }
+    
+    /**
      * 编译route
-     * 
-     * @param string $recompile
+     * @param boolean $recompile
      * @return Route
      */
     function compile($recompile = false)
     {
-        if (! $this->_isCompiled || $recompile) {
-            $this->_hostRegex = $this->_parseToRegex($this->getHost());
-            $this->_pathRegex = $this->_parseToRegex($this->getPath());
-            $this->_isCompiled = true;
+        if (!$this->isCompiled || $recompile) {
+            $this->hostRegex = $this->parseToRegex($this->getHost());
+            $this->pathRegex = $this->parseToRegex($this->getPath());
+            $this->isCompiled = true;
         }
         return $this;
     }
-    
+
+    /**
+     * 获取variables
+     * @return array
+     */
     function getVariables()
     {
-        return $this->_variables;
+        return $this->variables;
     }
-    
+
     /**
      * 解析成标准的正则字符串
-     *
      * @param string $path
      * @return string
      */
-    protected function _parseToRegex($path)
+    protected function parseToRegex($path)
     {
-        $regex = preg_replace_callback('#\{([a-zA-Z0-9_,]*)\}#i', function($matches) {
-            $this->_variables[] = $matches[1];
-            return "(?P<{$matches[1]}>" . (isset($this->_requirements[$matches[1]]) ? $this->_requirements[$matches[1]] : '.+') . ')';
+        $regex = preg_replace_callback('#\{([a-zA-Z0-9_,]*)\}#i', function ($matches) {
+            $this->variables[] = $matches[1];
+            return "(?P<{$matches[1]}>" . (isset($this->requirements[$matches[1]]) ? $this->requirements[$matches[1]] : '.+') . ')';
         }, $path);
         return "#^{$regex}$#i";
     }

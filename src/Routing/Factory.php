@@ -10,7 +10,7 @@ class Factory
 
     /**
      * 创建Matcher
-     * 
+     *
      * @param RequestContext $context
      * @return Matcher
      */
@@ -32,7 +32,7 @@ class Factory
     /**
      * 创建route collection
      *
-     * @param array $routes            
+     * @param array $routes
      * @return RouteCollection
      */
     static function createRoutes($routes = [])

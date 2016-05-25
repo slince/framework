@@ -14,24 +14,24 @@ trait RouteBuilderTrait
      * @var string
      */
     protected $_prefix = '';
-    
+
     function setPrefix($prefix)
     {
-        if (! empty($prefix)) {
+        if (!empty($prefix)) {
             $this->_prefix = '/' . trim($prefix, '/');
         }
     }
-    
+
     function getPreifx()
     {
         return $this->_prefix;
     }
-    
+
     /**
      * 创建一个普通路由，addRoute别名
      *
-     * @param string $path            
-     * @param array $arguments            
+     * @param string $path
+     * @param array $arguments
      */
     function http($path, $arguments)
     {
@@ -41,8 +41,8 @@ trait RouteBuilderTrait
     /**
      * 创建一个https路由
      *
-     * @param string $path            
-     * @param array $arguments            
+     * @param string $path
+     * @param array $arguments
      */
     function https($path, $arguments)
     {
@@ -54,8 +54,8 @@ trait RouteBuilderTrait
     /**
      * 创建一个get路由
      *
-     * @param string $path            
-     * @param array $arguments            
+     * @param string $path
+     * @param array $arguments
      */
     function get($path, $arguments)
     {
@@ -68,8 +68,8 @@ trait RouteBuilderTrait
     /**
      * 创建一个post路由
      *
-     * @param string $path            
-     * @param array $arguments            
+     * @param string $path
+     * @param array $arguments
      */
     function post($path, $arguments)
     {
@@ -81,8 +81,8 @@ trait RouteBuilderTrait
     /**
      * 创建一个put路由
      *
-     * @param string $path            
-     * @param array $arguments            
+     * @param string $path
+     * @param array $arguments
      */
     function put($path, $arguments)
     {
@@ -94,8 +94,8 @@ trait RouteBuilderTrait
     /**
      * 创建一个patch路由
      *
-     * @param string $path            
-     * @param array $arguments            
+     * @param string $path
+     * @param array $arguments
      */
     function patch($path, $arguments)
     {
@@ -107,8 +107,8 @@ trait RouteBuilderTrait
     /**
      * 创建一个delete路由
      *
-     * @param string $path            
-     * @param array $arguments            
+     * @param string $path
+     * @param array $arguments
      */
     function delete($path, $arguments)
     {
@@ -120,8 +120,8 @@ trait RouteBuilderTrait
     /**
      * 创建并添加一个路由
      *
-     * @param string $path            
-     * @param array $arguments            
+     * @param string $path
+     * @param array $arguments
      */
     function addRoute($path, $arguments)
     {
@@ -129,7 +129,7 @@ trait RouteBuilderTrait
         $action = null;
         if (is_callable($arguments) || is_string($arguments)) {
             $action = $arguments;
-        } elseif(is_array($arguments)) {
+        } elseif (is_array($arguments)) {
             $name = isset($arguments['name']) ? $arguments['name'] : null;
             $action = isset($arguments['action']) ? $arguments['action'] : $arguments[0];
         }
@@ -141,8 +141,8 @@ trait RouteBuilderTrait
     /**
      * 创建一个路由
      *
-     * @param string $path            
-     * @param array $arguments            
+     * @param string $path
+     * @param array $arguments
      * @return Route
      */
     function newRoute($path, $action)
@@ -154,8 +154,8 @@ trait RouteBuilderTrait
     /**
      * 创建一个前缀
      *
-     * @param string $prefix            
-     * @param \Closure $callback            
+     * @param string $prefix
+     * @param \Closure $callback
      */
     function prefix($prefix, \Closure $callback)
     {

@@ -9,21 +9,21 @@ class RouteCollection implements \Countable, \IteratorAggregate
 {
 
     use RouteBuilderTrait;
-    
+
     /**
      * route集合
      *
      * @var array
      */
     protected $_routes = [];
-    
+
     /**
      * name集合
      *
      * @var array
      */
     protected $_names = [];
-    
+
     /**
      * action集合
      *
@@ -39,11 +39,11 @@ class RouteCollection implements \Countable, \IteratorAggregate
     /**
      * 添加路由
      *
-     * @param RouteInterface $route            
+     * @param RouteInterface $route
      */
     function add(RouteInterface $route, $name = null)
     {
-        if (! is_null($name)) {
+        if (!is_null($name)) {
             $this->_names[$name] = $route;
         }
         $action = $route->getAction();
@@ -79,7 +79,7 @@ class RouteCollection implements \Countable, \IteratorAggregate
     {
         return $this->_namedRoutes;
     }
-    
+
     function getActionRoutes()
     {
         return $this->_actions;
@@ -94,7 +94,7 @@ class RouteCollection implements \Countable, \IteratorAggregate
     {
         return $this->_routes;
     }
-    
+
     /**
      * (non-PHPdoc)
      *
@@ -114,7 +114,7 @@ class RouteCollection implements \Countable, \IteratorAggregate
     {
         return new \ArrayIterator($this->_routes);
     }
-    
+
     function getRoutes()
     {
         return $this;
