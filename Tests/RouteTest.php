@@ -25,6 +25,12 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    function testInterface()
+    {
+        $route = new Route('/path', '');
+        $this->assertInstanceOf('Slince\Routing\RouteInterface', $route);
+    }
+    
     function testPath()
     {
         $route = new Route('/path', '');
