@@ -5,6 +5,6 @@
  */
 namespace Slince\Routing\Exception;
 
-class InvalidParameterException extends \Exception
+class InvalidArgumentException extends \InvalidArgumentException
 {
 }

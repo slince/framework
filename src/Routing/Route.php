@@ -153,7 +153,7 @@ class Route implements RouteInterface
      * 获取默认
      * @return array
      */
-    public function getDefaults()
+    function getDefaults()
     {
         return $this->defaults;
     }
@@ -163,7 +163,7 @@ class Route implements RouteInterface
      * @param array $defaults
      * @return $this
      */
-    public function setDefaults(array $defaults)
+    function setDefaults(array $defaults)
     {
         $this->defaults = $defaults;
         return $this;
@@ -174,7 +174,7 @@ class Route implements RouteInterface
      * @param $name
      * @return mixed|null
      */
-    public function getDefault($name)
+    function getDefault($name)
     {
         return isset($this->defaults[$name]) ? $this->defaults[$name] : null;
     }
@@ -184,7 +184,7 @@ class Route implements RouteInterface
      * @param $name
      * @return bool
      */
-    public function hasDefault($name)
+    function hasDefault($name)
     {
         return isset($this->defaults[$name]);
     }
@@ -370,7 +370,7 @@ class Route implements RouteInterface
      * route是否已经编译
      * @return boolean
      */
-    public function isCompiled()
+    function isCompiled()
     {
         return $this->isCompiled;
     }

@@ -10,7 +10,6 @@ interface GeneratorInterface
 
     /**
      * 生成特定路由的url
-     *
      * @param RouteInterface $route
      * @param array $parameters
      * @param boolean $absolute
@@ -20,14 +19,12 @@ interface GeneratorInterface
 
     /**
      * 设置上下文
-     *
      * @param RequestContext $context
      */
     function setContext(RequestContext $context);
 
     /**
      * 获取上下文
-     *
      * @return RequestContext $context
      */
     function getContext();
