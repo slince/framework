@@ -47,7 +47,7 @@ class Router
     /**
      * 匹配给定的路径
      *
-     * @param string $path            
+     * @param string $path
      * @return RouteInterface
      */
     function match($path)
@@ -59,9 +59,9 @@ class Router
     /**
      * 生成特定路由的url
      *
-     * @param RouteInterface $route            
-     * @param array $parameters            
-     * @param boolean $absolute            
+     * @param RouteInterface $route
+     * @param array $parameters
+     * @param boolean $absolute
      * @return string
      */
     function generate(RouteInterface $route, $parameters = [], $absolute = false)
@@ -72,9 +72,9 @@ class Router
     /**
      * 根据route name生成url
      *
-     * @param string $name            
-     * @param array $parameters            
-     * @param boolean $absolute            
+     * @param string $name
+     * @param array $parameters
+     * @param boolean $absolute
      * @return string
      */
     function generateByName($name, $parameters = [], $absolute = false)
@@ -89,9 +89,9 @@ class Router
     /**
      * 根据action生成url
      *
-     * @param string $action            
-     * @param array $parameters            
-     * @param boolean $absolute            
+     * @param string $action
+     * @param array $parameters
+     * @param boolean $absolute
      * @return string
      */
     function generateByAction($action, $parameters = [], $absolute = false)
@@ -142,7 +142,7 @@ class Router
     /**
      * 设置上下文
      *
-     * @param RequestContext $context            
+     * @param RequestContext $context
      */
     function setContext(RequestContext $context)
     {

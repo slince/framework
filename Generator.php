@@ -17,10 +17,10 @@ class Generator implements GeneratorInterface
      * @var RequestContext
      */
     protected $_context;
-    
+
     /**
      * 严格检查
-     * 
+     *
      * @var boolean
      */
     protected $_strictRequirements = false;
@@ -31,11 +31,12 @@ class Generator implements GeneratorInterface
      * @var array
      */
     protected $_routeVariables = [];
-    
+
     function __construct(RequestContext $context)
     {
         $this->_context = $context;
     }
+
     /**
      * (non-PHPdoc)
      *
@@ -45,7 +46,7 @@ class Generator implements GeneratorInterface
     {
         $this->_context = $context;
     }
-    
+
     /**
      * (non-PHPdoc)
      *
@@ -64,17 +65,17 @@ class Generator implements GeneratorInterface
     {
         $this->_strictRequirements = $enabled;
     }
-    
+
     /**
      * 是否严格匹配模式
-     * 
+     *
      * @return boolean
      */
     public function isStrictRequirements()
     {
         return $this->_strictRequirements;
     }
-    
+
     /**
      * (non-PHPdoc)
      * @see \Slince\Routing\GeneratorInterface::generate()
@@ -97,19 +98,19 @@ class Generator implements GeneratorInterface
         }
         return $uri;
     }
-    
+
     function getParameters(RouteInterface $route, $parameters)
     {
         return array_replace(
             $route->getDefaults(),
-            $this->_context->getParameters(), 
+            $this->_context->getParameters(),
             $parameters
         );
     }
 
     /**
      * 获取route的scheme和port
-     * 
+     *
      * @param RouteInterface $route
      * @return array
      */
@@ -118,7 +119,7 @@ class Generator implements GeneratorInterface
         $scheme = $this->_context->getScheme();
         $requiredSchemes = $route->getSchemes();
         //如果当前请求协议不在route要求的协议内则使用第一个要求的协议
-        if (! empty($requiredSchemes) && ! in_array($scheme, $requiredSchemes)) {
+        if (!empty($requiredSchemes) && !in_array($scheme, $requiredSchemes)) {
             $scheme = reset($requiredSchemes);
         }
         $port = '';
@@ -166,18 +167,20 @@ class Generator implements GeneratorInterface
      */
     protected function _formateRouteHostOrPath($path, $parameters, $requirements = [])
     {
-        return preg_replace_callback('#\{([a-zA-Z0-9_,]*)\}#', function ($matches) use($parameters, $requirements)
-        {
+        return preg_replace_callback('#\{([a-zA-Z0-9_,]*)\}#', function ($matches) use ($parameters, $requirements) {
             //为了避免重新编译route得到variable此处代为获取route variable
             $this->_routeVariables[] = $matches[1];
             $supportVariable = isset($parameters[$matches[1]]) ? $parameters[$matches[1]] : '';
             //非严格匹配类型直接返回提供的类型
-            if (! $this->_strictRequirements) {
+            if (!$this->_strictRequirements) {
                 return $supportVariable;
             }
             //如果不匹配要求的正则则抛出异常
-            if (isset($requirements[$matches[1]]) && ! preg_match('#^' . $requirements[$matches[1]] . '$#', $supportVariable)) {
-                $message = sprintf('Parameter "%s" must match "%s" ("%s" given) to generate a corresponding URL.', $matches[1], $requirements[$matches[1]], $supportVariable);
+            if (isset($requirements[$matches[1]]) && !preg_match('#^' . $requirements[$matches[1]] . '$#',
+                    $supportVariable)
+            ) {
+                $message = sprintf('Parameter "%s" must match "%s" ("%s" given) to generate a corresponding URL.',
+                    $matches[1], $requirements[$matches[1]], $supportVariable);
                 throw new InvalidParameterException($message);
             }
             return $supportVariable;

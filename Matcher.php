@@ -31,8 +31,8 @@ class Matcher implements MatcherInterface
     function match($path, RouteCollection $routes)
     {
         $path = '/' . ltrim($path, '/');
-        $route = is_null($this->_context) ? $this->_findRouteWithoutRequestContext($path, $routes) 
-            : $this->_findRoute($path, $routes); 
+        $route = is_null($this->_context) ? $this->_findRouteWithoutRequestContext($path, $routes)
+            : $this->_findRoute($path, $routes);
         $routeParameters = $this->_getRouteParameters($route);
         $route->setParameters($routeParameters);
         return $route;
@@ -61,8 +61,8 @@ class Matcher implements MatcherInterface
     /**
      * 找出匹配path的route
      *
-     * @param string $path            
-     * @param RouteCollection $routes            
+     * @param string $path
+     * @param RouteCollection $routes
      * @throws MethodNotAllowedException
      * @throws RouteNotFoundException
      * @return RouteInterface
@@ -80,7 +80,7 @@ class Matcher implements MatcherInterface
                 }
             }
         }
-        if (! empty($requireMethods)) {
+        if (!empty($requireMethods)) {
             throw new MethodNotAllowedException($requireMethods);
         }
         throw new RouteNotFoundException();
@@ -89,8 +89,8 @@ class Matcher implements MatcherInterface
     /**
      * 找出匹配path的route，不考虑request上下文
      *
-     * @param string $path            
-     * @param RouteCollection $routes            
+     * @param string $path
+     * @param RouteCollection $routes
      * @throws RouteNotFoundException
      * @return RouteInterface
      */
@@ -106,7 +106,7 @@ class Matcher implements MatcherInterface
 
     /**
      * 匹配host
-     * 
+     *
      * @param RouteInterface $route
      * @return boolean
      */
@@ -125,7 +125,7 @@ class Matcher implements MatcherInterface
 
     /**
      * 匹配method
-     * 
+     *
      * @param RouteInterface $route
      * @return boolean
      */
@@ -139,7 +139,7 @@ class Matcher implements MatcherInterface
 
     /**
      * 匹配scheme
-     * 
+     *
      * @param RouteInterface $route
      * @return boolean
      */
@@ -154,7 +154,7 @@ class Matcher implements MatcherInterface
 
     /**
      * 匹配path
-     * 
+     *
      * @param string $path
      * @param RouteInterface $route
      * @return boolean
@@ -176,13 +176,13 @@ class Matcher implements MatcherInterface
     /**
      * 处理路由参数
      *
-     * @param RouteInterface $route            
+     * @param RouteInterface $route
      * @return array
      */
     protected function _getRouteParameters(RouteInterface $route)
     {
-        return array_replace($route->getDefaults(), 
-            $route->getParameter('_hostMatches', []), 
+        return array_replace($route->getDefaults(),
+            $route->getParameter('_hostMatches', []),
             $route->getParameter('_pathMatches', [])
         );
     }
