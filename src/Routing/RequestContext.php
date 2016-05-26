@@ -345,7 +345,7 @@ class RequestContext
     /**
      * 实例化当前对象
      *
-     * @return \Slince\Routing\RequestContext
+     * @return $this
      */
     static function create()
     {

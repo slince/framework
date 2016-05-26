@@ -7,31 +7,34 @@ namespace Slince\Routing;
 
 trait RouteBuilderTrait
 {
-
     /**
      * 路由前缀
      *
      * @var string
      */
-    protected $_prefix = '';
+    protected $prefix = '';
 
     function setPrefix($prefix)
     {
         if (!empty($prefix)) {
-            $this->_prefix = '/' . trim($prefix, '/');
+            $this->prefix = '/' . trim($prefix, '/');
         }
     }
 
-    function getPreifx()
+    /**
+     * 获取当前的前缀
+     * @return string
+     */
+    function getPrefix()
     {
-        return $this->_prefix;
+        return $this->prefix;
     }
 
     /**
      * 创建一个普通路由，addRoute别名
-     *
-     * @param string $path
-     * @param array $arguments
+     * @param $path
+     * @param $arguments
+     * @return Route
      */
     function http($path, $arguments)
     {
@@ -40,9 +43,9 @@ trait RouteBuilderTrait
 
     /**
      * 创建一个https路由
-     *
-     * @param string $path
-     * @param array $arguments
+     * @param $path
+     * @param $arguments
+     * @return $this
      */
     function https($path, $arguments)
     {
@@ -53,9 +56,9 @@ trait RouteBuilderTrait
 
     /**
      * 创建一个get路由
-     *
-     * @param string $path
-     * @param array $arguments
+     * @param $path
+     * @param $arguments
+     * @return $this
      */
     function get($path, $arguments)
     {
@@ -67,9 +70,9 @@ trait RouteBuilderTrait
 
     /**
      * 创建一个post路由
-     *
-     * @param string $path
-     * @param array $arguments
+     * @param $path
+     * @param $arguments
+     * @return $this
      */
     function post($path, $arguments)
     {
@@ -80,9 +83,9 @@ trait RouteBuilderTrait
 
     /**
      * 创建一个put路由
-     *
-     * @param string $path
-     * @param array $arguments
+     * @param $path
+     * @param $arguments
+     * @return $this
      */
     function put($path, $arguments)
     {
@@ -93,9 +96,9 @@ trait RouteBuilderTrait
 
     /**
      * 创建一个patch路由
-     *
-     * @param string $path
-     * @param array $arguments
+     * @param $path
+     * @param $arguments
+     * @return $this
      */
     function patch($path, $arguments)
     {
@@ -106,9 +109,9 @@ trait RouteBuilderTrait
 
     /**
      * 创建一个delete路由
-     *
-     * @param string $path
-     * @param array $arguments
+     * @param $path
+     * @param $arguments
+     * @return $this
      */
     function delete($path, $arguments)
     {
@@ -119,9 +122,9 @@ trait RouteBuilderTrait
 
     /**
      * 创建并添加一个路由
-     *
-     * @param string $path
-     * @param array $arguments
+     * @param $path
+     * @param $arguments
+     * @return Route
      */
     function addRoute($path, $arguments)
     {
@@ -140,9 +143,8 @@ trait RouteBuilderTrait
 
     /**
      * 创建一个路由
-     *
-     * @param string $path
-     * @param array $arguments
+     * @param $path
+     * @param $action
      * @return Route
      */
     function newRoute($path, $action)
@@ -153,7 +155,6 @@ trait RouteBuilderTrait
 
     /**
      * 创建一个前缀
-     *
      * @param string $prefix
      * @param \Closure $callback
      */
@@ -166,8 +167,7 @@ trait RouteBuilderTrait
     }
 
     /**
-     * 返回适配的routecollection
-     *
+     * 返回适配的route collection
      * @return RouteCollection
      */
     abstract function getRoutes();
