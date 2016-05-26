@@ -13,67 +13,64 @@ class Matcher implements MatcherInterface
 
     /**
      * request context
-     *
      * @var RequestContext
      */
-    protected $_context;
+    protected $context;
 
     function __construct(RequestContext $context = null)
     {
-        $this->_context = $context;
+        $this->context = $context;
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Routing\MatcherInterface::match()
+     * 查找匹配的route
+     * @param string $path
+     * @param RouteCollection $routes
+     * @return RouteInterface
      */
     function match($path, RouteCollection $routes)
     {
         $path = '/' . ltrim($path, '/');
-        $route = is_null($this->_context) ? $this->_findRouteWithoutRequestContext($path, $routes)
-            : $this->_findRoute($path, $routes);
-        $routeParameters = $this->_getRouteParameters($route);
+        $route = is_null($this->context) ? $this->findRouteWithoutRequestContext($path, $routes)
+            : $this->findRoute($path, $routes);
+        $routeParameters = $this->getRouteParameters($route);
         $route->setParameters($routeParameters);
         return $route;
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Routing\MatcherInterface::setContext()
+     * 设置上下文
+     * @param RequestContext $context
      */
     function setContext(RequestContext $context)
     {
-        $this->_context = $context;
+        $this->context = $context;
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Routing\MatcherInterface::getContext()
+     * 获取上下文
+     * @return RequestContext $context
      */
     function getContext()
     {
-        return $this->_context;
+        return $this->context;
     }
 
     /**
      * 找出匹配path的route
-     *
      * @param string $path
      * @param RouteCollection $routes
      * @throws MethodNotAllowedException
      * @throws RouteNotFoundException
      * @return RouteInterface
      */
-    protected function _findRoute($path, RouteCollection $routes)
+    protected function findRoute($path, RouteCollection $routes)
     {
         $requireMethods = [];
         // 查找符合条件的route
         foreach ($routes as $route) {
-            if ($this->_matchSchema($route) && $this->_macthHost($route) && $this->_matchPath($path, $route)) {
-                if ($this->_matchMethod($route)) {
+            if ($this->matchSchema($route) && $this->matchHost($route) && $this->matchPath($path, $route)) {
+                if ($this->matchMethod($route)) {
                     return $route;
                 } else {
                     $requireMethods += $route->getMethods();
@@ -88,16 +85,15 @@ class Matcher implements MatcherInterface
 
     /**
      * 找出匹配path的route，不考虑request上下文
-     *
      * @param string $path
      * @param RouteCollection $routes
      * @throws RouteNotFoundException
      * @return RouteInterface
      */
-    protected function _findRouteWithoutRequestContext($path, RouteCollection $routes)
+    protected function findRouteWithoutRequestContext($path, RouteCollection $routes)
     {
         foreach ($routes as $route) {
-            if ($this->_matchPath($path, $route)) {
+            if ($this->matchPath($path, $route)) {
                 return $route;
             }
         }
@@ -106,16 +102,15 @@ class Matcher implements MatcherInterface
 
     /**
      * 匹配host
-     *
      * @param RouteInterface $route
      * @return boolean
      */
-    protected function _macthHost(RouteInterface $route)
+    protected function matchHost(RouteInterface $route)
     {
         if (empty($route->getHost())) {
             return true;
         }
-        if (preg_match($route->compile()->getHostRegex(), $this->_context->getHost(), $matches)) {
+        if (preg_match($route->compile()->getHostRegex(), $this->context->getHost(), $matches)) {
             $routeParameters = array_intersect_key($matches, array_flip($route->getVariables()));
             $route->setParameter('_hostMatches', $routeParameters);
             return true;
@@ -125,41 +120,38 @@ class Matcher implements MatcherInterface
 
     /**
      * 匹配method
-     *
      * @param RouteInterface $route
      * @return boolean
      */
-    protected function _matchMethod(RouteInterface $route)
+    protected function matchMethod(RouteInterface $route)
     {
         if (empty($route->getMethods())) {
             return true;
         }
-        return in_array($this->_context->getMethod(), $route->getMethods());
+        return in_array(strtolower($this->context->getMethod()), $route->getMethods());
     }
 
     /**
      * 匹配scheme
-     *
      * @param RouteInterface $route
      * @return boolean
      */
-    protected function _matchSchema(RouteInterface $route)
+    protected function matchSchema(RouteInterface $route)
     {
         //没有scheme直接忽略
         if (empty($route->getSchemes())) {
             return true;
         }
-        return in_array($this->_context->getScheme(), $route->getSchemes());
+        return in_array($this->context->getScheme(), $route->getSchemes());
     }
 
     /**
      * 匹配path
-     *
      * @param string $path
      * @param RouteInterface $route
      * @return boolean
      */
-    protected function _matchPath($path, RouteInterface $route)
+    protected function matchPath($path, RouteInterface $route)
     {
         //如果没有path则直接忽略
         if (empty($route->getPath())) {
@@ -175,11 +167,10 @@ class Matcher implements MatcherInterface
 
     /**
      * 处理路由参数
-     *
      * @param RouteInterface $route
      * @return array
      */
-    protected function _getRouteParameters(RouteInterface $route)
+    protected function getRouteParameters(RouteInterface $route)
     {
         return array_replace($route->getDefaults(),
             $route->getParameter('_hostMatches', []),

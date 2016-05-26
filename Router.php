@@ -12,36 +12,33 @@ class Router
 
     /**
      * routes
-     *
      * @var RouteCollection
      */
-    protected $_routes;
+    protected $routes;
 
     /**
      * matcher
-     *
      * @var MatcherInterface
      */
-    protected $_matcher;
+    protected $matcher;
 
     /**
      * generator
-     *
      * @var GeneratorInterface
      */
-    protected $_generator;
+    protected $generator;
 
     /**
      * request context
      *
      * @var RequestContext
      */
-    protected $_context;
+    protected $context;
 
     function __construct(RouteCollection $routes, RequestContext $context = null)
     {
-        $this->_routes = $routes;
-        $this->_context = $context;
+        $this->routes = $routes;
+        $this->context = $context;
     }
 
     /**
@@ -52,7 +49,7 @@ class Router
      */
     function match($path)
     {
-        $route = $this->getMatcher()->match($path, $this->_routes);
+        $route = $this->getMatcher()->match($path, $this->routes);
         return $route;
     }
 
@@ -79,7 +76,7 @@ class Router
      */
     function generateByName($name, $parameters = [], $absolute = false)
     {
-        $route = $this->_routes->getByName($name);
+        $route = $this->routes->getByName($name);
         if (is_null($route)) {
             throw new RouteNotFoundException(sprintf('Route "%s" not defined.', $name));
         }
@@ -96,7 +93,7 @@ class Router
      */
     function generateByAction($action, $parameters = [], $absolute = false)
     {
-        $route = $this->_routes->getByAction($action);
+        $route = $this->routes->getByAction($action);
         if (is_null($route)) {
             throw new RouteNotFoundException(sprintf('Action "%s" not defined.', $action));
         }
@@ -110,7 +107,7 @@ class Router
      */
     function getRoutes()
     {
-        return $this->_routes;
+        return $this->routes;
     }
 
     /**
@@ -120,42 +117,40 @@ class Router
      */
     function getMatcher()
     {
-        if (is_null($this->_matcher)) {
-            $this->_matcher = Factory::createMatcher($this->_context);
+        if (is_null($this->matcher)) {
+            $this->matcher = Factory::createMatcher($this->context);
         }
-        return $this->_matcher;
+        return $this->matcher;
     }
+
 
     /**
      * 获取generator
-     *
-     * @return \Slince\Routing\GeneratorInterface
+     * @return Generator|GeneratorInterface
      */
     function getGenerator()
     {
-        if (is_null($this->_generator)) {
-            $this->_generator = Factory::createGenerator($this->_context);
+        if (is_null($this->generator)) {
+            $this->generator = Factory::createGenerator($this->context);
         }
-        return $this->_generator;
+        return $this->generator;
     }
 
     /**
      * 设置上下文
-     *
      * @param RequestContext $context
      */
     function setContext(RequestContext $context)
     {
-        $this->_context = $context;
+        $this->context = $context;
     }
 
     /**
      * 获取上下文
-     *
      * @return RequestContext $context
      */
     function getContext()
     {
-        return $this->_context;
+        return $this->context;
     }
 }

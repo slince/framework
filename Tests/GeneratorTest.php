@@ -37,6 +37,7 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
         $route = new Route('/users/{id}', '');
         $route->setRequirement('id', '\d+');
         $generator = new Generator(RequestContext::create());
+        $this->assertEquals('http://localhost/users/steven', $generator->generate($route, ['id' => 'steven']));
         $generator->setStrictRequirements(true);
         $this->setExpectedExceptionRegExp('\Slince\Routing\Exception\InvalidArgumentException');
         echo $generator->generate($route, ['id' => 'steven']);
@@ -44,6 +45,9 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
 
     function testGenerateAdvanced()
     {
-        
+        $route = new Route('/users/{id}/{action}', '');
+        $route->setRequirement('id', '\d+');
+        $generator = new Generator(RequestContext::create());
+        $this->assertEquals('http://localhost/users/100/edit', $generator->generate($route, ['id' => 100, 'action' => 'edit']));
     }
 }
