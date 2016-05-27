@@ -134,7 +134,7 @@ trait RouteBuilderTrait
             $action = $arguments;
         } elseif (is_array($arguments)) {
             $name = isset($arguments['name']) ? $arguments['name'] : null;
-            $action = isset($arguments['action']) ? $arguments['action'] : $arguments[0];
+            $action = isset($arguments['action']) ? $arguments['action'] : reset($arguments);
         }
         $route = $this->newRoute($path, $action);
         $this->getRoutes()->add($route, $name);
@@ -149,7 +149,7 @@ trait RouteBuilderTrait
      */
     function newRoute($path, $action)
     {
-        $path = $this->getPreifx() . '/' . trim($path, '/');
+        $path = $this->getPrefix() . '/' . trim($path, '/');
         return new Route($path, $action);
     }
 
@@ -160,7 +160,7 @@ trait RouteBuilderTrait
      */
     function prefix($prefix, \Closure $callback)
     {
-        $originPrefix = $this->getPreifx();
+        $originPrefix = $this->getPrefix();
         $this->setPrefix($originPrefix . '/' . $prefix);
         call_user_func($callback, $this);
         $this->setPrefix($originPrefix);

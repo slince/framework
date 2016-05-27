@@ -10,9 +10,8 @@ class RouterFactory
 
     /**
      * 创建Matcher
-     *
-     * @param RequestContext $context
-     * @return Matcher
+     * @param RequestContext|null $context
+     * @return Router
      */
     static function create(RequestContext $context = null)
     {
