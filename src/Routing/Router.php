@@ -5,6 +5,7 @@
  */
 namespace Slince\Routing;
 
+use Slince\Routing\Exception\InvalidArgumentException;
 use Slince\Routing\Exception\RouteNotFoundException;
 
 class Router
@@ -43,7 +44,6 @@ class Router
 
     /**
      * 匹配给定的路径
-     *
      * @param string $path
      * @return RouteInterface
      */
@@ -55,7 +55,6 @@ class Router
 
     /**
      * 生成特定路由的url
-     *
      * @param RouteInterface $route
      * @param array $parameters
      * @param boolean $absolute
@@ -68,11 +67,11 @@ class Router
 
     /**
      * 根据route name生成url
-     *
-     * @param string $name
+     * @param $name
      * @param array $parameters
-     * @param boolean $absolute
+     * @param bool $absolute
      * @return string
+     * @throws RouteNotFoundException
      */
     function generateByName($name, $parameters = [], $absolute = false)
     {
@@ -85,11 +84,11 @@ class Router
 
     /**
      * 根据action生成url
-     *
-     * @param string $action
+     * @param $action
      * @param array $parameters
-     * @param boolean $absolute
+     * @param bool $absolute
      * @return string
+     * @throws RouteNotFoundException
      */
     function generateByAction($action, $parameters = [], $absolute = false)
     {
@@ -102,8 +101,7 @@ class Router
 
     /**
      * 获取routes
-     *
-     * @return \Slince\Routing\RouteCollection
+     * @return RouteCollection
      */
     function getRoutes()
     {
@@ -112,8 +110,7 @@ class Router
 
     /**
      * 获取matcher
-     *
-     * @return \Slince\Routing\MatcherInterface
+     * @return Matcher|MatcherInterface
      */
     function getMatcher()
     {
@@ -131,6 +128,9 @@ class Router
     function getGenerator()
     {
         if (is_null($this->generator)) {
+            if (is_null($this->context)) {
+                throw new InvalidArgumentException('Miss Argument "Context" for generator');
+            }
             $this->generator = Factory::createGenerator($this->context);
         }
         return $this->generator;

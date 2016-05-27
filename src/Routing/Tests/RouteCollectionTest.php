@@ -49,6 +49,29 @@ class RouteCollectionTest extends \PHPUnit_Framework_TestCase
         $route = $routes->get('/foo2', [
             'name' => 'foo2'
         ]);
-        $this->assertEquals(['get'], $route->getMethods());
+        $this->assertEquals(['get', 'head'], $route->getMethods());
+        $route = $routes->post('/foo3', [
+            'name' => 'foo3'
+        ]);
+        $this->assertEquals(['post'], $route->getMethods());
+        $route = $routes->put('/foo4', [
+            'name' => 'foo4'
+        ]);
+        $this->assertEquals(['put'], $route->getMethods());
+        $route = $routes->delete('/foo5', [
+            'name' => 'foo5'
+        ]);
+        $this->assertEquals(['delete'], $route->getMethods());
+    }
+
+    function testPrefix()
+    {
+        $routes = new RouteCollection();
+        $routes->prefix('/foo', function(RouteCollection $routes){
+            $routes->http('/bar', [
+                'name' => 'bar'
+            ]);
+        });
+        $this->assertEquals('/foo/bar', $routes->getByName('bar')->getPath());
     }
 }
