@@ -7,8 +7,6 @@ namespace Slince\Routing;
 
 class RouteCollection implements \Countable, \IteratorAggregate
 {
-    use RouteBuilderTrait;
-
     /**
      * route集合
      * @var array

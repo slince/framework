@@ -13,14 +13,14 @@ composer require slince/routing *@dev
 ```
 use Slince\Routing\RouterFactory;
 use Slince\Routing\RequestContext;
-use Slince\Routing\RouteCollection;
+use Slince\Routing\RouteBuilder;
 use Slince\Routing\Exception\MethodNotAllowedException;
 use Slince\Routing\Exception\RouteNotFoundException;
 
 //Create Router
 $router = RouterFactory::create();
 //添加route
-$routes = $router->getRoutes();
+$routes = $router->RouteBuilder();
 $routes->http('/users', 'UsersController@index');
 $routes->http('/users/{id}', 'UsersController@show')->setRequirements([
     'id' => '\d+'

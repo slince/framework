@@ -2,6 +2,8 @@
 namespace Slince\Routing\Tests;
 
 use Slince\Routing\Route;
+use Slince\Routing\RouteBuilder;
+use Slince\Routing\Router;
 use Slince\Routing\RouterFactory;
 use Slince\Routing\RequestContext;
 use Slince\Routing\RouteCollection;
@@ -27,9 +29,9 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $context = RequestContext::create();
         $context->setHost('m.domain.com');
         $router = RouterFactory::create($context);
-        $routes = $router->getRoutes();
-        $routes->add(new Route('/path', ''));
-        $routes->http('/users/{id}', [
+        $routeBuilder = $router->getRouteBuilder();
+        $routeBuilder->add('/path', '');
+        $routeBuilder->http('/users/{id}', [
                 'name' => 'home.dash',
                 'action' => 'UsersController@dashboard'
             ])->setRequirements([
@@ -37,15 +39,16 @@ class RouterTest extends \PHPUnit_Framework_TestCase
                 'subdomain' => 'm'
             ])->setHost('{subdomain}.domain.com')
             ->setDefaults(['subdomain' => 'm']);
-        $routes->prefix('user', function (RouteCollection $routes) {
-            $routes->http('/messages', 'MessagesController@index');
-            $routes->http('/messages/{id}', 'MessagesController@show');
-            $routes->prefix('me', function (RouteCollection $routes) {
-                $routes->http('/account', 'UsersController@me');
+        
+        $routeBuilder->prefix('user', function (RouteBuilder $routeBuilder) {
+            $routeBuilder->http('/messages', 'MessagesController@index');
+            $routeBuilder->http('/messages/{id}', 'MessagesController@show');
+            $routeBuilder->prefix('me', function (RouteBuilder $routeBuilder) {
+                $routeBuilder->http('/account', 'UsersController@me');
             });
         });
-        $routes->prefix('admin', function (RouteCollection $routes) {
-            $routes->http('/dashboard/', 'HomeController@index');
+        $routeBuilder->prefix('admin', function (RouteBuilder $routeBuilder) {
+            $routeBuilder->http('/dashboard/', 'HomeController@index');
         });
         $this->assertEquals('http://www.domain.com/users/100', $router->generateByName('home.dash', ['subdomain' => 'www', 'id' => 100], true));
         $this->assertEquals('http://m.domain.com/user/messages/100', $router->generateByAction('MessagesController@show', ['subdomain' => 'www', 'id' => 100], true));
