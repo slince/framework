@@ -10,7 +10,6 @@ use Slince\Routing\Exception\RouteNotFoundException;
 
 class Router
 {
-
     /**
      * routes
      * @var RouteCollection
@@ -31,15 +30,20 @@ class Router
 
     /**
      * request context
-     *
      * @var RequestContext
      */
     protected $context;
+
+    /**
+     * @var RouteBuilder
+     */
+    protected $routeBuilder;
 
     function __construct(RouteCollection $routes, RequestContext $context = null)
     {
         $this->routes = $routes;
         $this->context = $context;
+        $this->routeBuilder = new RouteBuilder('/', $routes);
     }
 
     /**
@@ -152,5 +156,13 @@ class Router
     function getContext()
     {
         return $this->context;
+    }
+
+    /**
+     * @return RouteBuilder
+     */
+    public function getRouteBuilder()
+    {
+        return $this->routeBuilder;
     }
 }

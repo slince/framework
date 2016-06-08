@@ -2,6 +2,7 @@
 namespace Slince\Routing\Tests;
 
 use Slince\Routing\Route;
+use Slince\Routing\RouteBuilder;
 use Slince\Routing\RouteCollection;
 
 class RouteCollectionTest extends \PHPUnit_Framework_TestCase
@@ -42,23 +43,24 @@ class RouteCollectionTest extends \PHPUnit_Framework_TestCase
     function testRouteBuilder()
     {
         $routes = new RouteCollection();
-        $route = $routes->http('/foo1', [
+        $routeBuilder = new RouteBuilder('/', $routes);
+        $route = $routeBuilder->http('/foo1', [
             'name' => 'foo1'
         ]);
         $this->assertEquals([], $route->getMethods());
-        $route = $routes->get('/foo2', [
+        $route = $routeBuilder->get('/foo2', [
             'name' => 'foo2'
         ]);
         $this->assertEquals(['get', 'head'], $route->getMethods());
-        $route = $routes->post('/foo3', [
+        $route = $routeBuilder->post('/foo3', [
             'name' => 'foo3'
         ]);
         $this->assertEquals(['post'], $route->getMethods());
-        $route = $routes->put('/foo4', [
+        $route = $routeBuilder->put('/foo4', [
             'name' => 'foo4'
         ]);
         $this->assertEquals(['put'], $route->getMethods());
-        $route = $routes->delete('/foo5', [
+        $route = $routeBuilder->delete('/foo5', [
             'name' => 'foo5'
         ]);
         $this->assertEquals(['delete'], $route->getMethods());
@@ -67,7 +69,8 @@ class RouteCollectionTest extends \PHPUnit_Framework_TestCase
     function testPrefix()
     {
         $routes = new RouteCollection();
-        $routes->prefix('/foo', function(RouteCollection $routes){
+        $routeBuilder = new RouteBuilder('/', $routes);
+        $routeBuilder->prefix('/foo', function(RouteBuilder $routes){
             $routes->http('/bar', [
                 'name' => 'bar'
             ]);
