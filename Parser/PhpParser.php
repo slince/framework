@@ -6,15 +6,15 @@
 namespace Slince\Config\Parser;
 
 use Slince\Config\Exception\ParseException;
-use Slince\Config\File\FileInterface;
 
 class PhpParser extends AbstractParser
 {
 
     /**
-     * (non-PHPdoc)
-     * 
-     * @see \Slince\Config\ParserInterface::parse()
+     * 解析对应的配置媒介
+     * @param string $filePath
+     * @throws ParseException
+     * @return array
      */
     function parse($filePath)
     {
@@ -26,18 +26,25 @@ class PhpParser extends AbstractParser
     }
 
     /**
-     * (non-PHPdoc)
-     * 
-     * @see \Slince\Config\ParserInterface::dump()
+     * 将数据持久化到配置文件
+     * @param string $filePath
+     * @param array $data
+     * @throws ParseException
+     * @return boolean
      */
     function dump($filePath, array $data)
     {
-        $string = "<?php\r\nreturn " . var_export($data, true) . ";\r\n";
+        $value = var_export($data, true);
+$string = <<<EOT
+<?php 
+return {$value};
+EOT;
         return @file_put_contents($filePath, $string) !== false;
     }
+
     /**
-     * (non-PHPdoc)
-     * @see \Slince\Config\Parser\ParserInterface::getSupportedExtensions()
+     * 获取解析器支持的文件扩展名
+     * @return array
      */
     static function getSupportedExtensions()
     {

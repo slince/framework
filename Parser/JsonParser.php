@@ -11,23 +11,26 @@ class JsonParser extends AbstractParser
 {
 
     /**
-     * (non-PHPdoc)
-     * 
-     * @see \Slince\Config\ParserInterface::parse()
+     * 解析对应的配置媒介
+     * @param string $filePath
+     * @throws ParseException
+     * @return array
      */
     function parse($filePath)
     {
         $data = json_decode(file_get_contents($filePath), true);
         if (json_last_error() != JSON_ERROR_NONE) {
-            throw new ParseException('The file (%s)  need to contain a valid json string');
+            throw new ParseException(sprintf('The file (%s)  need to contain a valid json string', $filePath));
         }
         return $data;
     }
 
     /**
-     * (non-PHPdoc)
-     * 
-     * @see \Slince\Config\ParserInterface::dump()
+     * 将数据持久化到配置文件
+     * @param string $filePath
+     * @param array $data
+     * @throws ParseException
+     * @return boolean
      */
     function dump($filePath, array $data)
     {
@@ -36,8 +39,8 @@ class JsonParser extends AbstractParser
     }
 
     /**
-     * (non-PHPdoc)
-     * @see \Slince\Config\Parser\ParserInterface::getSupportedExtensions()
+     * 获取解析器支持的文件扩展名
+     * @return array
      */
     static function getSupportedExtensions()
     {

@@ -17,14 +17,14 @@ class Config extends DataObject implements ConfigInterface
      *
      * @var array
      */
-    protected $_parsers = [];
+    protected $parsers = [];
 
     /**
      * 支持的解析器类型
      * 
      * @var array
      */
-    protected $_supportFileParsers = [
+    protected $supportFileParsers = [
         'Slince\\Config\\Parser\\PhpParser',
         'Slince\\Config\\Parser\\IniParser',
         'Slince\\Config\\Parser\\JsonParser'
@@ -38,9 +38,9 @@ class Config extends DataObject implements ConfigInterface
     }
 
     /**
-     * (non-PHPdoc)
-     * 
-     * @see \Slince\Config\ConfigInterface::load()
+     * 加载配置文件或者目录
+     * @param string|array $path
+     * @return $this
      */
     function load($path)
     {
@@ -48,15 +48,15 @@ class Config extends DataObject implements ConfigInterface
             $path
         ];
         foreach ($paths as $path) {
-            $this->_data = array_merge($this->_data, $this->parse($path));
+            $this->data = array_merge($this->data, $this->parse($path));
         }
         return $this;
     }
 
     /**
-     * (non-PHPdoc)
-     * 
-     * @see \Slince\Config\ConfigInterface::parse()
+     * 解析一个配置文件或者配置目录
+     * @param string|array $path
+     * @return array
      */
     function parse($path)
     {
@@ -70,9 +70,9 @@ class Config extends DataObject implements ConfigInterface
     }
 
     /**
-     * (non-PHPdoc)
-     * 
-     * @see \Slince\Config\ConfigInterface::dump()
+     * 将配置数据静态化到一个配置文件
+     * @param string $filePath
+     * @return boolean
      */
     function dump($filePath)
     {
@@ -90,8 +90,7 @@ class Config extends DataObject implements ConfigInterface
      */
     function getFilePath($path)
     {
-        $paths = [];
-        if (! is_file($path)) {
+        if (!is_file($path)) {
             throw new InvalidFileException(sprintf('File "%s" cannot be found', $path));
         } else {
             $paths = [
@@ -116,16 +115,14 @@ class Config extends DataObject implements ConfigInterface
      */
     function getParser($extension)
     {
-        $parser = null;
-        foreach ($this->_supportFileParsers as $fileParser) {
-            if (in_array($extension, call_user_func([
-                $fileParser,
-                'getSupportedExtensions'
-            ]))) {
-                if (! isset($this->_parsers[$fileParser])) {
-                    $this->_parsers[$fileParser] = new $fileParser();
-                }
-                return $this->_parsers[$fileParser];
+        //如果已经生成直接返回
+        if (isset($this->parsers[$extension])) {
+            return $this->parsers[$extension];
+        }
+        foreach ($this->supportFileParsers as $fileParser) {
+            if (in_array($extension, call_user_func([$fileParser, 'getSupportedExtensions']))) {
+                $this->parsers[$extension] = new $fileParser();
+                return $this->parsers[$extension];
             }
         }
         throw new UnsupportedFormatException('Unsupported configuration format');
