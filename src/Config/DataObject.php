@@ -7,13 +7,12 @@ namespace Slince\Config;
 
 class DataObject implements \ArrayAccess, \Countable, \IteratorAggregate
 {
-
     /**
      * 配置的值
      *
      * @var array
      */
-    protected $_data = [];
+    protected $data = [];
 
     /**
      * 输出当前对象中保存的配置值
@@ -22,7 +21,7 @@ class DataObject implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     function toArray()
     {
-        return $this->_data;
+        return $this->data;
     }
 
     /**
@@ -32,7 +31,7 @@ class DataObject implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     function replace(array $data)
     {
-        $this->_data = $data;
+        $this->data = $data;
     }
 
     /**
@@ -44,7 +43,7 @@ class DataObject implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     function set($key, $value)
     {
-        $this->_data[$key] = $value;
+        $this->data[$key] = $value;
     }
 
     /**
@@ -56,7 +55,7 @@ class DataObject implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     function get($key, $defaultValue = null)
     {
-        return $this->exists($key) ? $this->_data[$key] : $defaultValue;
+        return $this->exists($key) ? $this->data[$key] : $defaultValue;
     }
 
     /**
@@ -66,43 +65,42 @@ class DataObject implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     function merge(array $data)
     {
-        $this->_data = array_merge($this->_data, $data);
+        $this->data = array_merge($this->data, $data);
     }
 
     /**
      * 判断是否存在某个键值
-     *
-     * @param int|string $key            
+     * @param int|string $key
+     * @return boolean
      */
     function exists($key)
     {
-        return isset($this->_data[$key]);
+        return isset($this->data[$key]);
     }
 
     /**
      * 移除已存在的键值
-     *
-     * @param mixed $key            
+     * @param mixed $key
      */
     function delete($key)
     {
-        unset($this->_data[$key]);
+        unset($this->data[$key]);
     }
 
     /**
      * 清除所有的数据
-     *
      * @return void
      */
     function flush()
     {
-        $this->_data = [];
+        $this->data = [];
     }
 
+
     /**
-     * (non-PHPdoc)
-     * 
-     * @see ArrayAccess::offsetGet()
+     * 继承方法
+     * @param mixed $offset
+     * @return mixed
      */
     function offsetGet($offset)
     {
@@ -110,9 +108,9 @@ class DataObject implements \ArrayAccess, \Countable, \IteratorAggregate
     }
 
     /**
-     * (non-PHPdoc)
-     * 
-     * @see ArrayAccess::offsetSet()
+     * 继承方法
+     * @param mixed $offset
+     * @param mixed $value
      */
     function offsetSet($offset, $value)
     {
@@ -120,9 +118,8 @@ class DataObject implements \ArrayAccess, \Countable, \IteratorAggregate
     }
 
     /**
-     * (non-PHPdoc)
-     * 
-     * @see ArrayAccess::offsetUnset()
+     * 继承方法
+     * @param mixed $offset
      */
     function offsetUnset($offset)
     {
@@ -130,32 +127,31 @@ class DataObject implements \ArrayAccess, \Countable, \IteratorAggregate
     }
 
     /**
-     * (non-PHPdoc)
-     * 
-     * @see ArrayAccess::offsetExists()
+     * 继承方法
+     * @param mixed $offset
+     * @return bool
      */
     function offsetExists($offset)
     {
         return $this->exists($offset);
     }
 
+
     /**
-     * (non-PHPdoc)
-     * 
-     * @see Countable::count()
+     * 继承方法
+     * @return mixed
      */
     function count()
     {
-        return count($this->_data);
+        return count($this->data);
     }
 
     /**
-     * (non-PHPdoc)
-     * 
-     * @see IteratorAggregate::getIterator()
+     * 继承方法
+     * @return \ArrayIterator
      */
     function getIterator()
     {
-        return new \ArrayIterator($this->_data);
+        return new \ArrayIterator($this->data);
     }
 }
