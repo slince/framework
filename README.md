@@ -8,7 +8,7 @@
 ```
 {
     "require": {
-        "slince/cache": "dev-master@dev"
+        "slince/cache": "*"
     }
 }
 ```
