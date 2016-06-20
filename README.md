@@ -8,7 +8,7 @@
 
     {
         "require": {
-            "slince/config": "dev-master@dev"
+            "slince/config": "*"
         }
     }
 
