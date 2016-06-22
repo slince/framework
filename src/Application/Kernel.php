@@ -12,10 +12,10 @@ use Slince\Event\Event;
 use Slince\Application\Exception\LogicException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Slince\Routing\RequestContext;
-use Slince\Routing\RouteCollection;
 use Slince\Config\Config;
 use Slince\Routing\Router;
+use Slince\Routing\RequestContext;
+use Slince\Routing\RouteBuilder;
 
 abstract class Kernel
 {
@@ -79,7 +79,7 @@ abstract class Kernel
         $this->registerServices($this->container);
         $this->registerConfigs($this->container->get('config'));
         $this->registerEvents($this->container->get('dispatcher'));
-        $this->registerRoutes($this->container->get('router')->getRoutes());
+        $this->registerRoutes($this->container->get('router')->getRouteBuilder());
         //注册所有的桥
         $this->initializeBridges();
         $this->initializeApplications();
@@ -154,9 +154,9 @@ abstract class Kernel
     /**
      * 注册route
      *
-     * @param RouteCollection $routes
+     * @param RouteBuilder $routes
      */
-    abstract public function registerRoutes(RouteCollection $routes);
+    abstract public function registerRoutes(RouteBuilder $routes);
 
     /**
      * 注册事件监听
@@ -273,7 +273,7 @@ abstract class Kernel
      */
     public function dispatchEvent($eventName, array $parameters = [])
     {
-        $event = new Event($eventName, $this, $this->container->get('dispatcher'), $parameters);
+        $event = new Event($eventName, $this, $parameters);
         $this->container->get('dispatcher')->dispatch($eventName, $event);
     }
 
