@@ -14,6 +14,7 @@
     "require": {
         "php": ">=5.5.9",
         "symfony/http-foundation": "~3.0",
+        "symfony/filesystem": "~3.0",
         "cakephp/orm": "~3.0",
         "cakephp/cache": "~3.0",
         "monolog/monolog": "~1.0",
@@ -37,7 +38,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Slince\\": ""
+            "Slince\\": "src"
         }
     },
     "minimum-stability": "stable"

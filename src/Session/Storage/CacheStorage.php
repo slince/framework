@@ -5,35 +5,31 @@
  */
 namespace Slince\Session\Storage;
 
-use Slince\Cache\Cache;
+use Slince\Cache\CacheInterface;
 use Slince\Session\SessionManager;
 
 class CacheStorage extends AbstractStorage
 {
 
     /**
-     * cache handler
-     * 
-     * @var \Slince\Cache\Cache
+     * @var CacheInterface
      */
     protected $cacheHandler;
 
     /**
      * 缓存时间
-     * 
      * @var int
      */
     protected $duration;
 
-    function __construct(Cache $cacheHandler)
+    function __construct(CacheInterface $cacheHandler)
     {
         $this->setCacheHandler($cacheHandler);
     }
 
     /**
-     * (non-PHPdoc)
-     * 
-     * @see StorageInterface::init()
+     * SessionManager初始化工作
+     * @param SessionManager $sessionManager
      */
     function initialize(SessionManager $sessionManager)
     {
@@ -43,18 +39,16 @@ class CacheStorage extends AbstractStorage
 
     /**
      * 设置缓存句柄
-     * 
-     * @param Cache $cacheHandler            
+     * @param CacheInterface $cacheHandler
      */
-    function setCacheHandler(Cache $cacheHandler)
+    function setCacheHandler(CacheInterface $cacheHandler)
     {
         $this->cacheHandler = $cacheHandler;
     }
 
     /**
      * 获取缓存句柄
-     * 
-     * @return \Slince\Cache\Cache
+     * @return CacheInterface
      */
     function getCacheHandler()
     {
@@ -62,9 +56,10 @@ class CacheStorage extends AbstractStorage
     }
 
     /**
-     * (non-PHPdoc)
-     * 
-     * @see SessionHandlerInterface::open()
+     * 方法继承
+     * @param string $savePath
+     * @param string $sessionId
+     * @return bool
      */
     function open($savePath, $sessionId)
     {
@@ -73,9 +68,10 @@ class CacheStorage extends AbstractStorage
     }
 
     /**
-     * (non-PHPdoc)
-     * 
-     * @see SessionHandlerInterface::write()
+     * 方法继承
+     * @param string $sessionId
+     * @param string $sessionData
+     * @return bool|void
      */
     function write($sessionId, $sessionData)
     {
@@ -83,9 +79,9 @@ class CacheStorage extends AbstractStorage
     }
 
     /**
-     * (non-PHPdoc)
-     * 
-     * @see SessionHandlerInterface::read()
+     * 方法继承
+     * @param string $sessionId
+     * @return string
      */
     function read($sessionId)
     {
@@ -93,9 +89,9 @@ class CacheStorage extends AbstractStorage
     }
 
     /**
-     * (non-PHPdoc)
-     * 
-     * @see SessionHandlerInterface::destroy()
+     * 方法继承
+     * @param string $sessionId
+     * @return bool|void
      */
     function destroy($sessionId)
     {
@@ -103,9 +99,9 @@ class CacheStorage extends AbstractStorage
     }
 
     /**
-     * (non-PHPdoc)
-     * 
-     * @see SessionHandlerInterface::gc()
+     * 方法继承
+     * @param int $maxlifetime
+     * @return bool
      */
     function gc($maxlifetime)
     {
@@ -113,7 +109,8 @@ class CacheStorage extends AbstractStorage
     }
 
     /**
-     * @see \SessionHandlerInterface::close();
+     * 方法继承
+     * @return bool
      */
     function close()
     {

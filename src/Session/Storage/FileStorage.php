@@ -14,7 +14,6 @@ class FileStorage extends AbstractStorage
 
     /**
      * session文件保存位置
-     *
      * @var string
      */
     protected $savePath;
@@ -32,9 +31,9 @@ class FileStorage extends AbstractStorage
      * @var string
      */
     protected $suffix = 'sess';
+
     /**
      * file handler
-     * 
      * @var Filesystem
      */
     protected $filesystem;
@@ -43,7 +42,7 @@ class FileStorage extends AbstractStorage
     {
         $savePath = trim($savePath, '\\/') . '/';
         $this->filesystem = new Filesystem();
-        if (! file_exists($savePath)) {
+        if (!file_exists($savePath)) {
             $this->filesystem->mkdir($savePath);
         }
         if (! is_dir($savePath)) {
@@ -53,19 +52,20 @@ class FileStorage extends AbstractStorage
     }
 
     /**
-     * (non-PHPdoc)
-     * 
-     * @see \SessionHandlerInterface::open()
+     * 方法继承
+     * @param string $savePath
+     * @param string $sessionId
+     * @return bool
      */
-    function open($savePath, $sessionName)
+    function open($savePath, $sessionId)
     {
         return true;
     }
 
     /**
-     * (non-PHPdoc)
-     * 
-     * @see \SessionHandlerInterface::read()
+     * 方法继承
+     * @param string $sessionId
+     * @return string
      */
     function read($sessionId)
     {
@@ -73,9 +73,10 @@ class FileStorage extends AbstractStorage
     }
 
     /**
-     * (non-PHPdoc)
-     * 
-     * @see \SessionHandlerInterface::write()
+     * 方法继承
+     * @param string $sessionId
+     * @param string $sessionData
+     * @return bool|void
      */
     function write($sessionId, $sessionData)
     {
@@ -88,9 +89,9 @@ class FileStorage extends AbstractStorage
     }
 
     /**
-     * (non-PHPdoc)
-     * 
-     * @see \SessionHandlerInterface::destroy()
+     * 方法继承
+     * @param string $sessionId
+     * @return bool|void
      */
     function destroy($sessionId)
     {
@@ -103,9 +104,9 @@ class FileStorage extends AbstractStorage
     }
 
     /**
-     * (non-PHPdoc)
-     * 
-     * @see \SessionHandlerInterface::gc()
+     * 方法继承
+     * @param int $maxlifetime
+     * @return bool
      */
     function gc($maxlifetime)
     {
@@ -123,7 +124,8 @@ class FileStorage extends AbstractStorage
     }
 
     /**
-     * @see \SessionHandlerInterface::close();
+     * 方法继承
+     * @return bool
      */
     function close()
     {
@@ -132,7 +134,6 @@ class FileStorage extends AbstractStorage
 
     /**
      * 获取session文件保存路径
-     *
      * @return string
      */
     function getSavePath()
@@ -151,8 +152,7 @@ class FileStorage extends AbstractStorage
 
     /**
      * 获取session文件路径
-     * 
-     * @param string $sessionId            
+     * @param string $sessionId
      * @return string
      */
     function getSessionFile($sessionId)
@@ -162,7 +162,6 @@ class FileStorage extends AbstractStorage
 
     /**
      * 获取session文件名后缀
-     * 
      * @return string
      */
     function getSuffix()
@@ -172,7 +171,6 @@ class FileStorage extends AbstractStorage
 
     /**
      * 设置session文件名后缀
-     *
      * @param $suffix string
      */
     function setSuffix($suffix)

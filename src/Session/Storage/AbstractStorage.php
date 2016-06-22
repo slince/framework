@@ -11,8 +11,8 @@ abstract class AbstractStorage implements StorageInterface
 {
     
     /**
+     * SessionManager初始化工作
      * @param SessionManager $sessionManager
-     * @see StorageInterface::init()
      */
     function initialize(SessionManager $sessionManager)
     {

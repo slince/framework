@@ -8,7 +8,7 @@ class MemcacheCacheTest extends CacheTestCase
     function createCacheHandler()
     {
         $memcache = new \Memcache();
-        $memcache->connect('127.0.0.1', 11211);
+        $memcache->connect('192.168.20.21', 11211);
         return new MemcacheCache($memcache);
     }
 }

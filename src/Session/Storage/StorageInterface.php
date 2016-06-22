@@ -12,8 +12,7 @@ interface StorageInterface extends \SessionHandlerInterface
 
     /**
      * SessionManager初始化工作
-     *
-     * @param SessionManager $sessionManager            
+     * @param SessionManager $sessionManager
      */
     function initialize (SessionManager $sessionManager);
 }

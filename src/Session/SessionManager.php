@@ -100,9 +100,6 @@ class SessionManager
      */
     protected function initialize()
     {
-        if (!is_null($this->_handler)) {
-            session_set_save_handler($this->_handler, true);
-        }
         // 初始化桥配置
         if (!is_null($this->bridge)) {
             $this->bridge->initialize($this);
