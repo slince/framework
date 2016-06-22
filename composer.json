@@ -20,6 +20,9 @@
         "monolog/monolog": "~1.0",
         "filp/whoops": "~1.0"
     },
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    },
     "replace": {
         "slince/application": "self.version",
         "slince/config": "self.version",
@@ -32,9 +35,6 @@
         "slince/monolog-bridge": "self.version",
         "slince/cake-bridge": "self.version",
         "slince/whoops-bridge": "self.version"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "*"
     },
     "autoload": {
         "psr-4": {
