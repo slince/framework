@@ -1,2 +1,0 @@
-layout
-<?=$this->fetch('content');?>
