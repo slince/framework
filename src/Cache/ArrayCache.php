@@ -5,7 +5,7 @@
  */
 namespace Slince\Cache;
 
-class ArrayCache extends AbstractCache
+class ArrayCache extends AbstractCache implements \ArrayAccess
 {
 
     /**
@@ -66,5 +66,46 @@ class ArrayCache extends AbstractCache
     {
         $this->data = [];
         return true;
+    }
+
+    /**
+     * 继承方法
+     * @param mixed $offset
+     * @param mixed $value
+     * @return bool
+     */
+    function offsetSet($offset, $value)
+    {
+        return $this->set($offset, $value);
+    }
+
+    /**
+     * 继承方法
+     * @param mixed $offset
+     * @return mixed
+     */
+    function offsetGet($offset)
+    {
+        return $this->get($offset);
+    }
+
+    /**
+     * 继承方法
+     * @param mixed $offset
+     * @return bool
+     */
+    function offsetExists($offset)
+    {
+        return $this->exists($offset);
+    }
+
+    /**
+     * 继承方法
+     * @param mixed $offset
+     * @return bool
+     */
+    function offsetUnset($offset)
+    {
+        return $this->delete($offset);
     }
 }
