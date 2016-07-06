@@ -90,17 +90,16 @@ class Config extends DataObject implements ConfigInterface
      */
     function getFilePath($path)
     {
-        if (!is_file($path)) {
-            throw new InvalidFileException(sprintf('File "%s" cannot be found', $path));
-        } else {
-            $paths = [
-                $path
-            ];
-        }
         if (is_dir($path)) {
             $paths = glob($path . '/*.*');
             if (empty($paths)) {
                 throw new InvalidFileException(sprintf('Directory "%s" is empty', $path));
+            }
+        } else {
+            if (!file_exists($path)) {
+                throw new InvalidFileException(sprintf('File "%s" cannot be found', $path));
+            } else {
+                $paths = [$path];
             }
         }
         return $paths;
