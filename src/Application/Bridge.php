@@ -21,11 +21,19 @@ abstract class Bridge
      */
     protected $container;
 
+    /**
+     * 获取服务容器
+     * @return Container
+     */
     function getContainer()
     {
         return $this->container;
     }
 
+    /**
+     * 初始化
+     * @param Container $container
+     */
     public function initialize(Container $container)
     {
         $this->container = $container;
@@ -35,6 +43,10 @@ abstract class Bridge
     {
     }
 
+    /**
+     * 名称
+     * @return string
+     */
     function getName()
     {
         if (is_null($this->name)) {

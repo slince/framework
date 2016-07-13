@@ -275,10 +275,19 @@ abstract class Kernel
     }
 
     /**
+     * @param $name
+     * @return ApplicationInterface
+     */
+    public function getApplication($name)
+    {
+        return isset($this->applications[$name]) ? $this->applications[$name] : null;
+    }
+
+    /**
      * 获取当前正在运行的application
      * @return ApplicationInterface
      */
-    public function getApplication()
+    function getDispatchedApplication()
     {
         return $this->application;
     }

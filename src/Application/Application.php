@@ -103,7 +103,6 @@ abstract class Application implements ApplicationInterface
 
     /**
      * 获取view path
-     *
      * @return string
      */
     public function getViewPath()
@@ -151,8 +150,7 @@ abstract class Application implements ApplicationInterface
     
     /**
      * 获取controller
-     * 
-     * @return \Slince\Application\Controller
+     * @return Controller
      */
     public function getController()
     {
@@ -161,7 +159,6 @@ abstract class Application implements ApplicationInterface
 
     /**
      * 设置theme
-     * 
      * @param string $theme
      */
     public function setTheme($theme)
@@ -171,7 +168,6 @@ abstract class Application implements ApplicationInterface
     
     /**
      * 获取theme
-     * 
      * @return boolean|string
      */
     public function getTheme()
@@ -213,7 +209,6 @@ abstract class Application implements ApplicationInterface
     
     /**
      * 获取完整的controller class
-     * 
      * @param string $controller
      * @return string
      */
@@ -225,7 +220,6 @@ abstract class Application implements ApplicationInterface
 
     /**
      * 获取ViewManager
-     *
      * @return ViewManager
      */
     public function getViewManager()

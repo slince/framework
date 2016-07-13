@@ -24,14 +24,13 @@ class ErrorHandler implements SubscriberInterface
 
     /**
      * 错误发生时的捕获
-     * 
      * @param Event $event
      */
     function onError(Event $event)
     {
         $event->stopPropagation();
         $kernel = $event->getSubject();
-        $application = $kernel->getApplication();
+        $application = $kernel->getDispatchedApplication();
         $content = $this->getErrorContent($application, [
             'path' => $kernel->getParameter('request')->getPathInfo(),
             'message' => $event->getArgument(1)
@@ -42,7 +41,6 @@ class ErrorHandler implements SubscriberInterface
     
     /**
      * 异常发生时的默认捕获
-     * 
      * @param Event $event
      */
     function onException(Event $event)
@@ -50,7 +48,7 @@ class ErrorHandler implements SubscriberInterface
         $event->stopPropagation();
         $exception = $event->getArgument('exception');
         $kernel = $event->getSubject();
-        $application = $kernel->getApplication();
+        $application = $kernel->g();
         $parameters = [
             'path' => $kernel->getParameter('request')->getPathInfo(),
             'message' => $exception->getMessage()
@@ -69,7 +67,6 @@ class ErrorHandler implements SubscriberInterface
     
     /**
      * 获取404错误对应的错误内容
-     * 
      * @param Kernel $kernel
      * @param Application $application
      * @param array $parameters
@@ -95,8 +92,6 @@ EOT;
     
     /**
      * 获取500错误内容
-     * 
-     * @param Kernel $kernel
      * @param Application $application
      * @param array $parameters
      * @return string
@@ -130,8 +125,6 @@ EOT;
     
     /**
      * 从Application的错误模板渲染内容
-     * 
-     * @param Kernel $kernel
      * @param Application $application
      * @param string $templateName
      * @param array $parameters
@@ -147,7 +140,7 @@ EOT;
      * 生成Response对象
      * @param string $content
      * @param int $status
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     protected function createResponse($content, $status)
     {

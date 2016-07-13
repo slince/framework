@@ -9,7 +9,6 @@ use Cake\ORM\Table;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Slince\Application\Exception\LogicException;
-use Cake\Utility\Inflector;
 use Cake\ORM\TableRegistry;
 use Slince\Di\Container;
 
@@ -18,49 +17,42 @@ class Controller
 
     /**
      * app
-     *
      * @var Application
      */
     protected $application;
 
     /**
      * request
-     *
      * @var Request
      */
     protected $request;
 
     /**
      * response
-     *
      * @var Response
      */
     protected $response;
 
     /**
      * request action
-     *
      * @var string
      */
     protected $action;
 
     /**
      * layout
-     *
      * @var string
      */
     protected $layout;
 
     /**
      * 视图变量
-     *
      * @var array
      */
     protected $viewVariables = array();
 
     /**
      * 是否渲染过view
-     *
      * @var boolean
      */
     protected $rendered = false;
@@ -79,8 +71,7 @@ class Controller
 
     /**
      * 获取request
-     *
-     * @return \Symfony\Component\HttpFoundation\Request
+     * @return Request
      */
     function getRequest()
     {
@@ -98,7 +89,6 @@ class Controller
 
     /**
      * 获取container
-     * 
      * @return Container
      */
     function getContainer()
@@ -108,8 +98,7 @@ class Controller
 
     /**
      * load table
-     *
-     * @param string $modelClass            
+     * @param string $modelClass
      * @param array $options
      * @return Table
      */
@@ -132,8 +121,7 @@ class Controller
 
     /**
      * 设置view变量
-     *
-     * @param string $name            
+     * @param string $name
      * @param mixed $value            
      */
     function set($name, $value)
@@ -152,10 +140,9 @@ class Controller
 
     /**
      * 渲染模板
-     *
-     * @param string $template            
-     * @param string $layout            
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param string $template
+     * @param boolean $withLayout
+     * @return Response
      */
     function render($template = null, $withLayout = true)
     {
@@ -173,11 +160,10 @@ class Controller
 
     /**
      * 与application交互的接口，返回response
-     *
      * @param string $action 要触发的action
      * @param array $parameters 路由参数
      * @throws LogicException
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     function invokeAction($action, $parameters)
     {
@@ -200,8 +186,7 @@ class Controller
 
     /**
      * 反射并执行action
-     *
-     * @param string $action            
+     * @param string $action
      * @param array $parameters            
      * @return mixed
      */
