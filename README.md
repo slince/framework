@@ -1,17 +1,12 @@
 ﻿# The Slince PHP Framework
-
-一个现代化的php框架
+slince框架核心代码，如果你想创建一个完整的Slince应用，请查看[slince webapp](http://github.com/slince/webapp)
 
 ## 安装
 ```
-composer require slince/slince *@dev
+composer create-project slince/webapp [app-name] --stability=dev
 ```
 ## 文档
 
-Coming Soon!
-
-## 网站
-
-[Slince](http://www.qimuyu.com);
+文档请参阅[Slince官网](http://framework.qimuyu.com/documents)
 
 
