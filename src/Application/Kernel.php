@@ -19,46 +19,47 @@ use Slince\Routing\RouteBuilder;
 
 abstract class Kernel
 {
-
     /**
      * Container Instance
-     *
      * @var Container
      */
     protected $container;
 
     /**
      * 注册的application
-     *
      * @var array
      */
     protected $applications = [];
 
     /**
      * 被调度的application
-     *
      * @var ApplicationInterface
      */
     protected $application;
 
     /**
      * 是否是debug模式
-     *
      * @var boolean
      */
     protected $debug;
 
     /**
-     *  当前核心实例
-     * @var Kernel
+     * 命令空间
+     * @var
      */
-    protected static $kernel;
+    protected $namespace;
 
     /**
      *  项目根目录
      * @var string
      */
     protected $rootPath;
+
+    /**
+     *  当前核心实例
+     * @var Kernel
+     */
+    protected static $kernel;
 
     public function __construct($debug = false)
     {
@@ -87,7 +88,6 @@ abstract class Kernel
 
     /**
      * 注册错误和异常的捕获事件
-     *
      * return void
      */
     protected function registerErrorHandler()
@@ -167,8 +167,7 @@ abstract class Kernel
     
     /**
      * 获取DI容器
-     *
-     * @return \Slince\Di\Container
+     * @return Container
      */
     public function getContainer()
     {
@@ -177,7 +176,6 @@ abstract class Kernel
 
     /**
      * 获取router
-     *
      * @return Router
      */
     public function getRouter()
@@ -187,7 +185,6 @@ abstract class Kernel
 
     /**
      * 是否工作在debug模式下
-     *
      * @return boolean
      */
     public function debug()
@@ -205,6 +202,10 @@ abstract class Kernel
         $this->sendResponse($response);
     }
 
+    /**
+     * 发送response到客户端
+     * @param Response $response
+     */
     public function sendResponse(Response $response)
     {
         $response->send();
@@ -213,7 +214,6 @@ abstract class Kernel
 
     /**
      * 开始处理请求
-     *
      * @param Request $request
      * @return Response
      */
@@ -245,7 +245,6 @@ abstract class Kernel
 
     /**
      * 核心内存缓存参数读取
-     *
      * @param string $name
      * @param mixed $default
      */
@@ -256,7 +255,6 @@ abstract class Kernel
 
     /**
      * 核心内存缓存设置
-     *
      * @param string $name
      * @param mixed $value
      */
@@ -267,7 +265,6 @@ abstract class Kernel
 
     /**
      * 派发事件
-     *
      * @param string $eventName
      * @param array $parameters
      */
@@ -279,8 +276,7 @@ abstract class Kernel
 
     /**
      * 获取当前正在运行的application
-     *
-     * @return \Slince\Application\ApplicationInterface
+     * @return ApplicationInterface
      */
     public function getApplication()
     {
@@ -288,8 +284,19 @@ abstract class Kernel
     }
 
     /**
+     * 获取当前application的命名空间
+     * @return string
+     */
+    function getNamespace()
+    {
+        if (is_null($this->namespace)) {
+            $this->namespace = strstr(get_class($this), '\\', true);
+        }
+        return $this->namespace;
+    }
+
+    /**
      * 获取项目root path
-     *
      * @return string
      */
     public function getRootPath()
@@ -330,11 +337,10 @@ abstract class Kernel
 
     /**
      * 调度回调
-     *
      * @param string $action
      * @param array $parameters
      * @throws LogicException
-     * @return Ambigous <\Symfony\Component\HttpFoundation\Response, mixed>
+     * @return Response
      */
     protected function runCallableAction($action, $parameters = [])
     {
@@ -347,7 +353,6 @@ abstract class Kernel
 
     /**
      * 运行application
-     *
      * @param string $name
      * @param string $controller
      * @param string $action
@@ -365,7 +370,6 @@ abstract class Kernel
 
     /**
      * 绑定request到routing的context
-     *
      * @param Request $request
      * @param RequestContext $context
      * @return RequestContext
@@ -386,8 +390,7 @@ abstract class Kernel
 
     /**
      * 创建DI容器
-     *
-     * @return \Slince\Di\Container
+     * @return Container
      */
     protected function createContainer()
     {
@@ -396,7 +399,6 @@ abstract class Kernel
 
     /**
      * 获取正在运行的kernel实例
-     *
      * @return Kernel
      */
     public static function instance()

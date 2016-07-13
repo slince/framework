@@ -10,21 +10,19 @@ use Slince\Config\Config;
 use Slince\Di\Container;
 use Slince\Event\Dispatcher;
 use Slince\Application\Exception\MissActionException;
+use Slince\View\Engine\Native\ViewManager;
 
 abstract class Application implements ApplicationInterface
 {
-
     /**
      * application name
-     * 
      * @var string
      */
     protected $name;
     
     /**
      * 命令空间
-     * 
-     * @var 
+     * @var
      */
     protected $namespace;
 
@@ -37,14 +35,12 @@ abstract class Application implements ApplicationInterface
 
     /**
      * kernel
-     * 
      * @var Kernel
      */
     protected $kernel;
     
     /**
      * 当前执行的controller
-     * 
      * @var Controller
      */
     protected $controller;
@@ -58,23 +54,22 @@ abstract class Application implements ApplicationInterface
 
     /**
      * view manager
-     *
-     * @var \Slince\View\Engine\Native\ViewManager
+     * @var ViewManager
      */
     protected $viewManager;
 
     /**
-     * (non-PHPdoc)
-     * @see \Slince\Application\ApplicationInterface::getName()
+     * 获取application名称
+     * @return string
      */
     function getName()
     {
         return $this->name;
     }
-    
+
     /**
-     * (non-PHPdoc)
-     * @see \Slince\Application\ApplicationInterface::setName()
+     * 设置application名称
+     * @param string $name
      */
     function setName($name)
     {
@@ -82,8 +77,8 @@ abstract class Application implements ApplicationInterface
     }
 
     /**
-     * (non-PHPdoc)
-     * @see \Slince\Application\ApplicationInterface::getNamespace()
+     * 获取当前application的命名空间
+     * @return string
      */
     function getNamespace()
     {
@@ -95,7 +90,6 @@ abstract class Application implements ApplicationInterface
 
     /**
      * 获取application的跟目录
-     *
      * @return string
      */
     public function getRootPath()
@@ -124,17 +118,21 @@ abstract class Application implements ApplicationInterface
 
     /**
      * Get kernel
-     * 
      * @return Kernel;
      */
     public function getKernel()
     {
         return $this->kernel; 
     }
-    
+
     /**
-     * (non-PHPdoc)
-     * @see \Slince\Application\ApplicationInterface::run()
+     * application启动
+     * @param Kernel $kernel
+     * @param string $controller
+     * @param string $action
+     * @param array $parameters
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws MissControllerException
      */
     public function run(Kernel $kernel, $controller, $action, $parameters)
     {
@@ -228,7 +226,7 @@ abstract class Application implements ApplicationInterface
     /**
      * 获取ViewManager
      *
-     * @return \Slince\View\Engine\Native\ViewManager
+     * @return ViewManager
      */
     public function getViewManager()
     {
