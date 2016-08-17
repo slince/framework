@@ -48,7 +48,7 @@ class ErrorHandler implements SubscriberInterface
         $event->stopPropagation();
         $exception = $event->getArgument('exception');
         $kernel = $event->getSubject();
-        $application = $kernel->g();
+        $application = $kernel->getDispatchedApplication();
         $parameters = [
             'path' => $kernel->getParameter('request')->getPathInfo(),
             'message' => $exception->getMessage()
